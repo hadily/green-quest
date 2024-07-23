@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && docker-php-ext-install intl pdo pdo_mysql opcache zip
 
-# Enable Apache mod_rewrite
+# Enable Apache mod_rewrite (you might not need this if using Symfony CLI)
 RUN a2enmod rewrite
 
 # Install Composer
@@ -38,8 +38,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Install Symfony dependencies
 RUN composer install
 
-# Expose port 8000
+# Expose port 8000 for Symfony CLI server
 EXPOSE 8000
-docke
-# Start Apache in the foreground
-CMD ["apache2-foreground"]
+
+# Command to start Symfony CLI server on port 8000
+CMD ["symfony", "server:start", "--port=8000", "--no-tls"]
