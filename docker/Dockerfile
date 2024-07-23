@@ -28,12 +28,15 @@ RUN mkdir -p /var/www/html/var /var/www/html/vendor
 RUN chown -R www-data:www-data /var/www/html/var \
     && chown -R www-data:www-data /var/www/html/vendor
 
+# Set environment variable to allow Composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Set the DATABASE_URL environment variable
+ENV DATABASE_URL="mysql://root@host.docker.internal:4000/expDouce"
+
 # Install Symfony CLI tool
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
-
-# Set environment variable to allow Composer to run as root
-ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install Symfony dependencies
 RUN composer install

@@ -12,4 +12,5 @@ services:
       - ./app:/var/www/html
     environment:
       APP_ENV: dev
-      DATABASE_URL: "mysql://myuser:mypassword@host.docker.internal:3306/mydatabase"
+      DATABASE_URL: "mysql://root@host.docker.internal:4000/expDouce"
+      
