@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\TestEntit;
+use App\Entity\Partner;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TestEntit>
+ * @extends ServiceEntityRepository<Partner>
  */
-class TestEntitRepository extends ServiceEntityRepository
+class PartnerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TestEntit::class);
+        parent::__construct($registry, Partner::class);
     }
 
     //    /**
-    //     * @return TestEntit[] Returns an array of TestEntit objects
+    //     * @return Partner[] Returns an array of Partner objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
+    //            ->orderBy('p.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?TestEntit
+    //    public function findOneBySomeField($value): ?Partner
     //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
