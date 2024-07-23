@@ -38,8 +38,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Install Symfony dependencies
 RUN composer install
 
-# Expose port 80
-EXPOSE 80
-
+# Expose port 8000
+EXPOSE 8000
+docke
 # Start Apache in the foreground
 CMD ["apache2-foreground"]
