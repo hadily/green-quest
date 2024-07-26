@@ -7,48 +7,51 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-// [ORM\Entity(repositoryClass: AdminRepository::class)]
+
+/**
+ * @ORM\Entity
+ */
+#[ORM\Entity]
 class Admin extends User
 {
     /**
      * @var Collection<int, Client>
      */
     #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'admin')]
-    private Collection $clients;
+    private $clients;
 
     /**
      * @var Collection<int, Partner>
      */
     #[ORM\OneToMany(targetEntity: Partner::class, mappedBy: 'admin')]
-    private Collection $partners;
+    private $partners;
 
+    /**
+     * @var Admin|null
+     */
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subAdmins')]
-    private ?self $managedBy = null;
+    private $managedBy = null;
 
     /**
      * @var Collection<int, self>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'managedBy')]
-    private Collection $subAdmins;
+    private $subAdmins;
 
     /**
      * @var Collection<int, self>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'managedBy')]
-    private Collection $managedAdmins;
+    private $managedAdmins;
 
-    public function __construct()
+    public function __construct($email, $password, $role, $firstName, $lastName, $phoneNumber)
     {
-        parent::__construct();
+        parent::__construct($email, $password, $role, $firstName, $lastName, $phoneNumber);
         $this->clients = new ArrayCollection();
         $this->partners = new ArrayCollection();
         $this->subAdmins = new ArrayCollection();
         $this->managedAdmins = new ArrayCollection();
     }
-
-    //[ORM\Id]
-    //[ORM\GeneratedValue]
-    //[ORM\Column]
 
     /**
      * @return Collection<int, Client>
@@ -58,7 +61,7 @@ class Admin extends User
         return $this->clients;
     }
 
-    public function addClient(Client $client): static
+    public function addClient(Client $client): self
     {
         if (!$this->clients->contains($client)) {
             $this->clients->add($client);
@@ -68,10 +71,9 @@ class Admin extends User
         return $this;
     }
 
-    public function removeClient(Client $client): static
+    public function removeClient(Client $client): self
     {
         if ($this->clients->removeElement($client)) {
-            // set the owning side to null (unless already changed)
             if ($client->getAdmin() === $this) {
                 $client->setAdmin(null);
             }
@@ -88,7 +90,7 @@ class Admin extends User
         return $this->partners;
     }
 
-    public function addPartner(Partner $partner): static
+    public function addPartner(Partner $partner): self
     {
         if (!$this->partners->contains($partner)) {
             $this->partners->add($partner);
@@ -98,10 +100,9 @@ class Admin extends User
         return $this;
     }
 
-    public function removePartner(Partner $partner): static
+    public function removePartner(Partner $partner): self
     {
         if ($this->partners->removeElement($partner)) {
-            // set the owning side to null (unless already changed)
             if ($partner->getAdmin() === $this) {
                 $partner->setAdmin(null);
             }
@@ -115,7 +116,7 @@ class Admin extends User
         return $this->managedBy;
     }
 
-    public function setManagedBy(?self $managedBy): static
+    public function setManagedBy(?self $managedBy): self
     {
         $this->managedBy = $managedBy;
 
@@ -130,7 +131,7 @@ class Admin extends User
         return $this->subAdmins;
     }
 
-    public function addSubAdmin(self $subAdmin): static
+    public function addSubAdmin(self $subAdmin): self
     {
         if (!$this->subAdmins->contains($subAdmin)) {
             $this->subAdmins->add($subAdmin);
@@ -140,10 +141,9 @@ class Admin extends User
         return $this;
     }
 
-    public function removeSubAdmin(self $subAdmin): static
+    public function removeSubAdmin(self $subAdmin): self
     {
         if ($this->subAdmins->removeElement($subAdmin)) {
-            // set the owning side to null (unless already changed)
             if ($subAdmin->getManagedBy() === $this) {
                 $subAdmin->setManagedBy(null);
             }
@@ -160,7 +160,7 @@ class Admin extends User
         return $this->managedAdmins;
     }
 
-    public function addManagedAdmin(self $managedAdmin): static
+    public function addManagedAdmin(self $managedAdmin): self
     {
         if (!$this->managedAdmins->contains($managedAdmin)) {
             $this->managedAdmins->add($managedAdmin);
@@ -170,10 +170,9 @@ class Admin extends User
         return $this;
     }
 
-    public function removeManagedAdmin(self $managedAdmin): static
+    public function removeManagedAdmin(self $managedAdmin): self
     {
         if ($this->managedAdmins->removeElement($managedAdmin)) {
-            // set the owning side to null (unless already changed)
             if ($managedAdmin->getManagedBy() === $this) {
                 $managedAdmin->setManagedBy(null);
             }
@@ -182,5 +181,3 @@ class Admin extends User
         return $this;
     }
 }
-
-?>

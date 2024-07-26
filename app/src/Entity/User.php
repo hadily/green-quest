@@ -1,146 +1,148 @@
 <?php
+
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\MappedSuperclass
- */
-abstract class User
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'user', uniqueConstraints: [ new ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_ID', fields: ['id']) ])]
+#[ORM\InheritanceType("SINGLE_TABLE")]
+#[ORM\DiscriminatorColumn(name: "discriminator", type: "string")]
+#[ORM\DiscriminatorMap(["user" => User::class, "admin" => Admin::class, "partner" => Partner::class, "client" => Client::class])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @var list<string> The user roles
      */
-    protected $email;
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="string")
+     * @var string The hashed password
      */
-    protected $password;
+    #[ORM\Column(type: 'string')]
+    private $password = null;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $role;
+    #[ORM\Column(type:'string', length: 255, nullable: true)]
+    private $name = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $firstName;
+    #[ORM\Column(type:'string', length: 255, nullable: true)]
+    private $lastName = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $lastName;
+    #[ORM\Column(type:'string', length: 255, nullable: true)]
+    private $phoneNuumber = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $phoneNumber;
-
-    public function __construct($email, $password, $role, $firstName = null, $lastName = null, $phoneNumber = null) {
-        $this->email = $email;
-        $this->password = $password;
-        $this->role = $role;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->phoneNumber = $phoneNumber;
-    }
-
-    // Getters and setters
-
-    public function getId(): int {
+    public function getId(): ?string
+    {
         return $this->id;
     }
 
-    public function getEmail(): string {
-        return $this->email;
-    }
+    public function setId(string $id): int
+    {
+        $this->id = $id;
 
-    public function setEmail(string $email): self {
-        $this->email = $email;
         return $this;
     }
 
-    public function getPassword(): string {
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->id;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): array
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
         return $this->password;
     }
 
-    public function setPassword(string $password): self {
+    public function setPassword(string $password): array
+    {
         $this->password = $password;
+
         return $this;
     }
 
-    public function getRole(): string {
-        return $this->role;
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function setRole(string $role): self {
-        $this->role = $role;
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): string
+    {
+        $this->name = $name;
+
         return $this;
     }
 
-    public function getFirstName(): string {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): self {
-        $this->firstName = $firstName;
-        return $this;
-    }
-
-    public function getLastName(): string {
+    public function getLastName(): ?string
+    {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self {
+    public function setLastName(?string $lastName): string
+    {
         $this->lastName = $lastName;
+
         return $this;
     }
 
-    public function getPhoneNumber(): string {
-        return $this->phoneNumber;
+    public function getPhoneNuumber(): ?string
+    {
+        return $this->phoneNuumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): self {
-        $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
+    public function setPhoneNuumber(?string $phoneNuumber): string
+    {
+        $this->phoneNuumber = $phoneNuumber;
 
-    // Methods signup, login, update profile
-
-    public function signup(UserPasswordEncoderInterface $passwordEncoder, $plainPassword): self {
-        $encodedPassword = $passwordEncoder->encodePassword($this, $plainPassword);
-        $this->setPassword($encodedPassword);
-        return $this;
-    }
-
-    public function login($email, $plainPassword, UserPasswordEncoderInterface $passwordEncoder): bool {
-        if ($this->getEmail() === $email && $passwordEncoder->isPasswordValid($this, $plainPassword)) {
-            return true;
-        }
-        return false;
-    }
-
-    public function updateProfile($firstName, $lastName, $phoneNumber): self {
-        if ($firstName !== null) {
-            $this->setFirstName($firstName);
-        }
-        if ($lastName !== null) {
-            $this->setLastName($lastName);
-        }
-        if ($phoneNumber !== null) {
-            $this->setPhoneNumber($phoneNumber);
-        }
         return $this;
     }
 }
-?>

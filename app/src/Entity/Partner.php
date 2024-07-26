@@ -2,26 +2,30 @@
 
 namespace App\Entity;
 
+use App\Entity\Admin;
 use App\Repository\PartnerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-//[ORM\Entity(repositoryClass: PartnerRepository::class)]
+
+/**
+ * @ORM\Entity
+ */
+#[ORM\Entity]
 class Partner extends User
 {
-    #[ORM\ManyToOne(inversedBy: 'partners')]
+    /**
+     * @var Collection<int, Partner>
+     */
+    #[ORM\ManyToOne(targetEntity: Admin::class, inversedBy: 'partners')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Admin $admin = null;
-
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-
+    private $admin;
+    
     public function getAdmin(): ?Admin
     {
         return $this->admin;
     }
 
-    public function setAdmin(?Admin $admin): static
+    public function setAdmin(Admin $admin): Admin
     {
         $this->admin = $admin;
 

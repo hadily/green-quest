@@ -2,26 +2,28 @@
 
 namespace App\Entity;
 
+use App\Entity\Admin;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-// [ORM\Entity(repositoryClass: ClientRepository::class)]
+
+/**
+ * @ORM\Entity
+ */
+#[ORM\Entity]
 class Client extends User
 {
-    #[ORM\ManyToOne(inversedBy: 'clients')]
+    #[ORM\ManyToOne(targetEntity: Admin::class, inversedBy: 'clients')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Admin $admin = null;
+    private $admin = null;
 
-    //[ORM\Id]
-    //[ORM\GeneratedValue]
-    //[ORM\Column]
 
     public function getAdmin(): ?Admin
     {
         return $this->admin;
     }
 
-    public function setAdmin(?Admin $admin): static
+    public function setAdmin(?Admin $admin): Admin
     {
         $this->admin = $admin;
 
