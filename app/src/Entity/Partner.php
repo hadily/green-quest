@@ -14,6 +14,9 @@ class Partner extends User
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $companyDescription = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $localisation = null;
+
     public function __contruct()
     {
         parent::__construct();
@@ -38,5 +41,15 @@ class Partner extends User
     public function setCompanyDescription(?string $companyDescription): void
     {
         $this->companyDescription = $companyDescription;
+    }
+
+    public function getLocalisation(): ?string
+    {
+        return $this->localisation;
+    }
+
+    public function setLocalisation(?string $localisation): void
+    {
+        $this->localisation = $localisation;
     }
 }

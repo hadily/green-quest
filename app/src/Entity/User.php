@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\InheritanceType("SINGLE_TABLE")]
 #[ORM\DiscriminatorColumn(name:"discr", type:"string")]
-#[ORM\DiscriminatorMap(["user" => "User", "admin" => "Admin", "partner" => "Partner"])]
+#[ORM\DiscriminatorMap(["user" => "User", "admin" => "Admin", "partner" => "Partner", "client" => "Client"])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

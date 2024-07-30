@@ -29,6 +29,7 @@ class PartnerController extends AbstractController
                 'lastName' => $partner->getLastName(),
                 'companyName' => $partner->getCompanyName(),
                 'companyDescription' => $partner->getCompanyDescription(),
+                'localisation' => $partner->getLocalisation(),
                 'phoneNumber' => $partner->getPhoneNumber()
             ];
         }
@@ -53,6 +54,7 @@ class PartnerController extends AbstractController
             'phoneNumber' => $partner->getPhoneNumber(),
             'companyName' => $partner->getCompanyName(),
             'companyDescription' => $partner->getCompanyDescription(),
+            'localisation' => $partner->getLocalisation(),
             'roles' => $partner->getRoles()
         ];
 
@@ -73,6 +75,7 @@ class PartnerController extends AbstractController
         $partner->setRoles($data['roles'] ?? ['PARTNER']);
         $partner->setCompanyName($data['companyName']);
         $partner->setCompanyDescription($data['companyDescription']);
+        $partner->setLocalisation($data['localisation']);
 
         $em->persist($partner);
         $em->flush();
@@ -111,6 +114,9 @@ class PartnerController extends AbstractController
         }
         if (isset($data['companyDescription'])) {
             $partner->setCompanyDescription($data['companyDescription']);
+        }
+        if (isset($data['localisation'])) {
+            $partner->setLocalisation($data['localisation']);
         }
         if (isset($data['roles'])) {
             $partner->setRoles($data['roles']);
