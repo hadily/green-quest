@@ -141,7 +141,7 @@
 		color: $title-color;
 
 		.menu-title {
-			color: $title-color;
+			color: #57886c;
 		}
 	}
 
@@ -150,7 +150,7 @@
 			&,
 			.svg-icon,
 			i {
-				color: $icon-color;
+				color: #57886c;
 			}
 		}
 	}
@@ -214,7 +214,7 @@
 	#{$sel}.menu-link.active {
 		transition: $transition-link;
 
-		@include menu-link-theme($title-color, $icon-color, $bullet-color, $arrow-color, $bg-color);
+		@include menu-link-theme(#57886c, #57886c, $bullet-color, $arrow-color, $bg-color);
 	}
 }
 

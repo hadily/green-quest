@@ -14,17 +14,17 @@ body {
 	}
 }
 
-@include color-mode(light) {
-	body:not(.app-blank) {
-		background-image: url('../../media/patterns/header-bg.jpg');
-	}
-}
+// @include color-mode(light) {
+// 	body:not(.app-blank) {
+// 		background-image: url('../../media/patterns/header-bg.jpg');
+// 	}
+// }
 
-@include color-mode(dark) {
-	body:not(.app-blank) {
-		background-image: url('../../media/patterns/header-bg-dark.png');
-	}
-}
+// @include color-mode(dark) {
+// 	body:not(.app-blank) {
+// 		background-image: url('../../media/patterns/header-bg-dark.png');
+// 	}
+// }
 
 // Font color from Content background color
 .text-page-bg {

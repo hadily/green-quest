@@ -35,8 +35,8 @@
 			.menu {
 				& > .menu-item {
 					@include menu-link-here-state( 
-						$title-color: var(--#{$prefix}primary), 
-						$icon-color: var(--#{$prefix}primary), 
+						$title-color: var(#57886c), 
+						$icon-color: var(#57886c), 
 						$bullet-color: var(--#{$prefix}primary), 
 						$arrow-color: var(--#{$prefix}primary), 
 						$bg-color: var(--#{$prefix}menu-link-bg-color-active),

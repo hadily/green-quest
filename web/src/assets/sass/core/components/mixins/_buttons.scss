@@ -21,11 +21,11 @@
     @if ( $icon-color != null ) {
         i,
         .svg-icon {
-    		color: $icon-color;
+    		color: #57886c;
     	}
 
         &.dropdown-toggle:after {
-            color: $icon-color;
+            color: #48725a;
         }
     }
 
