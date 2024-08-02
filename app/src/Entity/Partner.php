@@ -17,6 +17,10 @@ class Partner extends User
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $localisation = null;
 
+    #[ORM\ManyToOne(targetEntity: Admin::class, inversedBy: 'partners')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $admin = null;
+
     public function __contruct()
     {
         parent::__construct();
@@ -51,5 +55,17 @@ class Partner extends User
     public function setLocalisation(?string $localisation): void
     {
         $this->localisation = $localisation;
+    }
+
+    public function getAdmin(): Admin
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?Admin $admin): self
+    {
+        $this->admin = $admin;
+
+        return $this;
     }
 }

@@ -16,6 +16,21 @@ class ClientRepository extends ServiceEntityRepository
         parent::__construct($registry, Client::class);
     }
 
+    /**
+     * Find clients by admin.
+     *
+     * @param Admin $admin
+     * @return Client[]
+     */
+    public function findByAdmin(Admin $admin): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.admin = :admin')
+            ->setParameter('admin', $admin)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Client[] Returns an array of Client objects
     //     */

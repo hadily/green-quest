@@ -2,7 +2,7 @@ nelmio_api_doc:
     documentation:
         info:
             title: API hub
-            description: Green Quest
+            description: 
             version: 1.0.0
     areas:
         path_patterns:

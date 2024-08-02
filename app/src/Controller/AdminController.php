@@ -138,5 +138,139 @@ class AdminController extends AbstractController
         return new JsonResponse(['message' => 'Admin deleted'], Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * APIs Manage Partners Relation
+     */
+
+    #[Route('/partners', name: 'admin_partners', methods: ['GET'])]
+    public function getPartners(AdminRepository $adminRepository): JsonResponse
+    {
+        // $admin = $this->getUser(); 
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+
+        $partners = $admin->getPartners();
+
+        $partnerData = [];
+        foreach ($partners as $partner) {
+            $partnerData[] = [
+                'id' => $partner->getId(),
+                'companyName' => $partner->getCompanyName(),
+                'companyDescription' => $partner->getCompanyDescription(),
+                'localisation' => $partner->getLocalisation(),
+            ];
+        }
+
+        return new JsonResponse($partnerData, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/partners/{id}', name: 'admin_add_partner', methods: ['POST'])]
+    public function addPartner(int $id, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
+    {
+        // $admin = $this->getUser();
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+    
+        $partner = $partnerRepository->find($id);
+        if (!$partner) {
+            return new JsonResponse(['message' => 'Partner not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $admin->addPartner($partner);
+        $em->persist($admin);
+        $em->flush();
+    
+        return new JsonResponse(['message' => 'Partner added successfully'], JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/partners/{id}', name: 'admin_remove_partner', methods: ['DELETE'])]
+    public function removePartner(int $id, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
+    {
+        // $admin = $this->getUser();
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+
+        $partner = $partnerRepository->find($id);
+        if (!$partner) {
+            return new JsonResponse(['message' => 'Partner not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $admin->removePartner($partner);
+        $em->persist($admin);
+        $em->flush();
+    
+        return new JsonResponse(['message' => 'Partner removed successfully'], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * APIs Manage Clients Relation
+     */
+
+    #[Route('/clients', name: 'admin_get_clients', methods: ['GET'])]
+    public function getClients(ClientRepository $clientRepository): JsonResponse
+    {
+        // $admin = $this->getUser();
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+    
+        $clients = $clientRepository->findBy(['admin' => $admin]);
+    
+        $clientData = [];
+        foreach ($clients as $client) {
+            $clientData[] = [
+                'id' => $client->getId(),
+                'firstName' => $client->getFirstName(),
+                'lastName' => $client->getLastName(),
+            ];
+        }
+    
+        return new JsonResponse($clientData, JsonResponse::HTTP_OK);
+    }
+
+     #[Route('/clients/{id}', name: 'admin_add_client', methods: ['POST'])]
+    public function addClient(int $id, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
+    {
+        // $admin = $this->getUser();
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+
+        $client = $clientRepository->find($id);
+        if (!$client) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $admin->addClient($client);
+        $em->persist($admin);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'Client added successfully'], JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/clients/{id}', name: 'admin_remove_client', methods: ['DELETE'])]
+    public function removeClient(int $id, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
+    {
+        // $admin = $this->getUser();
+        // if (!$admin instanceof Admin) {
+        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        // }
+
+        $client = $clientRepository->find($id);
+        if (!$client) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $admin->removeClient($client);
+        $em->persist($admin);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'Client removed successfully'], JsonResponse::HTTP_OK);
+    }
+
+
     
 }
