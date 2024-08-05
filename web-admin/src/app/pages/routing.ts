@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { ViewPartnersComponent } from './view-partners/view-partners.component';
+import { ViewClientsComponent } from './view-clients/view-clients.component';
+import { ViewAdminsComponent } from './view-admins/view-admins.component';
 
 const Routing: Routes = [
   {
@@ -47,6 +50,18 @@ const Routing: Routes = [
     path: '**',
     redirectTo: 'error/404',
   },
+  {
+    path: 'users/partners',
+    component: ViewPartnersComponent
+  },
+  {
+    path: 'users/clients',
+    component: ViewClientsComponent
+  },
+  {
+    path: 'users/admins',
+    component: ViewAdminsComponent
+  }
 ];
 
 export { Routing };

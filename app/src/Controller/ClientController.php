@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Admin;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,6 +71,14 @@ class ClientController extends AbstractController
         $client->setPhoneNumber($data['phoneNumber']);
         $client->setRoles($data['roles'] ?? ['ROLE_CLIENT']);
         $client->setLocalisation($data['localisation']);
+        
+        // Fetch the Admin entity or use default admin ID 6
+        $adminId = $data['admin_id'] ?? 6;
+        $admin = $em->getRepository(Admin::class)->find($adminId);
+        if (!$admin) {
+            return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
+        }
+        $client->setAdmin($admin);
 
         $em->persist($client);
         $em->flush();

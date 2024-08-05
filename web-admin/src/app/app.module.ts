@@ -15,6 +15,11 @@ import { environment } from 'src/environments/environment';
 import { FakeAPIService } from './_fake/fake-api.service';
 // #fake-end#
 
+
+import { PartnerModule } from './modules/users/partner/partner.module'; 
+import { ClientModule } from './modules/users/client/client.module';
+import { AdminModule } from './modules/users/admin/admin.module';
+
 function appInitializer(authService: AuthService) {
   return () => {
     return new Promise((resolve) => {
@@ -43,6 +48,9 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
+    PartnerModule, 
+    ClientModule,
+    AdminModule
   ],
   providers: [
     {

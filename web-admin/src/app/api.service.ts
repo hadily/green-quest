@@ -18,4 +18,19 @@ export class ApiService {
       tap(data => console.log('Fetched all users:', data)) // Log the response
     );
   }
+
+  getAllPartners(): Observable<any> {
+    const url = `${this.apiUrl}/partner/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getAllClients(): Observable<any> {
+    const url = `${this.apiUrl}/client/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getAllAdmins(): Observable<any> {
+    const url = `${this.apiUrl}/admin/`;
+    return this.http.get<any[]>(url);
+  }
 }

@@ -28,138 +28,83 @@
     ><span class="menu-title">Layout Builder</span></a
   >
 </div>
-<!-- Separator -->
+
+<!-- Manage Separator -->
 <div class="menu-item">
   <div class="menu-content pt-8 pb-2">
     <span class="menu-section text-muted text-uppercase fs-8 ls-1"
-      >Crafted</span
+      >Management</span
     >
   </div>
 </div>
 
-<!-- Pages -->
+<!-- Users -->
 <div
   class="menu-item menu-accordion"
   data-kt-menu-trigger="click"
-  routerLinkActive="here show"
->
-  <span class="menu-link"
-    ><span class="menu-icon"
-      ><span
-        class="svg-icon svg-icon-2"
-        [inlineSVG]="'./assets/media/icons/duotune/general/gen022.svg'"
-      ></span></span
-    ><span class="menu-title">Pages</span><span class="menu-arrow"></span
+  routerLinkActive="here show">
+  <span class="menu-link">
+    <span class="menu-icon">
+      <i class="bi bi-person-workspace"></i>
+    </span
+    ><span class="menu-title">Users</span><span class="menu-arrow"></span
   ></span>
   <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
+    <!-- Partners -->
     <div
       class="menu-item menu-accordion"
       routerLinkActive="here show"
-      data-kt-menu-trigger="click"
-    >
-      <span class="menu-link"
-        ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
-        ><span class="menu-title" data-link="/crafted/pages/profile"
-          >Profile</span
-        ><span class="menu-arrow"></span
-      ></span>
-      <div
-        class="menu-sub menu-sub-accordion"
-        routerLinkActive="menu-active-bg"
-      >
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/profile/overview"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Overview</span></a
-          >
-        </div>
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/profile/projects"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Projects</span></a
-          >
-        </div>
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/profile/campaigns"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Campaigns</span></a
-          >
-        </div>
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/profile/documents"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Documents</span></a
-          >
-        </div>
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/profile/connections"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Connections</span></a
-          >
-        </div>
+      data-kt-menu-trigger="click">
+      <div class="menu-item">
+        <a
+          class="menu-link without-sub"
+          routerLink="/users/partners"
+          routerLinkActive="active">
+            <span class="menu-icon">
+              <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+            </span
+          ><span class="menu-title">Partners</span></a
+        >
       </div>
     </div>
+    <!-- Clients -->
     <div
       class="menu-item menu-accordion"
       routerLinkActive="here show"
-      data-kt-menu-trigger="click"
-    >
-      <span class="menu-link"
-        ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
-        ><span class="menu-title" data-link="/crafted/pages/wizards"
-          >Wizards</span
-        ><span class="menu-arrow"></span
-      ></span>
-      <div
-        class="menu-sub menu-sub-accordion"
-        routerLinkActive="menu-active-bg"
-      >
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/wizards/horizontal"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Horizontal</span></a
-          >
-        </div>
-        <div class="menu-item">
-          <a
-            class="menu-link without-sub"
-            routerLinkActive="active"
-            routerLink="/crafted/pages/wizards/vertical"
-            ><span class="menu-bullet"
-              ><span class="bullet bullet-dot"></span></span
-            ><span class="menu-title">Vertical</span></a
-          >
-        </div>
+      data-kt-menu-trigger="click">
+      <div class="menu-item">
+        <a
+          class="menu-link without-sub"
+          routerLink="/users/clients"
+          routerLinkActive="active">
+            <span class="menu-icon">
+              <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+            </span
+          ><span class="menu-title">Clients</span></a
+        >
+      </div>
+    </div>
+    <!-- Admins -->
+    <div
+      class="menu-item menu-accordion"
+      routerLinkActive="here show"
+      data-kt-menu-trigger="click">
+      <div class="menu-item">
+        <a
+          class="menu-link without-sub"
+          routerLink="/users/admins"
+          routerLinkActive="active">
+            <span class="menu-icon">
+              <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+            </span
+          ><span class="menu-title">Admins</span></a
+        >
       </div>
     </div>
   </div>
 </div>
 
-<!-- Accounts -->
+<!-- Blog -->
 <div
   class="menu-item menu-accordion"
   data-kt-menu-trigger="click"
@@ -171,7 +116,7 @@
         class="svg-icon svg-icon-2"
         [inlineSVG]="'./assets/media/icons/duotune/communication/com006.svg'"
       ></span></span
-    ><span class="menu-title" data-link="/crafted/account">Accounts</span
+    ><span class="menu-title" data-link="/crafted/account">Blog</span
     ><span class="menu-arrow"></span
   ></span>
   <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
@@ -196,7 +141,7 @@
   </div>
 </div>
 
-<!-- Errors -->
+<!-- Complaints -->
 <div
   class="menu-item menu-accordion"
   data-kt-menu-trigger="click"
@@ -208,7 +153,7 @@
         class="svg-icon svg-icon-2"
         [inlineSVG]="'./assets/media/icons/duotune/general/gen040.svg'"
       ></span></span
-    ><span class="menu-title" data-link="/error">Errors</span
+    ><span class="menu-title" data-link="/error">Complaints</span
     ><span class="menu-arrow"></span
   ></span>
   <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
@@ -306,7 +251,7 @@
   </div>
 </div>
 
-<!-- Separator -->
+<!-- Apps Separator -->
 <div class="menu-item">
   <div class="menu-content pt-8 pb-2">
     <span class="menu-section text-muted text-uppercase fs-8 ls-1">Apps</span>

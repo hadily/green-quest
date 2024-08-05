@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Partner;
+use App\Entity\Admin;
 use App\Repository\PartnerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -76,6 +77,15 @@ class PartnerController extends AbstractController
         $partner->setCompanyName($data['companyName']);
         $partner->setCompanyDescription($data['companyDescription']);
         $partner->setLocalisation($data['localisation']);
+
+
+        // Fetch the Admin entity or use default admin ID 6
+        $adminId = $data['admin_id'] ?? 6;
+        $admin = $em->getRepository(Admin::class)->find($adminId);
+        if (!$admin) {
+            return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
+        }
+        $partner->setAdmin($admin);
 
         $em->persist($partner);
         $em->flush();
