@@ -15,10 +15,16 @@ import { environment } from 'src/environments/environment';
 import { FakeAPIService } from './_fake/fake-api.service';
 // #fake-end#
 
-
+///////////////////////////
 import { PartnerModule } from './modules/users/partner/partner.module'; 
 import { ClientModule } from './modules/users/client/client.module';
 import { AdminModule } from './modules/users/admin/admin.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { NewPartnerComponent } from './pages/new-partner/new-partner.component';
+import { UpdatePartnersComponent } from './pages/update-partners/update-partners.component';
+import { ViewPartnersComponent } from './pages/view-partners/view-partners.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -30,7 +36,12 @@ function appInitializer(authService: AuthService) {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    NewPartnerComponent,
+    UpdatePartnersComponent,
+    ViewPartnersComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -48,9 +59,11 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
-    PartnerModule, 
+    ////////////////////////////
     ClientModule,
-    AdminModule
+    AdminModule,
+    MatDialogModule,
+    FormsModule,
   ],
   providers: [
     {
@@ -59,6 +72,7 @@ function appInitializer(authService: AuthService) {
       multi: true,
       deps: [AuthService],
     },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent],
 })

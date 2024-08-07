@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -32,5 +32,26 @@ export class ApiService {
   getAllAdmins(): Observable<any> {
     const url = `${this.apiUrl}/admin/`;
     return this.http.get<any[]>(url);
+  }
+
+  createPartner(partner: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/partner/`, partner);
+  }
+
+  deletePartner(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/partner/${id}`);
+  }
+
+  updatePartner(id: number, partner: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/partner/${id}`, partner);
+  }
+
+  getPartnerById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/partner/${id}`);
+  }
+
+  searchPartners(query: string): Observable<any[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<any[]>(`${this.apiUrl}/partner/search`, { params });
   }
 }

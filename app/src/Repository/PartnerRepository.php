@@ -40,4 +40,16 @@ class PartnerRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function searchPartners(string $query)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.firstName LIKE :query')
+            ->orWhere('p.lastName LIKE :query')
+            ->orWhere('p.companyName LIKE :query')
+            ->orWhere('p.localisation LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

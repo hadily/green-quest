@@ -3,13 +3,31 @@
   <div class="card-header border-0 pt-5">
     <h3 class="card-title align-items-start flex-column">
       <span class="card-label fw-bolder fs-3 mb-1">Partner Statistics</span>
-      <span class="text-muted mt-1 fw-bold fs-7">Over {{ partners.length }} partners</span>
+      <span class="text-muted mt-1 fw-bold fs-7">Total Partners : {{ partners.length }}</span>
     </h3>
-    <div class="card-toolbar" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-trigger="hover" title="Click to add a user">
-      <a href="#" class="btn btn-sm btn-light-primary">
-        <i class="bi bi-plus-lg"></i>
-        New Partner
-      </a>
+
+    <div class="header-actions">
+      <!--begin::Form-->
+      <form data-kt-search-element="form" class="search-form position-relative mb-3" autocomplete="off">
+        <!--begin::Icon-->
+        <span
+          [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+          class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0"
+        ></span>
+        <!--end::Icon-->
+
+        <!--begin::Input-->
+        <input type="text" class="form-control form-control-flush ps-10" name="search" value="" placeholder="Search..." data-kt-search-element="input" (input)="onSearchChange($event)"/>
+        <!--end::Input-->
+      </form>
+      <!--end::Form-->
+
+      <div class="card-toolbar" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-trigger="hover" title="Click to add a user">
+        <button (click)="openModal()" class="btn btn-sm btn-light-primary">
+          <i class="bi bi-plus-lg"></i>
+          New Partner
+        </button>
+      </div>
     </div>
   </div>
   <!-- end::Header -->
@@ -30,7 +48,7 @@
             </th>
             <th class="min-w-150px">Partner</th>
             <th class="min-w-140px">Company</th>
-            <th class="min-w-120px">Review</th>
+            <th class="min-w-120px">City</th>
             <th class="min-w-100px text-end">Actions</th>
           </tr>
         </thead>
@@ -59,7 +77,7 @@
               <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{ partner.companyName }}</a>
               <span class="text-muted fw-bold text-muted d-block fs-7">{{ partner.companyDescription }}</span>
             </td>
-            <td class="text-end">
+            <!-- <td class="text-end">
               <div class="d-flex flex-column w-100 me-2">
                 <div class="d-flex flex-stack mb-2">
                   <span class="text-muted me-2 fs-7 fw-bold">50%</span>
@@ -68,18 +86,18 @@
                   <div class="progress-bar bg-primary" role="progressbar" [style.width]="'50%'"></div>
                 </div>
               </div>
+            </td> -->
+            <td>
+              <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{ partner.localisation }}</a>
             </td>
             <td>
               <div class="d-flex justify-content-end flex-shrink-0">
-                <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                  <i class="bi bi-toggles"></i>
-                </a>
-                <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(partner.id)">
                   <i class="bi bi-pen"></i>
-                </a>
-                <a href="#" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                </button>
+                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="openDeleteModal(partner.id)">
                   <i class="bi bi-trash2"></i>
-                </a>
+                </button>
               </div>
             </td>
           </tr>

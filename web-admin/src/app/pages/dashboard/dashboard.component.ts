@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalConfig, ModalComponent } from '../../_metronic/partials';
-import { ApiService } from '../../api.service';
+import { ApiService } from '../../services/api.service';
 
 
 @Component({

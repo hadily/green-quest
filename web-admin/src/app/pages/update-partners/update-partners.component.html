@@ -1,0 +1,42 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <h2>Update Partner</h2>
+  <form (ngSubmit)="onUpdate()" #partnerForm="ngForm">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [(ngModel)]="partner.email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" [(ngModel)]="partner.firstName" name="firstName" required>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" [(ngModel)]="partner.lastName" name="lastName" required>
+    </div>
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="tel" id="phoneNumber" [(ngModel)]="partner.phoneNumber" name="phoneNumber" required>
+    </div>
+    <div class="form-group">
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" [(ngModel)]="partner.companyName" name="companyName" required>
+    </div>
+    <div class="form-group">
+      <label for="companyDescription">Company Description</label>
+      <textarea id="companyDescription" [(ngModel)]="partner.companyDescription" name="companyDescription" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="localisation">Localisation</label>
+      <input type="text" id="localisation" [(ngModel)]="partner.localisation" name="localisation" required>
+    </div>
+    <div class="form-group">
+      <label for="adminId">Admin</label>
+      <select id="adminId" [(ngModel)]="partner.adminId" name="adminId" required>
+        <option *ngFor="let admin of admins" [value]="admin.id">{{ admin.firstName }} {{ admin.lastName }}</option>
+      </select>
+    </div>
+    <button type="submit">Update</button>
+    <button type="button" (click)="closeModal()">Cancel</button>
+  </form>
+</div>

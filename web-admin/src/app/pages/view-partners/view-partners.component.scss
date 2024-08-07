@@ -8,10 +8,24 @@
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Align items to the center vertically */
 }
 
 .card-title {
     display: flex;
     flex-direction: column;
+    flex-grow: 1; /* Allow the card title to take up more space */
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.search-form {
+    margin-right: 20px; /* Space between search form and button */
+}
+
+.card-toolbar button {
+    white-space: nowrap; /* Prevent the button text from wrapping */
 }

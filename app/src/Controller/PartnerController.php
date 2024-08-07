@@ -38,7 +38,7 @@ class PartnerController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'getPartnerByID', methods: ['GET'])]
+    #[Route('/{id}', name: 'getPartnerByID', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function getPartnerByID(int $id, PartnerRepository $partnerRepository): JsonResponse
     {
         $partner = $partnerRepository->find($id);
@@ -152,4 +152,32 @@ class PartnerController extends AbstractController
 
         return new JsonResponse(['message' => 'Partner deleted'], Response::HTTP_NO_CONTENT);
     }
+
+    #[Route('/search', name: 'searchPartners', methods: ['GET'])]
+    public function searchPartners(Request $request, PartnerRepository $partnerRepository): JsonResponse
+    {
+        $query = $request->query->get('query', '');
+
+        // Perform the search based on the query
+        $partners = $partnerRepository->searchPartners($query);
+
+        // Convert entities to array
+        $data = [];
+        foreach ($partners as $partner) {
+            $data[] = [
+                'id' => $partner->getId(),
+                'email' => $partner->getEmail(),
+                'firstName' => $partner->getFirstName(),
+                'lastName' => $partner->getLastName(),
+                'phoneNumber' => $partner->getPhoneNumber(),
+                'companyName' => $partner->getCompanyName(),
+                'companyDescription' => $partner->getCompanyDescription(),
+                'localisation' => $partner->getLocalisation(),
+                'roles' => $partner->getRoles(),
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
 }
+
