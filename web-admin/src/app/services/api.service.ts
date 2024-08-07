@@ -54,4 +54,25 @@ export class ApiService {
     const params = new HttpParams().set('query', query);
     return this.http.get<any[]>(`${this.apiUrl}/partner/search`, { params });
   }
+
+  searchClients(query: string): Observable<any[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<any[]>(`${this.apiUrl}/client/search`, { params });
+  }
+
+  createClient(client: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/client/`, client);
+  }
+
+  getClientById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/client/${id}`);
+  }
+
+  updateClient(id: number, client: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/client/${id}`, client);
+  }
+
+  deleteClient(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/client/${id}`);
+  }
 }

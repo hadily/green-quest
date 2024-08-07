@@ -36,7 +36,7 @@ class ClientController extends AbstractController
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'getClientById', methods: ['GET'])]
+    #[Route('/{id}', name: 'getClientById', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function getClientById(int $id, ClientRepository $clientRepository): JsonResponse
     {
         $client = $clientRepository->find($id);
@@ -138,5 +138,30 @@ class ClientController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['message' => 'Client deleted'], JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/search', name: 'searchClients', methods: ['GET'])]
+    public function searchClients(Request $request, ClientRepository $clientRepository): JsonResponse
+    {
+        $query = $request->query->get('query', '');
+
+        // Perform the search based on the query
+        $clients = $clientRepository->searchClients($query);
+
+        // Convert entities to array
+        $data = [];
+        foreach ($clients as $client) {
+            $data[] = [
+                'id' => $client->getId(),
+                'email' => $client->getEmail(),
+                'firstName' => $client->getFirstName(),
+                'lastName' => $client->getLastName(),
+                'phoneNumber' => $client->getPhoneNumber(),
+                'localisation' => $client->getLocalisation(),
+                'roles' => $client->getRoles(),
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 }

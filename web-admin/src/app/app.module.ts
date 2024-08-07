@@ -16,8 +16,6 @@ import { FakeAPIService } from './_fake/fake-api.service';
 // #fake-end#
 
 ///////////////////////////
-import { PartnerModule } from './modules/users/partner/partner.module'; 
-import { ClientModule } from './modules/users/client/client.module';
 import { AdminModule } from './modules/users/admin/admin.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -25,6 +23,10 @@ import { FormsModule } from '@angular/forms';
 import { NewPartnerComponent } from './pages/management/users/partners/new-partner/new-partner.component';
 import { UpdatePartnersComponent } from './pages/management/users/partners/update-partners/update-partners.component';
 import { ViewPartnersComponent } from './pages/management/users/partners/view-partners/view-partners.component';
+import { ViewClientsComponent } from './pages/management/users/clients/view-clients/view-clients.component';
+import { NewClientComponent } from './pages/management/users/clients/new-client/new-client.component';
+import { UpdateClientComponent } from './pages/management/users/clients/update-client/update-client.component';
+import { DeleteClientComponent } from './pages/management/users/clients/delete-client/delete-client.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -40,7 +42,11 @@ function appInitializer(authService: AuthService) {
     AppComponent,
     NewPartnerComponent,
     UpdatePartnersComponent,
-    ViewPartnersComponent
+    ViewPartnersComponent,
+    ViewClientsComponent,
+    NewClientComponent,
+    UpdateClientComponent,
+    DeleteClientComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +66,6 @@ function appInitializer(authService: AuthService) {
     InlineSVGModule.forRoot(),
     NgbModule,
     ////////////////////////////
-    ClientModule,
     AdminModule,
     MatDialogModule,
     FormsModule,

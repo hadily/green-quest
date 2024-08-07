@@ -95,20 +95,5 @@ export class ViewPartnersComponent implements OnInit {
     this.searchPartners();
   }
 
-  fetchPartners(query: string = ''): void {
-    this.apiService.searchPartners(query).subscribe(
-      (data) => {
-        this.partners = data;
-      },
-      (error) => {
-        console.error('Error fetching partners:', error);
-      }
-    );
-  }
-
-  onSearch(query: string): void {
-    this.fetchPartners(query);
-  }
-
 
 }
