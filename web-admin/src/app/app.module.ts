@@ -22,9 +22,9 @@ import { AdminModule } from './modules/users/admin/admin.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { NewPartnerComponent } from './pages/new-partner/new-partner.component';
-import { UpdatePartnersComponent } from './pages/update-partners/update-partners.component';
-import { ViewPartnersComponent } from './pages/view-partners/view-partners.component';
+import { NewPartnerComponent } from './pages/management/users/partners/new-partner/new-partner.component';
+import { UpdatePartnersComponent } from './pages/management/users/partners/update-partners/update-partners.component';
+import { ViewPartnersComponent } from './pages/management/users/partners/view-partners/view-partners.component';
 
 function appInitializer(authService: AuthService) {
   return () => {

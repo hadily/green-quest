@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { ViewPartnersComponent } from './view-partners/view-partners.component';
-import { ViewClientsComponent } from './view-clients/view-clients.component';
-import { ViewAdminsComponent } from './view-admins/view-admins.component';
+import { ViewPartnersComponent } from './management/users/partners/view-partners/view-partners.component';
+import { ViewClientsComponent } from './management/users/clients/view-clients/view-clients.component';
+import { ViewAdminsComponent } from './management/users/admins/view-admins/view-admins.component';
 
 const Routing: Routes = [
   {
