@@ -1,0 +1,26 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  
+<h2>Create New Admint</h2>
+<form (ngSubmit)="onSubmit()" #partnerForm="ngForm">
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" [(ngModel)]="admin.email" name="email" required>
+  </div>
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" [(ngModel)]="admin.firstName" name="firstName" required>
+  </div>
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" [(ngModel)]="admin.lastName" name="lastName" required>
+  </div>
+  <div class="form-group">
+    <label for="phoneNumber">Phone Number</label>
+    <input type="tel" id="phoneNumber" [(ngModel)]="admin.phoneNumber" name="phoneNumber" required>
+  </div>
+  <button type="submit">Submit</button>
+  <button type="button" (click)="closeModal()">Cancel</button>
+</form>
+
+</div>

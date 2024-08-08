@@ -11,12 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './modules/auth/services/auth.service';
 import { environment } from 'src/environments/environment';
-// #fake-start#
-import { FakeAPIService } from './_fake/fake-api.service';
-// #fake-end#
-
-///////////////////////////
-import { AdminModule } from './modules/users/admin/admin.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
@@ -27,6 +21,10 @@ import { ViewClientsComponent } from './pages/management/users/clients/view-clie
 import { NewClientComponent } from './pages/management/users/clients/new-client/new-client.component';
 import { UpdateClientComponent } from './pages/management/users/clients/update-client/update-client.component';
 import { DeleteClientComponent } from './pages/management/users/clients/delete-client/delete-client.component';
+import { ViewAdminsComponent } from './pages/management/users/admins/view-admins/view-admins.component';
+import { NewAdminComponent } from './pages/management/users/admins/new-admin/new-admin.component';
+import { UpdateAdminComponent } from './pages/management/users/admins/update-admin/update-admin.component';
+import { DeleteAdminComponent } from './pages/management/users/admins/delete-admin/delete-admin.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -46,7 +44,11 @@ function appInitializer(authService: AuthService) {
     ViewClientsComponent,
     NewClientComponent,
     UpdateClientComponent,
-    DeleteClientComponent
+    DeleteClientComponent,
+    ViewAdminsComponent,
+    NewAdminComponent,
+    UpdateAdminComponent,
+    DeleteAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -54,19 +56,10 @@ function appInitializer(authService: AuthService) {
     TranslateModule.forRoot(),
     HttpClientModule,
     ClipboardModule,
-    // #fake-start#
-    environment.isMockEnabled
-      ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
-          passThruUnknownUrl: true,
-          dataEncapsulation: false,
-        })
-      : [],
-    // #fake-end#
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
     ////////////////////////////
-    AdminModule,
     MatDialogModule,
     FormsModule,
   ],

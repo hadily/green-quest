@@ -34,7 +34,7 @@ class AdminController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'getAdminByID', methods: ['GET'])]
+    #[Route('/{id}', name: 'getAdminByID', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function getAdminByID(int $id, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
     {
         $admin = $adminRepository->find($id);
@@ -269,6 +269,31 @@ class AdminController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['message' => 'Client removed successfully'], JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/search', name: 'searchAdmins', methods: ['GET'])]
+    public function searchAdmins(Request $request, AdminRepository $adminRepository): JsonResponse
+    {
+        $query = $request->query->get('query', '');
+
+        // Perform the search based on the query
+        $admins = $clientRepository->searchAdmins($query);
+
+        // Convert entities to array
+        $data = [];
+        foreach ($admins as $admin) {
+            $data[] = [
+                'id' => $client->getId(),
+                'email' => $client->getEmail(),
+                'firstName' => $client->getFirstName(),
+                'lastName' => $client->getLastName(),
+                'phoneNumber' => $client->getPhoneNumber(),
+                'localisation' => $client->getLocalisation(),
+                'roles' => $client->getRoles(),
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 
 

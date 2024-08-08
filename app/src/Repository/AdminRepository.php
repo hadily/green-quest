@@ -55,4 +55,15 @@ class AdminRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function searchAdmins(string $query)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.firstName LIKE :query')
+            ->orWhere('p.lastName LIKE :query')
+            ->orWhere('p.localisation LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

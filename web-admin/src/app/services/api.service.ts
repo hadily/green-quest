@@ -75,4 +75,25 @@ export class ApiService {
   deleteClient(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/client/${id}`);
   }
+
+  searchAdmins(query: string): Observable<any[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<any[]>(`${this.apiUrl}/admin/search`, { params });
+  }
+
+  createAdmin(admin: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/admin/`, admin);
+  }
+
+  getAdminById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/${id}`);
+  }
+
+  updateAdmin(id: number, admin: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/${id}`, admin);
+  }
+
+  deleteAdmin(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/admin/${id}`);
+  }
 }
