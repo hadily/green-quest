@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ClipboardModule } from 'ngx-clipboard';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ import { ViewAdminsComponent } from './pages/management/users/admins/view-admins
 import { NewAdminComponent } from './pages/management/users/admins/new-admin/new-admin.component';
 import { UpdateAdminComponent } from './pages/management/users/admins/update-admin/update-admin.component';
 import { DeleteAdminComponent } from './pages/management/users/admins/delete-admin/delete-admin.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -71,6 +72,7 @@ function appInitializer(authService: AuthService) {
       deps: [AuthService],
     },
     provideAnimationsAsync(),
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
   ],
   bootstrap: [AppComponent],
 })

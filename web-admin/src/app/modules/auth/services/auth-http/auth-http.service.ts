@@ -5,17 +5,20 @@ import { UserModel } from '../../models/user.model';
 import { environment } from '../../../../../environments/environment';
 import { AuthModel } from '../../models/auth.model';
 
-const API_USERS_URL = `${environment.apiUrl}/auth`;
+const API_USERS_URL = `${environment.apiUrl}`;
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthHTTPService {
+  post<T>(arg0: string, arg1: { username: string; password: string; }): Observable<any> {
+    throw new Error('Method not implemented.');
+  }
   constructor(private http: HttpClient) {}
 
   // public methods
   login(email: string, password: string): Observable<any> {
-    return this.http.post<AuthModel>(`${API_USERS_URL}/login`, {
+    return this.http.post<AuthModel>(`${API_USERS_URL}/login_check`, {
       email,
       password,
     });

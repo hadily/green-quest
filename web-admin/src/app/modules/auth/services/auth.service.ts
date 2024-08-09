@@ -1,17 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, of, Subscription, throwError } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
 import { AuthModel } from '../models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export type UserType = UserModel | undefined;
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService implements OnDestroy {
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
@@ -22,6 +24,7 @@ export class AuthService implements OnDestroy {
   isLoading$: Observable<boolean>;
   currentUserSubject: BehaviorSubject<UserType>;
   isLoadingSubject: BehaviorSubject<boolean>;
+  http: any;
 
   get currentUserValue(): UserType {
     return this.currentUserSubject.value;
@@ -43,21 +46,22 @@ export class AuthService implements OnDestroy {
     this.unsubscribe.push(subscr);
   }
 
-  // public methods
-  login(email: string, password: string): Observable<UserType> {
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password).pipe(
-      map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
-      }),
-      switchMap(() => this.getUserByToken()),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
+  login(email: string, password: string): Observable<any> {
+    
+    return this.authHttpService.post<any>(`${environment.config.urlLogin}`, {
+      username: email, // Map the email to username
+      password: password
+    });
+  }
+
+  getUsers(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/user`)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Get users error', error);
+          return throwError(error);
+        })
+      );
   }
 
   logout() {

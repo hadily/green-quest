@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Admin;
 use App\Repository\AdminRepository;
+use App\Repository\PartnerRepository;
+use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -145,10 +147,10 @@ class AdminController extends AbstractController
     #[Route('/partners', name: 'admin_partners', methods: ['GET'])]
     public function getPartners(AdminRepository $adminRepository): JsonResponse
     {
-        // $admin = $this->getUser(); 
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser(); 
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
 
         $partners = $admin->getPartners();
 
@@ -168,10 +170,10 @@ class AdminController extends AbstractController
     #[Route('/partners/{id}', name: 'admin_add_partner', methods: ['POST'])]
     public function addPartner(int $id, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
     {
-        // $admin = $this->getUser();
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser();
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
     
         $partner = $partnerRepository->find($id);
         if (!$partner) {
@@ -188,10 +190,10 @@ class AdminController extends AbstractController
     #[Route('/partners/{id}', name: 'admin_remove_partner', methods: ['DELETE'])]
     public function removePartner(int $id, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
     {
-        // $admin = $this->getUser();
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser();
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
 
         $partner = $partnerRepository->find($id);
         if (!$partner) {
@@ -212,10 +214,10 @@ class AdminController extends AbstractController
     #[Route('/clients', name: 'admin_get_clients', methods: ['GET'])]
     public function getClients(ClientRepository $clientRepository): JsonResponse
     {
-        // $admin = $this->getUser();
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser();
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
     
         $clients = $clientRepository->findBy(['admin' => $admin]);
     
@@ -234,10 +236,10 @@ class AdminController extends AbstractController
      #[Route('/clients/{id}', name: 'admin_add_client', methods: ['POST'])]
     public function addClient(int $id, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
     {
-        // $admin = $this->getUser();
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser();
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
 
         $client = $clientRepository->find($id);
         if (!$client) {
@@ -254,10 +256,10 @@ class AdminController extends AbstractController
     #[Route('/clients/{id}', name: 'admin_remove_client', methods: ['DELETE'])]
     public function removeClient(int $id, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
     {
-        // $admin = $this->getUser();
-        // if (!$admin instanceof Admin) {
-        //     return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
-        // }
+        $admin = $this->getUser();
+        if (!$admin instanceof Admin) {
+            return new JsonResponse(['message' => 'Access Denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
 
         $client = $clientRepository->find($id);
         if (!$client) {
@@ -277,19 +279,19 @@ class AdminController extends AbstractController
         $query = $request->query->get('query', '');
 
         // Perform the search based on the query
-        $admins = $clientRepository->searchAdmins($query);
+        $admins = $adminRepository->searchAdmins($query);
 
         // Convert entities to array
         $data = [];
         foreach ($admins as $admin) {
             $data[] = [
-                'id' => $client->getId(),
-                'email' => $client->getEmail(),
-                'firstName' => $client->getFirstName(),
-                'lastName' => $client->getLastName(),
-                'phoneNumber' => $client->getPhoneNumber(),
-                'localisation' => $client->getLocalisation(),
-                'roles' => $client->getRoles(),
+                'id' => $admin->getId(),
+                'email' => $admin->getEmail(),
+                'firstName' => $admin->getFirstName(),
+                'lastName' => $admin->getLastName(),
+                'phoneNumber' => $admin->getPhoneNumber(),
+                'localisation' => $admin->getLocalisation(),
+                'roles' => $admin->getRoles(),
             ];
         }
 

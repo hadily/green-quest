@@ -47,6 +47,7 @@ export class UserModel extends AuthModel {
       tipsOnMetronicBusinessProducts: boolean;
     };
   };
+  token: import("c:/Users/utilisateur/Desktop/symfony-project/web-admin/src/app/modules/auth/index").UserType;
 
   setUser(_user: unknown) {
     const user = _user as UserModel;

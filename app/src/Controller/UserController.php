@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserController extends AbstractController
 {
     #[Route('/', name: 'getAllUsers', methods: ['GET'])]
-    public function getAllUsers(EntityManagerInterface $em, UserRepository $userRepository): JsonResponse
+    public function getUsers(EntityManagerInterface $em, UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findAll();
         $data = [];

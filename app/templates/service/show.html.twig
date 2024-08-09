@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Service{% endblock %}
+
+{% block body %}
+    <h1>Service</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ service.id }}</td>
+            </tr>
+            <tr>
+                <th>ServiceName</th>
+                <td>{{ service.serviceName }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ service.description }}</td>
+            </tr>
+            <tr>
+                <th>StartDate</th>
+                <td>{{ service.startDate ? service.startDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndDate</th>
+                <td>{{ service.endDate ? service.endDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ service.type ? service.type|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ service.price }}</td>
+            </tr>
+            <tr>
+                <th>MaxParticipants</th>
+                <td>{{ service.maxParticipants }}</td>
+            </tr>
+            <tr>
+                <th>Available</th>
+                <td>{{ service.available ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Promotion</th>
+                <td>{{ service.promotion ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_service_index') }}">back to list</a>
+
+    <a href="{{ path('app_service_edit', {'id': service.id}) }}">edit</a>
+
+    {{ include('service/_delete_form.html.twig') }}
+{% endblock %}
