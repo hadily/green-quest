@@ -6,7 +6,7 @@ import { AuthModel } from '../models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 export type UserType = UserModel | undefined;
 
@@ -35,6 +35,7 @@ export class AuthService implements OnDestroy {
   }
 
   constructor(
+    private http_client: HttpClient,
     private authHttpService: AuthHTTPService,
     private router: Router
   ) {
@@ -46,12 +47,12 @@ export class AuthService implements OnDestroy {
     this.unsubscribe.push(subscr);
   }
 
-  login(email: string, password: string): Observable<any> {
-    
-    return this.authHttpService.post<any>(`${environment.config.urlLogin}`, {
-      username: email, // Map the email to username
-      password: password
-    });
+  login(username: string, password: string): Observable<any> {
+    return this.http_client.post<any>(`${environment.apiUrl}/login_check`, { username, password });
+    // return this.authHttpService.post<any>(`${environment.config.urlLogin}`, {
+    //   username: email, // Map the email to username
+    //   password: password
+    // });
   }
 
   getUsers(): Observable<any> {
