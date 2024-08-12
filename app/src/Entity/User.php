@@ -45,6 +45,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'writer')]
     private Collection $articles;
 
+    /**
+     * @var Collection<int, Complaints>
+     */
+    #[ORM\OneToMany(targetEntity: Complaints::class, mappedBy: 'Owner', orphanRemoval: true)]
+    private Collection $complaints;
+
     public function __construct()
     {
         $this->roles = ['USER'];
@@ -54,6 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastName = '';
         $this->phoneNumber = '';
         $this->articles = new ArrayCollection();
+        $this->complaints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,6 +86,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->roles);
     }
 
     /**
@@ -184,6 +196,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($article->getWriter() === $this) {
                 $article->setWriter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Complaints>
+     */
+    public function getComplaints(): Collection
+    {
+        return $this->complaints;
+    }
+
+    public function addComplaint(Complaints $complaint): static
+    {
+        if (!$this->complaints->contains($complaint)) {
+            $this->complaints->add($complaint);
+            $complaint->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComplaint(Complaints $complaint): static
+    {
+        if ($this->complaints->removeElement($complaint)) {
+            // set the owning side to null (unless already changed)
+            if ($complaint->getOwner() === $this) {
+                $complaint->setOwner(null);
             }
         }
 

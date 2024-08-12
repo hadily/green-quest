@@ -2,14 +2,14 @@
     <!-- begin::Header -->
 <div class="card-header border-0 pt-5">
     <h3 class="card-title align-items-start flex-column">
-      <span class="card-label fw-bolder fs-3 mb-1">New Arrivals</span>
-      <span class="text-muted mt-1 fw-bold fs-7">Over 500 new products</span>
+      <span class="card-label fw-bolder fs-3 mb-1">All Complaints</span>
+      <span class="text-muted mt-1 fw-bold fs-7">Total Complaints : {{complaints.length}}</span>
     </h3>
     <div class="card-toolbar">
-        <button class="btn btn-sm btn-light-primary">
+        <button class="btn btn-sm btn-light-primary" (click)="filterClientComplaints()">
             Clients
         </button>
-        <button class="btn btn-sm btn-light-primary">
+        <button class="btn btn-sm btn-light-primary" (click)="filterPartnerComplaints()">
             Partners
         </button>
     </div>
@@ -24,37 +24,27 @@
         <!-- begin::Table head -->
         <thead>
           <tr class="fw-bolder text-muted bg-light">
-            <th class="ps-4 min-w-325px rounded-start">Product</th>
-            <th class="min-w-125px">Price</th>
-            <th class="min-w-125px">Deposit</th>
-            <th class="min-w-200px">Agent</th>
-            <th class="min-w-150px">Status</th>
-            <th class="min-w-200px text-end rounded-end"></th>
+            <th class="ps-4 min-w-325px rounded-start">Complaint</th>
+            <th class="min-w-125px">Article</th>
+            <th class="min-w-125px">Owner</th>
+            <th class="min-w-125px">Date</th>
+            <th class="min-w-125px">Status</th>
+            <th class="min-w-50px"></th>
           </tr>
         </thead>
         <!-- end::Table head -->
         <!-- begin::Table body -->
         <tbody>
-          <tr>
+          <tr *ngFor="let complaint of complaints">
             <td>
               <div class="d-flex align-items-center">
-                <div class="symbol symbol-50px me-5">
-                  <img
-                    src="./assets/media/stock/600x400/img-26.jpg"
-                    class=""
-                    alt=""
-                  />
-                </div>
                 <div class="d-flex justify-content-start flex-column">
                   <a
                     href="#"
                     class="text-gray-900 fw-bolder text-hover-primary mb-1 fs-6"
                   >
-                    Sant Extreanet Solution
+                    {{ complaint.subject }}
                   </a>
-                  <span class="text-muted fw-bold text-muted d-block fs-7">
-                    HTML, JS, ReactJS
-                  </span>
                 </div>
               </div>
             </td>
@@ -63,69 +53,34 @@
                 href="#"
                 class="text-gray-900 fw-bolder text-hover-primary d-block mb-1 fs-6"
               >
-                $2,790
+                {{ complaint.relatedTo }}
               </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7">Paid</span>
             </td>
             <td>
               <a
                 href="#"
                 class="text-gray-900 fw-bolder text-hover-primary d-block mb-1 fs-6"
               >
-                $520
+                {{ complaint.owner }}
               </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7"
-                >Rejected</span
-              >
             </td>
             <td>
               <a
                 href="#"
                 class="text-gray-900 fw-bolder text-hover-primary d-block mb-1 fs-6"
               >
-                Bradly Beal
+                {{ complaint.date }}
               </a>
-              <span class="text-muted fw-bold text-muted d-block fs-7"
-                >Insurance</span
-              >
             </td>
             <td>
-              <span class="badge badge-light-primary fs-7 fw-bold">Approved</span>
+              <span [ngClass]="getBadgeClass(complaint.status)">{{complaint.status}}</span>
             </td>
-            <td class="text-end">
-              <a
-                href="#"
-                class="
-                  btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                  me-1
-                "
-              >
-                <span
-                  [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'"
-                  class="svg-icon svg-icon-3"
-                ></span>
-              </a>
-              <a
-                href="#"
-                class="
-                  btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                  me-1
-                "
-              >
-                <span
-                  [inlineSVG]="'./assets/media/icons/duotune/art/art005.svg'"
-                  class="svg-icon svg-icon-3"
-                ></span>
-              </a>
-              <a
-                href="#"
-                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
-              >
-                <span
-                  [inlineSVG]="'./assets/media/icons/duotune/general/gen027.svg'"
-                  class="svg-icon svg-icon-3"
-                ></span>
-              </a>
+            <td>
+              <div class="d-flex justify-content-end flex-shrink-0">
+                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(complaint.id)">
+                  <i class="bi bi-pen"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>

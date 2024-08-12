@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,17 @@ class Article
 
     #[ORM\Column(nullable: true)]
     private ?int $likes = null;
+
+    /**
+     * @var Collection<int, Complaints>
+     */
+    #[ORM\OneToMany(targetEntity: Complaints::class, mappedBy: 'relatedTo')]
+    private Collection $complaints;
+
+    public function __construct()
+    {
+        $this->complaints = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +134,36 @@ class Article
     public function setLikes(?int $likes): static
     {
         $this->likes = $likes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Complaints>
+     */
+    public function getComplaints(): Collection
+    {
+        return $this->complaints;
+    }
+
+    public function addComplaint(Complaints $complaint): static
+    {
+        if (!$this->complaints->contains($complaint)) {
+            $this->complaints->add($complaint);
+            $complaint->setRelatedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComplaint(Complaints $complaint): static
+    {
+        if ($this->complaints->removeElement($complaint)) {
+            // set the owning side to null (unless already changed)
+            if ($complaint->getRelatedTo() === $this) {
+                $complaint->setRelatedTo(null);
+            }
+        }
 
         return $this;
     }

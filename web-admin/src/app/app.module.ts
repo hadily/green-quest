@@ -31,6 +31,7 @@ import { DeleteArticleComponent } from './pages/management/blog/delete-article/d
 import { UpdateArticleComponent } from './pages/management/blog/update-article/update-article.component';
 import { NewArticleComponent } from './pages/management/blog/new-article/new-article.component';
 import { ViewComplaintsComponent } from './pages/management/complaints/view-complaints/view-complaints.component';
+import { UpdateComplaintsComponent } from './pages/management/complaints/update-complaints/update-complaints.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -59,7 +60,8 @@ function appInitializer(authService: AuthService) {
     DeleteArticleComponent,
     UpdateArticleComponent,
     NewArticleComponent,
-    ViewComplaintsComponent
+    ViewComplaintsComponent,
+    UpdateComplaintsComponent
   ],
   imports: [
     BrowserModule,

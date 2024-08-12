@@ -23,10 +23,17 @@ class Admin extends User
     #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'admin')]
     private Collection $clients;
 
+    /**
+     * @var Collection<int, Complaints>
+     */
+    #[ORM\OneToMany(targetEntity: Complaints::class, mappedBy: 'admin')]
+    private Collection $fixedComplaints;
+
     public function __construct()
     {
         $this->partners = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->fixedComplaints = new ArrayCollection();
     }
 
     public function __contruct()
@@ -89,6 +96,36 @@ class Admin extends User
             // set the owning side to null (unless already changed)
             if ($client->getAdmin() === $this) {
                 $client->setAdmin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Complaints>
+     */
+    public function getFixedComplaints(): Collection
+    {
+        return $this->fixedComplaints;
+    }
+
+    public function addFixedComplaint(Complaints $complaint): static
+    {
+        if (!$this->fixedComplaints->contains($complaint)) {
+            $this->fixedComplaints->add($complaint);
+            $complaint->setAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFixedComplaint(Complaints $complaint): static
+    {
+        if ($this->fixedComplaints->removeElement($complaint)) {
+            // set the owning side to null (unless already changed)
+            if ($complaint->getAdmin() === $this) {
+                $complaint->setAdmin(null);
             }
         }
 

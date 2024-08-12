@@ -62,6 +62,25 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/article/${id}`);
   }
 
+  getAllComplaints(): Observable<any> {
+    const url = `${this.apiUrl}/complaints/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getClientComplaints(): Observable<any> {
+    const url = `${this.apiUrl}/complaints/client-complaints/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getPartnerComplaints(): Observable<any> {
+    const url = `${this.apiUrl}/complaints/partner-complaints/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getComplaintById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/complaints/${id}`);
+  }
+
   /** CREATE */
 
   createPartner(partner: any): Observable<any> {
@@ -97,6 +116,10 @@ export class ApiService {
 
   updateArticle(id: number, article: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/article/${id}`, article);
+  }
+
+  updateComplaints(id: number, complaint: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/complaints/${id}`, complaint);
   }
 
   /** DELETE */

@@ -1,0 +1,42 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <h2>Resolve Complaint</h2>
+  <form (ngSubmit)="onUpdate()" #partnerForm="ngForm">
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" [(ngModel)]="complaint.subject" name="subject" required disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="owner">Owner</label>
+      <input type="text" id="owner" [(ngModel)]="complaint.owner" name="owner" required disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="article">Article</label>
+      <input type="text" id="article" [(ngModel)]="complaint.relatedTo" name="article" required disabled>
+    </div>
+
+    <div class="form-group">
+      <label for="details">Details</label>
+      <textarea id="details" [(ngModel)]="complaint.details" name="details" rows="5" class="form-control" required disabled></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="reply">Reply</label>
+      <textarea id="reply" [(ngModel)]="complaint.reply" name="reply" rows="5" class="form-control" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" [(ngModel)]="complaint.status" name="status" class="form-control" required>
+        <option value="New">New</option>
+        <option value="Pending">Pending</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </div>
+
+    <button type="submit">Resolve</button>
+    <button type="button" (click)="closeModal()">Cancel</button>
+  </form>
+</div>
