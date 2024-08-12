@@ -3,43 +3,98 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\User;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\AdminRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/article')]
+#[Route('/api/article')]
 class ArticleController extends AbstractController
 {
-    #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+    //#[Route('/', name: 'app_article_index', methods: ['GET'])]
+    //public function index(ArticleRepository $articleRepository): Response
+    //{
+    //    return $this->render('article/index.html.twig', [
+    //        'articles' => $articleRepository->findAll(),
+    //    ]);
+    //}
+
+    #[Route('/', name: 'getAllArticles', methods: ['GET'])]
+    public function getAllArticles(EntityManagerInterface $em, ArticleRepository $articleRepository): JsonResponse
     {
-        return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
-        ]);
-    }
+        $articles = $articleRepository->findAll();
+        $data = [];
 
-    #[Route('/new', name: 'app_article_new', methods: ['POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
+        foreach($articles as $article) {
+            $writer = $article->getWriter(); // Get the writer (User object)
+            $writerName = $writer ? $writer->getFullName() : null; // Extract the ID from the User object
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($article);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+            $data[] = [
+                'id' => $article->getId(),
+                'writer' => $writerName,
+                'title' => $article->getTitle(),
+                'subTitle' => $article->getSubTitle(),
+                'summary' => $article->getSummary(),
+                'text' => $article->getText(),
+                'date' => $article->getDate()->format('Y-m-d'),
+                'likes' => $article->getLikes()
+            ];
         }
 
-        return $this->render('article/new.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    #[Route('/{id}', name: 'getArticleByID', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function getPartnerByID(int $id, ArticleRepository $articleRepository): JsonResponse
+    {
+        $article = $articleRepository->find($id);
+
+        if (!$article) {
+            return new JsonResponse(['message' => 'article not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'title' => $article->getTitle(),
+            'subTitle' => $article->getSubTitle(),
+            'summary' => $article->getSummary(),
+            'text' => $article->getText(),
+            'date' => $article->getDate()
+        ];
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    #[Route('/', name: 'createArticle', methods: ['POST'])]
+    public function createArticle(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $article = new Article();
+        $article->setTitle($data['title']);
+        $article->setSubTitle($data['subTitle']);
+        $article->setSummary($data['summary']);
+        $article->setText($data['text']);
+        $article->setDate(new \DateTime());
+
+        // Fetch the User entity 
+        $writerId = $data['writerId'];
+        $writer = $em->getRepository(User::class)->find($writerId);
+        if (!$writer) {
+            return new JsonResponse(['error' => 'User with ID ' . $writerId . ' not found'], Response::HTTP_NOT_FOUND);
+        }
+        $article->setWriter($writer);
+
+        $em->persist($article);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'Article created'], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
@@ -50,32 +105,71 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_article_edit', methods: ['PUT'])]
-    public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_article_update', methods: ['PUT'])]
+    public function updateArticle(int $id, Request $request, EntityManagerInterface $em, ArticleRepository $articleRepository): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
+        $article = $articleRepository->find($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+        if (!$article) {
+            return new JsonResponse(['message' => 'article not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->render('article/edit.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['title'])) {
+            $article->setTitle($data['title']);
+        }
+        if (isset($data['subTitle'])) {
+            $article->setSubTitle($data['subTitle']);
+        }
+        if (isset($data['text'])) {
+            $article->setText($data['text']);
+        }
+        if (isset($data['date'])) {
+            $article->setDate(new \DateTime());
+        }
+
+        $em->persist($article);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'article updated'], Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'app_article_delete', methods: ['DELETE'])]
-    public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+    public function delete(int $id, EntityManagerInterface $em, ArticleRepository $articleRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($article);
-            $entityManager->flush();
+        $article = $articleRepository->find($id);
+
+        if (!$article) {
+            return new JsonResponse(['message' => 'Article not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+        $em->remove($article);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'Article deleted'], Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/search', name: 'searchArticles', methods: ['GET'])]
+    public function searchArticles(Request $request, ArticleRepository $articleRepository): JsonResponse
+    {
+        $query = $request->query->get('query', '');
+
+        // Perform the search based on the query
+        $articles = $articleRepository->searchArticles($query);
+
+        // Convert entities to array
+        $data = [];
+        foreach ($articles as $article) {
+            $data[] = [
+                'id' => $article->getId(),
+                'title' => $article->getTitle(),
+                'subTitle' => $article->getSubTitle(),
+                'writer' => $article->getWriter(),
+                'date' => $article->getDate() ? $article->getDate()->format('Y-m-d') : null,
+            ];
+        }
+
+    return new JsonResponse($data);
     }
 }

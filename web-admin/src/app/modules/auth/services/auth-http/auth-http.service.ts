@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserModel } from '../../models/user.model';
 import { environment } from '../../../../../environments/environment';
@@ -11,6 +11,7 @@ const API_USERS_URL = `${environment.apiUrl}`;
   providedIn: 'root',
 })
 export class AuthHTTPService {
+
   post<T>(arg0: string, arg1: { username: string; password: string; }): Observable<any> {
     throw new Error('Method not implemented.');
   }

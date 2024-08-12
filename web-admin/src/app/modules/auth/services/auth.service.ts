@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription, throwError } from 'rxjs';
-import { map, catchError, switchMap, finalize } from 'rxjs/operators';
+import { map, catchError, switchMap, finalize, tap } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
 import { AuthModel } from '../models/auth.model';
 import { AuthHTTPService } from './auth-http';
@@ -54,6 +54,13 @@ export class AuthService implements OnDestroy {
     //   password: password
     // });
   }
+
+  // Call this method to renew the token
+  //renewToken(): Observable<string> {
+  //  return this.http_client.post<{ token: string }>(`${environment.apiUrl}/auth/refresh-token`, {}).pipe(
+  //    map(response => response.token)
+  //  );
+  //}
 
   getUsers(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/user`)

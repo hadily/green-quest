@@ -26,6 +26,10 @@ import { NewAdminComponent } from './pages/management/users/admins/new-admin/new
 import { UpdateAdminComponent } from './pages/management/users/admins/update-admin/update-admin.component';
 import { DeleteAdminComponent } from './pages/management/users/admins/delete-admin/delete-admin.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ArticlesComponent } from './pages/management/blog/articles/articles.component';
+import { DeleteArticleComponent } from './pages/management/blog/delete-article/delete-article.component';
+import { UpdateArticleComponent } from './pages/management/blog/update-article/update-article.component';
+import { NewArticleComponent } from './pages/management/blog/new-article/new-article.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -49,7 +53,11 @@ function appInitializer(authService: AuthService) {
     ViewAdminsComponent,
     NewAdminComponent,
     UpdateAdminComponent,
-    DeleteAdminComponent
+    DeleteAdminComponent,
+    ArticlesComponent,
+    DeleteArticleComponent,
+    UpdateArticleComponent,
+    NewArticleComponent
   ],
   imports: [
     BrowserModule,

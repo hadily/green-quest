@@ -10,11 +10,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use \Symfony\Bundle\SecurityBundle\Security;
+
 
 #[Route('/api/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'getAllUsers', methods: ['GET'])]
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
+    #[Route('/', name: 'getCurretUser', methods: ['GET'])]
+    public function getCurrentUser(EntityManagerInterface $em, UserRepository $userRepository): JsonResponse
+    {
+        $user = $this->security->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        // Return user data as needed
+        return new JsonResponse([
+            'id' => $userRepository->getId(),
+            'email' => $userRepository->getEmail(),
+        ]);
+    }
+
+    #[Route('/all', name: 'getAllUsers', methods: ['GET'])]
     public function getUsers(EntityManagerInterface $em, UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findAll();
@@ -33,26 +58,26 @@ class UserController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    // #[Route('/{id}', name: 'getUserByID', methods: ['GET'])]
-    // public function getUserByID(int $id, UserRepository $userRepository): JsonResponse
-    // {
-    //     $user = $userRepository->find($id);
+    #[Route('/{id}', name: 'getUserByID', methods: ['GET'])]
+    public function getUserByID(int $id, UserRepository $userRepository): JsonResponse
+    {
+        $user = $userRepository->find($id);
 
-    //     if (!$user) {
-    //         return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-    //     }
+        if (!$user) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
 
-    //     $data = [
-    //         'id' => $user->getId(),
-    //         'email' => $user->getEmail(),
-    //         'firstName' => $user->getFirstName(),
-    //         'lastName' => $user->getLastName(),
-    //         'phoneNumber' => $user->getPhoneNumber(),
-    //         'roles' => $user->getRoles(),
-    //     ];
+        $data = [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'phoneNumber' => $user->getPhoneNumber(),
+            'roles' => $user->getRoles(),
+        ];
 
-    //     return new JsonResponse($data, Response::HTTP_OK);
-    // }
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
 
     // #[Route('/', name: 'createUser', methods: ['POST'])]
     // public function createUser(Request $request, EntityManagerInterface $entityManager): JsonResponse

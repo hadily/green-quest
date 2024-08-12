@@ -81,6 +81,7 @@ export class ViewPartnersComponent implements OnInit {
   }
 
   searchPartners(): void {
+    console.log(this.searchQuery);
     if (this.searchQuery.trim()) {
       this.apiService.searchPartners(this.searchQuery).subscribe(data => {
         this.partners = data;
@@ -91,6 +92,7 @@ export class ViewPartnersComponent implements OnInit {
   }
 
   onSearchChange(event: any): void {
+    console.log(event);
     this.searchQuery = event.target.value;
     this.searchPartners();
   }

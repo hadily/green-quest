@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { ViewPartnersComponent } from './management/users/partners/view-partners/view-partners.component';
 import { ViewClientsComponent } from './management/users/clients/view-clients/view-clients.component';
 import { ViewAdminsComponent } from './management/users/admins/view-admins/view-admins.component';
+import { ArticlesComponent } from './management/blog/articles/articles.component';
+import { NewArticleComponent } from './management/blog/new-article/new-article.component';
 
 const Routing: Routes = [
   {
@@ -61,6 +63,14 @@ const Routing: Routes = [
   {
     path: 'users/admins',
     component: ViewAdminsComponent
+  },
+  {
+    path: 'blog/articles',
+    component: ArticlesComponent
+  },
+  {
+    path: 'blog/new-article',
+    component: NewArticleComponent
   }
 ];
 
