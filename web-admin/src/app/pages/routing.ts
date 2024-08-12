@@ -4,6 +4,7 @@ import { ViewClientsComponent } from './management/users/clients/view-clients/vi
 import { ViewAdminsComponent } from './management/users/admins/view-admins/view-admins.component';
 import { ArticlesComponent } from './management/blog/articles/articles.component';
 import { NewArticleComponent } from './management/blog/new-article/new-article.component';
+import { ViewComplaintsComponent } from './management/complaints/view-complaints/view-complaints.component';
 
 const Routing: Routes = [
   {
@@ -71,6 +72,10 @@ const Routing: Routes = [
   {
     path: 'blog/new-article',
     component: NewArticleComponent
+  },
+  {
+    path: 'complaints',
+    component: ViewComplaintsComponent
   }
 ];
 

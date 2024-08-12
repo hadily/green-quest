@@ -30,6 +30,7 @@ import { ArticlesComponent } from './pages/management/blog/articles/articles.com
 import { DeleteArticleComponent } from './pages/management/blog/delete-article/delete-article.component';
 import { UpdateArticleComponent } from './pages/management/blog/update-article/update-article.component';
 import { NewArticleComponent } from './pages/management/blog/new-article/new-article.component';
+import { ViewComplaintsComponent } from './pages/management/complaints/view-complaints/view-complaints.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -57,7 +58,8 @@ function appInitializer(authService: AuthService) {
     ArticlesComponent,
     DeleteArticleComponent,
     UpdateArticleComponent,
-    NewArticleComponent
+    NewArticleComponent,
+    ViewComplaintsComponent
   ],
   imports: [
     BrowserModule,
