@@ -32,6 +32,11 @@ import { UpdateArticleComponent } from './pages/management/blog/update-article/u
 import { NewArticleComponent } from './pages/management/blog/new-article/new-article.component';
 import { ViewComplaintsComponent } from './pages/management/complaints/view-complaints/view-complaints.component';
 import { UpdateComplaintsComponent } from './pages/management/complaints/update-complaints/update-complaints.component';
+import { ProfileDetailsComponent } from './modules/account/settings/forms/profile-details/profile-details.component';
+import { SettingsComponent } from './modules/account/settings/settings.component';
+import { SignInMethodComponent } from './modules/account/settings/forms/sign-in-method/sign-in-method.component';
+import { SharedModule } from './_metronic/shared/shared.module';
+import { AccountModule } from './modules/account/account.module';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -61,7 +66,10 @@ function appInitializer(authService: AuthService) {
     UpdateArticleComponent,
     NewArticleComponent,
     ViewComplaintsComponent,
-    UpdateComplaintsComponent
+    UpdateComplaintsComponent,
+    SettingsComponent,
+    SignInMethodComponent,
+    ProfileDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +80,8 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
+    SharedModule,
+    AccountModule,
     ////////////////////////////
     MatDialogModule,
     FormsModule,

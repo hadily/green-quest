@@ -17,7 +17,7 @@
       <label class="col-lg-4 fw-bold text-muted">Full Name</label>
 
       <div class="col-lg-8">
-        <span class="fw-bolder fs-6 text-gray-900">Max Smith</span>
+        <span class="fw-bolder fs-6 text-gray-900">{{ user.firstName }}  {{ user.lastName }}</span>
       </div>
     </div>
 
@@ -25,7 +25,7 @@
       <label class="col-lg-4 fw-bold text-muted">Company</label>
 
       <div class="col-lg-8 fv-row">
-        <span class="fw-bold fs-6">Keenthemes</span>
+      <span class="fw-bold fs-6">{{ user.companyName || 'Green Quest' }} </span>
       </div>
     </div>
 
@@ -40,12 +40,13 @@
       </label>
 
       <div class="col-lg-8 d-flex align-items-center">
-        <span class="fw-bolder fs-6 me-2">044 3276 454 935</span>
+        <span class="fw-bolder fs-6 me-2">{{ user.phoneNumber }}</span>
 
         <span class="badge badge-success">Verified</span>
       </div>
     </div>
 
+    <!--
     <div class="row mb-7">
       <label class="col-lg-4 fw-bold text-muted">Company Site</label>
 
@@ -70,6 +71,7 @@
         <span class="fw-bolder fs-6 text-gray-900">Germany</span>
       </div>
     </div>
+    -->
 
     <div class="row mb-7">
       <label class="col-lg-4 fw-bold text-muted">Communication</label>

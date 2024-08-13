@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalConfig, ModalComponent } from '../../_metronic/partials';
-import { ApiService } from '../../services/api.service';
+import { AuthService } from 'src/app/modules/auth';
 
 
 @Component({
@@ -20,15 +20,14 @@ export class DashboardComponent implements OnInit {
     return await this.modalComponent.open();
   }
 
-  users: any[] = [];
+  user: any;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.apiService.getCurrentUser().subscribe(
+    this.authService.getUserByToken().subscribe(
       data => {
-        console.log('Data received in component:', data); // Log in component
-        this.users = data;
+        this.user = data;
       },
       error => {
         console.error('Error fetching users:', error); // Log any errors
