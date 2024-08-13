@@ -33,6 +33,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function userToJson(User $user): array
+    {
+        return [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            // Add other fields as needed
+        ];
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
