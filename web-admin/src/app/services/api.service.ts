@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -21,9 +21,8 @@ export class ApiService {
     );
   }
 
-  getCurrentUser(): Observable<any> {
-    const url = `${this.apiUrl}/user/`;
-    return this.http.get<any[]>(url);
+  getUserById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/${id}`);
   }
 
   getAllPartners(): Observable<any> {
@@ -79,6 +78,14 @@ export class ApiService {
 
   getComplaintById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/complaints/${id}`);
+  }
+
+  getUsers(): Observable<any> {
+    const token = localStorage.getItem('token');
+    console.log('token: ', token);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/user/`, { headers });
   }
 
   /** CREATE */

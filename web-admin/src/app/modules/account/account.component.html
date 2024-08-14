@@ -4,7 +4,7 @@
       <div class="me-7 mb-4">
         <div
           class="
-            symbol symbol-100px symbol-lg-160px symbol-fixed
+            symbol symbol-100px symbol-lg-60px symbol-fixed
             position-relative
           "
         >
@@ -47,7 +47,7 @@
                   cursor-pointer
                 "
               >
-                Max Smith
+                {{ user.firstName }} {{ user.lastName }}
               </a>
               <a class="cursor-pointer">
                 <app-keenicon name="verify" class="fs-1 text-primary"></app-keenicon>
@@ -81,7 +81,7 @@
                 "
               >
                 <app-keenicon name="profile-circle" class="fs-4 me-1"></app-keenicon>
-                Developer
+                {{ user.roles }}
               </a>
               <a
                 class="
@@ -94,7 +94,7 @@
                 "
               >
                 <app-keenicon name="geolocation" class="fs-4 me-1"></app-keenicon>
-                SF, Bay Area
+                {{ user.CompanyName || 'Green Quest' }}
               </a>
               <a
                 class="
@@ -105,8 +105,8 @@
                   cursor-pointer
                 "
               >
-                <app-keenicon name="geolocation" class="fs-4 me-1"></app-keenicon>
-                max&#64;kt.com
+                <app-keenicon name="profile-circle" class="fs-4 me-1"></app-keenicon>
+                {{user.email }}
               </a>
             </div>
           </div>
