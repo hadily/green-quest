@@ -36,6 +36,17 @@
   <app-notifications-inner></app-notifications-inner>
 </div>
 
+<!-- Logout Button -->
+<div class="d-flex align-items-center" [ngClass]="toolbarButtonMarginClass">
+  <button
+    class="btn btn-icon btn-active-light-danger btn-large"
+    (click)="logout()"
+    aria-label="Logout"
+  >
+    <i class="bi bi-box-arrow-left"></i>
+  </button>
+</div>
+
 
 <!-- begin::User -->
 <div
