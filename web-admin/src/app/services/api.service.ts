@@ -174,6 +174,11 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/article/search`, { params });
   }
 
+  /** CHANGE PASSWORD */
+  resetPassword(id: number, data: { currentPassword: string; newPassword: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/reset-password/${id}`, data);
+  }
+
   
   
 }
