@@ -129,6 +129,10 @@ export class ApiService {
     return this.http.put<any>(`${this.apiUrl}/complaints/${id}`, complaint);
   }
 
+  updateUser(id: number, user: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/user/${id}`, user);
+  }
+
   /** DELETE */
 
   deletePartner(id: number): Observable<any> {

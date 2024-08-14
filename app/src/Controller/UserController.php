@@ -98,45 +98,44 @@ class UserController extends AbstractController
     //     return new JsonResponse(['message' => 'User created'], Response::HTTP_CREATED);
     // }
 
-    // #[Route('/{id}', name: 'updateUser', methods: ['PUT'])]
-    // public function updateUser(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
-    // {
-    //     $user = $userRepository->find($id);
+    #[Route('/{id}', name: 'updateUser', methods: ['PUT'])]
+    public function updateUser(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
 
-    //     if (!$user) {
-    //         return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-    //     }
+        if ($id === 1 || in_array('SUPER_USER', $user->getRoles())) {
+            return new JsonResponse(['message' => 'Cannot update this user'], Response::HTTP_FORBIDDEN);
+        }
 
-    //     if ($id === 1 || in_array('SUPER_USER', $user->getRoles())) {
-    //         return new JsonResponse(['message' => 'Cannot update this user'], Response::HTTP_FORBIDDEN);
-    //     }
+        $data = json_decode($request->getContent(), true);
 
-    //     $data = json_decode($request->getContent(), true);
+        if (isset($data['email'])) {
+            $user->setEmail($data['email']);
+        }
+        if (isset($data['password'])) {
+            $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+        }
+        if (isset($data['firstName'])) {
+            $user->setFirstName($data['firstName']);
+        }
+        if (isset($data['lastName'])) {
+            $user->setLastName($data['lastName']);
+        }
+        if (isset($data['phoneNumber'])) {
+            $user->setPhoneNumber($data['phoneNumber']);
+        }
+        if (isset($data['roles'])) {
+            $user->setRoles($data['roles']);
+        }
 
-    //     if (isset($data['email'])) {
-    //         $user->setEmail($data['email']);
-    //     }
-    //     if (isset($data['password'])) {
-    //         $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-    //     }
-    //     if (isset($data['firstName'])) {
-    //         $user->setFirstName($data['firstName']);
-    //     }
-    //     if (isset($data['lastName'])) {
-    //         $user->setLastName($data['lastName']);
-    //     }
-    //     if (isset($data['phoneNumber'])) {
-    //         $user->setPhoneNumber($data['phoneNumber']);
-    //     }
-    //     if (isset($data['roles'])) {
-    //         $user->setRoles($data['roles']);
-    //     }
+        $entityManager->persist($user);
+        $entityManager->flush();
 
-    //     $entityManager->persist($user);
-    //     $entityManager->flush();
-
-    //     return new JsonResponse(['message' => 'User updated'], Response::HTTP_OK);
-    // }
+        return new JsonResponse(['message' => 'User updated'], Response::HTTP_OK);
+    }
 
     // #[Route('/{id}', name: 'deleteUser', methods: ['DELETE'])]
     // public function deleteUser(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
