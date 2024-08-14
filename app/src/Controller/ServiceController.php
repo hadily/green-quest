@@ -19,6 +19,7 @@ class ServiceController extends AbstractController
     {
         return $this->render('service/index.html.twig', [
             'services' => $serviceRepository->findAll(),
+            
         ]);
     }
 

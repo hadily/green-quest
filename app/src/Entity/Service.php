@@ -9,6 +9,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name:"type", type:"string")]
+#[ORM\DiscriminatorMap(["service" => "Service", "product" => "Product", "event" => "Event"])]
 class Service
 {
     #[ORM\Id]
@@ -27,9 +30,6 @@ class Service
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDate = null;
-
-    #[ORM\Column()]
-    private array $type = [];
 
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
@@ -107,18 +107,6 @@ class Service
     public function setEndDate(?\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    public function getType(): array
-    {
-        return $this->type;
-    }
-
-    public function setType(array $type): static
-    {
-        $this->type = $type;
 
         return $this;
     }
