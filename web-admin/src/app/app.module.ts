@@ -93,7 +93,6 @@ function appInitializer(authService: AuthService) {
   ],
   exports: [
     NgModule,
-    InlineSVGModule.forRoot()
   ],
   providers: [
     {

@@ -7,6 +7,7 @@ import { DeletePartnerComponent } from '../delete-partner/delete-partner.compone
 import { RefreshService } from 'src/app/services/refresh.service';
 import { Subscription } from 'rxjs';
 import { UpdatePartnersComponent } from '../update-partners/update-partners.component';
+import { InlineSVGModule } from 'ng-inline-svg-2';
 
 @Component({
   selector: 'app-view-partners',
