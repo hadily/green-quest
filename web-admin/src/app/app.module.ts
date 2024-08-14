@@ -37,6 +37,8 @@ import { SettingsComponent } from './modules/account/settings/settings.component
 import { SignInMethodComponent } from './modules/account/settings/forms/sign-in-method/sign-in-method.component';
 import { SharedModule } from './_metronic/shared/shared.module';
 import { AccountModule } from './modules/account/account.module';
+import { BuilderModule } from './pages/builder/builder.module';
+import { BuilderComponent } from './pages/builder/builder.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -52,7 +54,6 @@ function appInitializer(authService: AuthService) {
     AppComponent,
     NewPartnerComponent,
     UpdatePartnersComponent,
-    ViewPartnersComponent,
     ViewClientsComponent,
     NewClientComponent,
     UpdateClientComponent,
@@ -69,7 +70,9 @@ function appInitializer(authService: AuthService) {
     UpdateComplaintsComponent,
     SettingsComponent,
     SignInMethodComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    ViewPartnersComponent,
+    BuilderComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +88,12 @@ function appInitializer(authService: AuthService) {
     ////////////////////////////
     MatDialogModule,
     FormsModule,
+    NgModule,
+    BuilderModule
+  ],
+  exports: [
+    NgModule,
+    InlineSVGModule.forRoot()
   ],
   providers: [
     {
