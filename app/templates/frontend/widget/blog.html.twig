@@ -28,14 +28,14 @@
 						<div class="rbt-card variation-02 rbt-hover">
 							<div class="rbt-card-img">
 								<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">
-									<img src="{{ asset('uploads/') ~ blog.image }}" alt="{{blog.title}}">
+									
 								</a>
 							</div>
 							<div class="rbt-card-body">
 								<h5 class="rbt-card-title">
 									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">{{blog.title}}</a>
 								</h5>
-								<p class="rbt-card-text">{{blog.description}}</p>
+								<p class="rbt-card-text">{{blog.text}}</p>
 								<div class="rbt-card-bottom">
 									<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">En savoir plus<i>
 											<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">

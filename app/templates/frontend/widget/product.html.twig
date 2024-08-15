@@ -17,12 +17,11 @@
 					<div class="rbt-card variation-02 rbt-hover">
 						<div class="rbt-card-img">
 							<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">
-								<img src="{{ asset('uploads/') ~ product.image }}" alt="{{product.title}}">
 							</a>
 						</div>
 						<div class="rbt-card-body">
 							<h5 class="rbt-card-title">
-								<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">{{product.title}}</a>
+								<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">{{product.serviceName}}</a>
 							</h5>
 							<p class="rbt-card-text">I{{product.description}}</p>
 							<div class="rbt-card-bottom">

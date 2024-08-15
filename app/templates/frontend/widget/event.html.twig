@@ -15,27 +15,26 @@
 		<div
 			class="row g-5">
 			<!-- Start Single Event  -->
-            {% for product in list %}
+            {% for event in list %}
 			<div class="col-lg-6 col-md-12 col-12">
 				<div class="rbt-card card-list-2 event-list-card variation-01 rbt-hover">
 					<div class="rbt-card-img">
-						<a href="{{ path('frontend_eent_detail', {'id': event.id}) }}">
-							<img src="{{ asset('uploads/') ~ event.image }}" alt="{{event.title}}">
+						<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">
 						</a>
 					</div>
 					<div class="rbt-card-body">
 						<ul class="rbt-meta">
 							<li>
-								<i class="feather-map-pin"></i>{{event.address}}</li>
+								<i class="feather-clock"></i>{{event.startDate | date("d/m/Y") }}</li>
 							<li>
-								<i class="feather-clock"></i>{{event.date | date("d/m/Y") }}</li>
+								<i class="feather-clock"></i>{{event.endDate | date("d/m/Y") }}</li>
 						</ul>
 						<h4 class="rbt-card-title">
-							<a href="{{ path('frontend_eent_detail', {'id': event.id}) }}">{{event.title}}</a>
+							<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">{{event.serviceName}}</a>
 						</h4>
 
 						<div class="read-more-btn">
-							<a class="rbt-btn btn-border hover-icon-reverse btn-sm radius-round" href="{{ path('frontend_eent_detail', {'id': event.id}) }}">
+							<a class="rbt-btn btn-border hover-icon-reverse btn-sm radius-round" href="{{ path('frontend_event_detail', {'id': event.id}) }}">
 								<span class="icon-reverse-wrapper">
 									<span class="btn-text">Détails</span>
 									<span class="btn-icon">
