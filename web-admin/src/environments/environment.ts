@@ -8,6 +8,7 @@ export const environment = {
     USERDATA_KEY: 'userData',
     isMockEnabled: false,
     apiUrl: 'http://localhost:8000/api',
+    fileUrl: 'http://localhost:8000/',
     config: {
       urlLogin: 'http://localhost:8000/api/login_check',
     },

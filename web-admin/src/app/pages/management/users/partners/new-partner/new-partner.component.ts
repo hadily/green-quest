@@ -22,9 +22,10 @@ export class NewPartnerComponent implements OnInit {
     companyDescription: '',
     localisation: '',
     adminId: null,
-    roles: ['PARTNER']
+    roles: ['PARTNER'],
   };
   admins : any[] = [];
+  file: any;
 
   constructor(
     public dialogRef: MatDialogRef<NewPartnerComponent>,
@@ -44,6 +45,20 @@ export class NewPartnerComponent implements OnInit {
     );
   }
 
+  // handleFile(e: any){
+  //   this.file = e.target.value
+  // }
+
+  selectImage(event: any) {
+    this.file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output: any = document.getElementById('imageFilename');
+      output.src = reader.result;
+    }
+    reader.readAsDataURL(this.file);
+  }
+
   generateRandomPassword(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
@@ -54,8 +69,9 @@ export class NewPartnerComponent implements OnInit {
   }
   
   onSubmit(): void {
+    console.log(this.partner)
     this.partner['password'] = this.generateRandomPassword();
-    this.apiService.createPartner(this.partner).subscribe(
+    this.apiService.createPartner(this.partner, this.file).subscribe(
       response => {
         console.log('Partner created:', response);
         this.refreshService.triggerRefresh('/users/partners'); // Emit a value to notify other components
@@ -71,5 +87,7 @@ export class NewPartnerComponent implements OnInit {
   closeModal(): void {
     this.dialogRef.close();
   }
+
+
 
 }

@@ -10,10 +10,11 @@
       <!--begin::Form-->
       <form data-kt-search-element="form" class="search-form position-relative mb-3" autocomplete="off">
         <!--begin::Icon-->
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+        <!-- <span
+          inlineSVG="{{fileUrl}}/uploads/{{partner.imageFilename}}"
           class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0"
-        ></span>
+        ></span> -->
+
         <!--end::Icon-->
 
         <!--begin::Input-->
@@ -65,8 +66,8 @@
             <td>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-45px me-5">
-                  <img src="./assets/media/avatars/300-14.jpg" alt="" />
-                </div>
+               <img  src="{{fileUrl}}/uploads/{{partner.imageFilename}}">
+                             </div>
                 <div class="d-flex justify-content-start flex-column">
                   <a href="#" class="text-gray-900 fw-bolder text-hover-primary fs-6">{{ partner.firstName }} {{ partner.lastName }}</a>
                   <span class="text-muted fw-bold text-muted d-block fs-7">{{ partner.email }}</span>

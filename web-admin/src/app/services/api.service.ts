@@ -99,8 +99,19 @@ export class ApiService {
 
   /** CREATE */
 
-  createPartner(partner: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/partner/`, partner);
+  createPartner(partner: any, fileName: any): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('email', partner.email);
+    formData.append('password', partner.password);
+    formData.append('firstName', partner.firstName);
+    formData.append('lastName', partner.lastName);
+    formData.append('phoneNumber', partner.phoneNumber);
+    formData.append('companyName', partner.companyName);
+    formData.append('companyDescription', partner.companyDescription);
+    formData.append('localisation', partner.localisation);
+    formData.append('adminId', partner.adminId);
+    formData.append('imageFilename', fileName);
+    return this.http.post<FormData>(`${this.apiUrl}/partner/`, formData);
   }
 
   

@@ -21,7 +21,8 @@ export class TopbarComponent implements OnInit {
     private layout: LayoutService,
     private authService: AuthService,
     private apiService: ApiService,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +31,6 @@ export class TopbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout(); // Remove token from localStorage
-    this.refreshService.triggerRefresh('/auth/login'); // Navigate to login page
+    this.router.navigate(['/auth/login']); // Navigate to login page
   }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Partner;
 use App\Entity\Admin;
 use App\Repository\PartnerRepository;
+use App\Service\UploadFileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,7 +32,8 @@ class PartnerController extends AbstractController
                 'companyName' => $partner->getCompanyName(),
                 'companyDescription' => $partner->getCompanyDescription(),
                 'localisation' => $partner->getLocalisation(),
-                'phoneNumber' => $partner->getPhoneNumber()
+                'phoneNumber' => $partner->getPhoneNumber(),
+                'imageFilename' => $partner->getImageFilename()
             ];
         }
 
@@ -56,18 +58,28 @@ class PartnerController extends AbstractController
             'companyName' => $partner->getCompanyName(),
             'companyDescription' => $partner->getCompanyDescription(),
             'localisation' => $partner->getLocalisation(),
-            'roles' => $partner->getRoles()
+            'roles' => $partner->getRoles(),
+            'imageFilename' => $partner->getImageFilename()
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
     #[Route('/', name: 'createPartner', methods: ['POST'])]
-    public function createPartner(Request $request, EntityManagerInterface $em): JsonResponse
+    public function createPartner(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        // $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
 
         $partner = new Partner();
+
+        $imageFilename = $request->files->get('imageFilename');
+
+        if ($imageFilename) {
+            $imageName = $ufService->uploadFile($imageFilename);
+            $partner->setImageFilename($imageName);
+        }
+
         $partner->setEmail($data['email']);
         $partner->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
         $partner->setFirstName($data['firstName']);

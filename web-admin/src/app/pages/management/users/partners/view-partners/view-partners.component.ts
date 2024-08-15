@@ -7,6 +7,7 @@ import { DeletePartnerComponent } from '../delete-partner/delete-partner.compone
 import { RefreshService } from 'src/app/services/refresh.service';
 import { Subscription } from 'rxjs';
 import { UpdatePartnersComponent } from '../update-partners/update-partners.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-view-partners',
@@ -17,8 +18,8 @@ export class ViewPartnersComponent implements OnInit {
   partners: any[] = [];
   private refreshSubscription: Subscription;
   searchQuery: string = '';
-
-
+  fileUrl = environment.fileUrl;
+  
   constructor(
     public dialog: MatDialog, 
     private apiService: ApiService, 

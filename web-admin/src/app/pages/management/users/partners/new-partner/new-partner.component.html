@@ -4,6 +4,10 @@
 <h2>Create New Partner</h2>
 <form (ngSubmit)="onSubmit()" #partnerForm="ngForm">
   <div class="form-group">
+    <div class="form-group">
+      <label for="imageFilename">Localisation</label>
+      <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
+    </div>
     <label for="email">Email</label>
     <input type="email" id="email" [(ngModel)]="partner.email" name="email" required>
   </div>

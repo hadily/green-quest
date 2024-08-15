@@ -34,9 +34,6 @@ export class DashboardComponent implements OnInit {
         console.log('userId ', this.user.id);
         this.loadUserData(this.user.id);
       },
-      error => {
-        console.error('Error fetching users:', error); // Log any errors
-      }
     );
   }
 
