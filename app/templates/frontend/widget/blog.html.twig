@@ -1,0 +1,60 @@
+<!-- Start Blog Style -->
+<div class="rbt-rbt-blog-area rbt-section-gapTop bg-gradient-8 rbt-round-bottom-shape">
+	<div class="wrapper pb--50 rbt-index-upper">
+		<div class="container">
+			<div class="row g-5 align-items-end mb--60">
+				<div class="col-lg-6 col-md-12 col-12">
+					<div class="section-title text-start">
+						<h2 class="title color-white">Latest News</h2>
+						<p class="description color-white-off mt--20">Learning communicate to global world and build a bright future and career development, increase your skill with our histudy.</p>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-12 col-12">
+					<div class="load-more-btn text-start text-lg-end">
+						<a class="rbt-btn btn-border icon-hover radius-round color-white-off" href="blog.html">
+							<span class="btn-text">See All Articles</span>
+							<span class="btn-icon">
+								<i class="feather-arrow-right"></i>
+							</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- Start Card Area -->
+			<div class="row g-5">
+				{% for blog in list %}
+					<!-- Start Single Card  -->
+					<div class="col-lg-4 col-md-6 col-sm-12 col-12">
+						<div class="rbt-card variation-02 rbt-hover">
+							<div class="rbt-card-img">
+								<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">
+									<img src="{{ asset('uploads/') ~ blog.image }}" alt="{{blog.title}}">
+								</a>
+							</div>
+							<div class="rbt-card-body">
+								<h5 class="rbt-card-title">
+									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">{{blog.title}}</a>
+								</h5>
+								<p class="rbt-card-text">{{blog.description}}</p>
+								<div class="rbt-card-bottom">
+									<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">En savoir plus<i>
+											<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">
+												<g stroke="#27374D" fill="none" fill-rule="evenodd">
+													<path d="M10.614 0l5.629 5.629-5.63 5.629"/>
+													<path stroke-linecap="square" d="M.663 5.572h14.594"/>
+												</g>
+											</svg>
+										</i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Card  -->
+				{% endfor %}
+			</div>
+			<!-- End Card Area -->
+		</div>
+	</div>
+</div>
+<!-- End Blog Style -->

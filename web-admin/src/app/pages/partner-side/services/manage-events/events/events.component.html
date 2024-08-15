@@ -1,0 +1,20 @@
+<div class="row g-5 g-xl-8">
+    <!-- First Column -->
+    <div class="col-xl-6">
+      <ng-container *ngFor="let event of getFilteredEvents(); let i = index">
+        <ng-container *ngIf="i % 2 === 0">
+          <app-event-panel class="card mb-5 mb-xl-8" [event]="event"></app-event-panel>
+        </ng-container>
+      </ng-container>
+    </div>
+  
+    <!-- Second Column -->
+    <div class="col-xl-6">
+      <ng-container *ngFor="let event of getFilteredEvents(); let i = index">
+        <ng-container *ngIf="i % 2 !== 0">
+          <app-event-panel class="card mb-5 mb-xl-8" [event]="event"></app-event-panel>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  

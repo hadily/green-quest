@@ -1,0 +1,10 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+{{ render(controller('App\\Controller\\frontend\\IndexController::banner' )) }}
+{{ render(controller('App\\Controller\\frontend\\IndexController::product', { 'max': 2 } )) }}
+{# {{ render(controller('App\\Controller\\frontend\\IndexController::event', { 'max': 4 } )) }} #}
+{{ render(controller('App\\Controller\\frontend\\IndexController::blog', { 'max': 3 } )) }}
+{% endblock %}
+
+

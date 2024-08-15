@@ -41,18 +41,18 @@ class EventController extends AbstractController
             return new JsonResponse(['message' => 'Event not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse([
+        $data = [
             'id' => $event->getId(),
             'serviceName' => $event->getServiceName(),
             'description' => $event->getDescription(),
             'startDate' => $event->getStartDate()?->format('Y-m-d'),
             'endDate' => $event->getEndDate()?->format('Y-m-d'),
             'price' => $event->getPrice(),
-            'maxParticipants' => $event->getMaxParticipants(),
-            'available' => $event->isAvailable(),
-            'promotion' => $event->isPromotion(),
             'ownerId' => $event->getOwner()->getId(),
-        ]);
+            'available' => $event->isAvailable()
+        ];
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
     #[Route('/', name: 'list_events', methods: ['GET'])]
@@ -60,22 +60,20 @@ class EventController extends AbstractController
     {
         $events = $this->eventRepository->findAll();
 
-        $data = array_map(function (Event $event) {
-            return [
+        foreach ($events as $event) {
+            $data[] = [
                 'id' => $event->getId(),
                 'serviceName' => $event->getServiceName(),
                 'description' => $event->getDescription(),
                 'startDate' => $event->getStartDate()?->format('Y-m-d'),
                 'endDate' => $event->getEndDate()?->format('Y-m-d'),
                 'price' => $event->getPrice(),
-                'maxParticipants' => $event->getMaxParticipants(),
-                'available' => $event->isAvailable(),
-                'promotion' => $event->isPromotion(),
                 'ownerId' => $event->getOwner()->getId(),
+                'available' => $event->isAvailable()
             ];
-        }, $events);
+        }
 
-        return new JsonResponse($data);
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
     #[Route('/', name: 'create_event', methods: ['POST'])]
@@ -83,46 +81,25 @@ class EventController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['serviceName'], $data['ownerId'])) {
-            return new JsonResponse(['message' => 'Missing required fields'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-
         $event = new Event();
         $event->setServiceName($data['serviceName']);
         $event->setDescription($data['description'] ?? '');
         $event->setStartDate(isset($data['startDate']) ? new \DateTime($data['startDate']) : null);
         $event->setEndDate(isset($data['endDate']) ? new \DateTime($data['endDate']) : null);
         $event->setPrice($data['price'] ?? null);
-        $event->setMaxParticipants($data['maxParticipants'] ?? null);
         $event->setAvailable($data['available'] ?? false);
-        $event->setPromotion($data['promotion'] ?? null);
 
         $owner = $this->partnerRepository->find($data['ownerId']);
         if (!$owner) {
-            return new JsonResponse(['message' => 'Owner not found'], JsonResponse::HTTP_NOT_FOUND);
+            $owner = $this->partnerRepository->find(15);
         }
         $event->setOwner($owner);
 
-        $errors = $this->validator->validate($event);
-        if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string) $errors], JsonResponse::HTTP_BAD_REQUEST);
-        }
 
         $this->entityManager->persist($event);
         $this->entityManager->flush();
 
-        return new JsonResponse([
-            'id' => $event->getId(),
-            'serviceName' => $event->getServiceName(),
-            'description' => $event->getDescription(),
-            'startDate' => $event->getStartDate()?->format('Y-m-d'),
-            'endDate' => $event->getEndDate()?->format('Y-m-d'),
-            'price' => $event->getPrice(),
-            'maxParticipants' => $event->getMaxParticipants(),
-            'available' => $event->isAvailable(),
-            'promotion' => $event->isPromotion(),
-            'ownerId' => $event->getOwner()->getId(),
-        ], JsonResponse::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Event created'], JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'update_event', methods: ['PUT'])]
@@ -141,9 +118,6 @@ class EventController extends AbstractController
         $event->setStartDate(isset($data['startDate']) ? new \DateTime($data['startDate']) : $event->getStartDate());
         $event->setEndDate(isset($data['endDate']) ? new \DateTime($data['endDate']) : $event->getEndDate());
         $event->setPrice($data['price'] ?? $event->getPrice());
-        $event->setMaxParticipants($data['maxParticipants'] ?? $event->getMaxParticipants());
-        $event->setAvailable($data['available'] ?? $event->isAvailable());
-        $event->setPromotion($data['promotion'] ?? $event->isPromotion());
 
         $owner = $this->partnerRepository->find($data['ownerId'] ?? $event->getOwner()->getId());
         if (!$owner) {
@@ -165,9 +139,6 @@ class EventController extends AbstractController
             'startDate' => $event->getStartDate()?->format('Y-m-d'),
             'endDate' => $event->getEndDate()?->format('Y-m-d'),
             'price' => $event->getPrice(),
-            'maxParticipants' => $event->getMaxParticipants(),
-            'available' => $event->isAvailable(),
-            'promotion' => $event->isPromotion(),
             'ownerId' => $event->getOwner()->getId(),
         ]);
     }

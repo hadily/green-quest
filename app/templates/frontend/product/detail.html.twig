@@ -1,0 +1,70 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+	<div class="rbt-single-product-area rbt-single-product rbt-section-gap">
+		<div class="container">
+			<div class="row g-5 row--30 align-items-center">
+				<div class="col-lg-6">
+					<div class="thumbnail">
+						<img class="w-100 radius-10" src="{{ asset('uploads/') ~ product.image }}" alt="{{product.title}}">
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="content">
+						<h2 class="title mt--10 mb--10">{{product.title}}</h2>
+						<div class="rbt-price justify-content-start mt--10">
+							<span class="current-price theme-gradient">{{product.price}}
+								Dt</span>
+						</div>
+
+						<p class="mt--20">{{product.description}}</p>
+
+						<div class="product-action mb--20">
+							<div class="addto-cart-btn">
+								<a class="rbt-btn btn-gradient hover-icon-reverse" href="{{ path('frontend_cart_add_product', {'id': product.id}) }}">
+									<span class="icon-reverse-wrapper">
+										<span class="btn-text">Ajouter au panier</span>
+										<span class="btn-icon">
+											<i class="feather-arrow-right"></i>
+										</span>
+										<span class="btn-icon">
+											<i class="feather-arrow-right"></i>
+										</span>
+									</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="rbt-product-description rbt-section-gapBottom bg-color-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<ul class="nav nav-tabs tab-button-style-2" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<a href="#" class="tab-button active" id="home-tab-4" data-bs-toggle="tab" data-bs-target="#home-4" role="tab" aria-controls="home-tab-4" aria-selected="true">
+								<span class="title">Description</span>
+							</a>
+						</li>
+					</ul>
+
+					<div class="tab-content" id="myTabContent">
+						<div class="product-description-content tab-pane fade active show" id="home-4" role="tabpanel" aria-labelledby="home-tab-4">
+							<p>{{product.detailedDescription | raw }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="rbt-separator-mid">
+		<div class="container">
+			<hr class="rbt-separator m-0">
+		</div>
+	</div>
+{% endblock %}

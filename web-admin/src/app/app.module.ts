@@ -32,6 +32,10 @@ import { UpdateArticleComponent } from './pages/management/blog/update-article/u
 import { NewArticleComponent } from './pages/management/blog/new-article/new-article.component';
 import { ViewComplaintsComponent } from './pages/management/complaints/view-complaints/view-complaints.component';
 import { UpdateComplaintsComponent } from './pages/management/complaints/update-complaints/update-complaints.component';
+import { EventsComponent } from './pages/partner-side/services/manage-events/events/events.component';
+import { EventPanelComponent } from './pages/partner-side/services/manage-events/event-panel/event-panel.component';
+import { NewEventComponent } from './pages/partner-side/services/manage-events/new-event/new-event.component';
+import { ProductsComponent } from './pages/partner-side/services/manage-products/products/products.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -61,7 +65,11 @@ function appInitializer(authService: AuthService) {
     UpdateArticleComponent,
     NewArticleComponent,
     ViewComplaintsComponent,
-    UpdateComplaintsComponent
+    UpdateComplaintsComponent,
+    EventsComponent,
+    EventPanelComponent,
+    NewEventComponent,
+    ProductsComponent
   ],
   imports: [
     BrowserModule,

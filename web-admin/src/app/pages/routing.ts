@@ -5,8 +5,9 @@ import { ViewAdminsComponent } from './management/users/admins/view-admins/view-
 import { ArticlesComponent } from './management/blog/articles/articles.component';
 import { NewArticleComponent } from './management/blog/new-article/new-article.component';
 import { ViewComplaintsComponent } from './management/complaints/view-complaints/view-complaints.component';
-import { EventsComponent } from './partner-side/services/events/events.component';
-import { ProductsComponent } from './partner-side/services/products/products.component';
+import { EventsComponent } from './partner-side/services/manage-events/events/events.component';
+import { ProductsComponent } from './partner-side/services/manage-products/products/products.component';
+import { NewEventComponent } from './partner-side/services/manage-events/new-event/new-event.component';
 
 const Routing: Routes = [
   {
@@ -82,6 +83,10 @@ const Routing: Routes = [
   {
     path:'partner/services/events',
     component: EventsComponent
+  },
+  {
+    path:'partner/services/new-event',
+    component: NewEventComponent
   },
   {
     path: 'partner/services/products',

@@ -1,0 +1,102 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+	<div
+		class="rbt-page-banner-wrapper">
+		<!-- Start Banner BG Image  -->
+		<div class="rbt-banner-image"></div>
+		<!-- End Banner BG Image  -->
+		<div
+			class="rbt-banner-content">
+			<!-- Start Banner Content Top  -->
+			<div class="rbt-banner-content-top">
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-12">
+							<!-- Start Breadcrumb Area  -->
+							<ul class="page-list">
+								<li class="rbt-breadcrumb-item">
+									<a href="{{ path('frontend_index') }}">Accueil</a>
+								</li>
+								<li>
+									<div class="icon-right">
+										<i class="feather-chevron-right"></i>
+									</div>
+								</li>
+								<li class="rbt-breadcrumb-item active">Tous les articles</li>
+							</ul>
+							<!-- End Breadcrumb Area  -->
+
+							<div class=" title-wrapper">
+								<h1 class="title mb--0">Tous les articles</h1>
+								<a href="#" class="rbt-badge-2">
+									<div class="image">🎉</div>
+									{{list | length }}
+									Articles
+								</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Banner Content Top  -->
+		</div>
+	</div>
+
+	<div class="rbt-blog-area rbt-section-overlayping-top rbt-section-gapBottom">
+		<div class="container">
+			<div class="row g-5">
+				{% for blog in list %}
+					<div class="col-lg-4 col-md-6 col-12">
+						<div class="rbt-default-card style-three rbt-hover">
+							<div class="inner">
+								<ul class="meta-list justify-content-end mb--10">
+									<li class="list-item">
+										<i class="feather-clock"></i>
+										<span>{{blog.createdAt | date("m/d/Y") }}</span>
+									</li>
+								</ul>
+								<div class="content pt--0 pb--10">
+									<h2 class="title">
+										<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">{{blog.title}}</a>
+									</h2>
+									<span class="team-form">
+										<span class="location">{{blog.category.title}}</span>
+									</span>
+
+								</div>
+								<div class="thumbnail">
+									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">
+										<img src="{{ asset('uploads/') ~ blog.image }}" alt="{{blog.title}}">
+									</a>
+								</div>
+								<div class="content">
+									{{blog.description}}
+									<div class="rbt-card-bottom mt--40">
+										<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">Lire plus<i>
+												<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">
+													<g stroke="#27374D" fill="none" fill-rule="evenodd">
+														<path d="M10.614 0l5.629 5.629-5.63 5.629"/>
+														<path stroke-linecap="square" d="M.663 5.572h14.594"/>
+													</g>
+												</svg>
+											</i>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="rbt-separator-mid">
+		<div class="container">
+			<hr class="rbt-separator m-0">
+		</div>
+	</div>
+{% endblock %}

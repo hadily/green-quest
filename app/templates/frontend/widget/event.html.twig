@@ -1,0 +1,57 @@
+<div class="rbt-events-area rbt-section-gap bg-color-secondary-alt">
+	<div class="container">
+		<div class="row g-5 align-items-center mb--60">
+			<div class="col-lg-12">
+				<div class="section-title text-center">
+					<h2 class="title">Our
+						<span class="theme-gradient">Events</span>
+					</h2>
+					<p class="description mt--20">Are You Want to
+						<strong>Change Your Life?</strong>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div
+			class="row g-5">
+			<!-- Start Single Event  -->
+            {% for product in list %}
+			<div class="col-lg-6 col-md-12 col-12">
+				<div class="rbt-card card-list-2 event-list-card variation-01 rbt-hover">
+					<div class="rbt-card-img">
+						<a href="{{ path('frontend_eent_detail', {'id': event.id}) }}">
+							<img src="{{ asset('uploads/') ~ event.image }}" alt="{{event.title}}">
+						</a>
+					</div>
+					<div class="rbt-card-body">
+						<ul class="rbt-meta">
+							<li>
+								<i class="feather-map-pin"></i>{{event.address}}</li>
+							<li>
+								<i class="feather-clock"></i>{{event.date | date("d/m/Y") }}</li>
+						</ul>
+						<h4 class="rbt-card-title">
+							<a href="{{ path('frontend_eent_detail', {'id': event.id}) }}">{{event.title}}</a>
+						</h4>
+
+						<div class="read-more-btn">
+							<a class="rbt-btn btn-border hover-icon-reverse btn-sm radius-round" href="{{ path('frontend_eent_detail', {'id': event.id}) }}">
+								<span class="icon-reverse-wrapper">
+									<span class="btn-text">Détails</span>
+									<span class="btn-icon">
+										<i class="feather-arrow-right"></i>
+									</span>
+									<span class="btn-icon">
+										<i class="feather-arrow-right"></i>
+									</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+            {% endfor %}
+			<!-- End Single Event  -->
+		</div>
+	</div>
+</div>

@@ -88,6 +88,15 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/user/`, { headers });
   }
 
+  getEvents(): Observable<any> {
+    const url = `${this.apiUrl}/event/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getEventById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/event/${id}`);
+  }
+
   /** CREATE */
 
   createPartner(partner: any): Observable<any> {
@@ -105,6 +114,10 @@ export class ApiService {
 
   createArticle(article: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/article/`, article);
+  }
+
+  createEvent(event: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/event/`, event);
   }
 
   /** UPDATE */
@@ -133,6 +146,10 @@ export class ApiService {
     return this.http.put<any>(`${this.apiUrl}/user/${id}`, user);
   }
 
+  updateEvent(id: number, event: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/event/${id}`, event);
+  }
+
   /** DELETE */
 
   deletePartner(id: number): Observable<any> {
@@ -149,6 +166,10 @@ export class ApiService {
 
   deleteArticle(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/article/${id}`);
+  }
+
+  deleteEvent(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/event/${id}`);
   }
 
 
