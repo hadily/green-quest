@@ -10,3 +10,7 @@ api_login_check:
 api_refresh_token:
     path: /api/token/refresh
 
+email_test:
+    path: /send-test-email
+    controller: App\Controller\MailTestController::sendTestEmail
+

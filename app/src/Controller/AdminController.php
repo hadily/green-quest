@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\UploadFileService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Service\EmailService;
+
 
 
 #[Route('/api/admin')]
@@ -64,7 +66,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/', name: 'createAdmin', methods: ['POST'])]
-    public function createAdmin(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
+    public function createAdmin(Request $request, EntityManagerInterface $em, UploadFileService $ufService, EmailService $emailService): JsonResponse
     {
         // $data = json_decode($request->getContent(), true);
         $data = $request->request->all();
@@ -87,6 +89,12 @@ class AdminController extends AbstractController
         
         $em->persist($admin);
         $em->flush();
+
+        // Send an email with the plain password
+        $emailService->sendWelcomeEmail(
+            $admin->getEmail(),
+            $data['password'] // Sending the plain password in the email
+        );
 
         return new JsonResponse(['message' => 'Client created'], JsonResponse::HTTP_CREATED);
     }
