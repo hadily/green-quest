@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\UploadFileService;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 #[Route('/api/article')]
 class ArticleController extends AbstractController
@@ -65,16 +68,47 @@ class ArticleController extends AbstractController
             'subTitle' => $article->getSubTitle(),
             'summary' => $article->getSummary(),
             'text' => $article->getText(),
-            'date' => $article->getDate()
+            'date' => $article->getDate(),
+            'imageFilename' => $article->getImageFilename()
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    #[Route('/', name: 'createArticle', methods: ['POST'])]
-    public function createArticle(Request $request, EntityManagerInterface $em): JsonResponse
+    #[Route('/{id}', name: 'getArticleById', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function getArticleById(int $id, ArticleRepository $articleRepository): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $article = $articleRepository->find($id);
+
+        if (!$article) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'title' => $article->getTitle(),
+            'subTitle' => $article->getSubTitle(),
+            'summary' => $article->getSummary(),
+            'text' => $article->getText(),
+            'date' => $article->getDate(),
+            'imageFilename' => $article->getImageFilename()
+        ];
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/', name: 'createArticle', methods: ['POST'])]
+    public function createArticle(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
+    {
+        $data = $request->request->all();
+
+        $article = new Article();
+
+        $imageFilename = $request->files->get('imageFilename');
+
+        if ($imageFilename) {
+            $imageName = $ufService->uploadFile($imageFilename);
+            $article->setImageFilename($imageName);
+        }
 
         $article = new Article();
         $article->setTitle($data['title']);
@@ -82,6 +116,7 @@ class ArticleController extends AbstractController
         $article->setSummary($data['summary']);
         $article->setText($data['text']);
         $article->setDate(new \DateTime());
+        
 
         // Fetch the User entity 
         $writerId = $data['writerId'];
@@ -105,8 +140,8 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_update', methods: ['PUT'])]
-    public function updateArticle(int $id, Request $request, EntityManagerInterface $em, ArticleRepository $articleRepository): Response
+    #[Route('/{id}', name: 'app_article_update', methods: ['POST'])]
+    public function updateArticle(int $id, Request $request, EntityManagerInterface $em, ArticleRepository $articleRepository, UploadFileService $ufService): Response
     {
         $article = $articleRepository->find($id);
 
@@ -114,7 +149,21 @@ class ArticleController extends AbstractController
             return new JsonResponse(['message' => 'article not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $imageFilename = $request->files->get('imageFilename');
+
+        if ($imageFilename) {
+            $imageName = $ufService->uploadFile($imageFilename);
+            $article->setImageFilename($imageName);
+        } else {
+            return new JsonResponse(['error' => 'Image is required'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Extract data from the request
+        $title = $request->request->get('title');
+        $subTitle = $request->request->get('subTitle');
+        $text = $request->request->get('text');
+        $date = $request->request->get('date');
+
 
         if (isset($data['title'])) {
             $article->setTitle($data['title']);
@@ -167,6 +216,7 @@ class ArticleController extends AbstractController
                 'subTitle' => $article->getSubTitle(),
                 'writer' => $article->getWriter(),
                 'date' => $article->getDate() ? $article->getDate()->format('Y-m-d') : null,
+                'imageFilename' => $article->getImageFilename()
             ];
         }
 

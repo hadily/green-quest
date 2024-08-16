@@ -4,13 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Admin;
+use App\Entity\Article;
 use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UploadFileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 #[Route('/api/client')]
 class ClientController extends AbstractController
@@ -29,7 +34,8 @@ class ClientController extends AbstractController
                 'firstName' => $client->getFirstName(),
                 'lastName' => $client->getLastName(),
                 'phoneNumber' => $client->getPhoneNumber(),
-                'localisation' => $client->getLocalisation()
+                'localisation' => $client->getLocalisation(),
+                'imageFilename' => $client->getImageFilename()
             ];
         }
 
@@ -52,24 +58,34 @@ class ClientController extends AbstractController
             'firstName' => $client->getFirstName(),
             'lastName' => $client->getLastName(),
             'phoneNumber' => $client->getPhoneNumber(),
-            'localisation' => $client->getLocalisation()
+            'localisation' => $client->getLocalisation(),
+            'imageFilename' => $client->getImageFilename()
         ];
 
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
     #[Route('/', name: 'createClient', methods: ['POST'])]
-    public function createClient(Request $request, EntityManagerInterface $em): JsonResponse
+    public function createClient(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        // $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
 
         $client = new Client();
+
+        $imageFilename = $request->files->get('imageFilename');
+
+        if ($imageFilename) {
+            $imageName = $ufService->uploadFile($imageFilename);
+            $client->setImageFilename($imageName);
+        }
+
         $client->setEmail($data['email']);
         $client->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
         $client->setFirstName($data['firstName']);
         $client->setLastName($data['lastName']);
         $client->setPhoneNumber($data['phoneNumber']);
-        $client->setRoles($data['roles'] ?? ['ROLE_CLIENT']);
+        $client->setRoles($data['roles'] ?? ['CLIENT']);
         $client->setLocalisation($data['localisation']);
         
         // Fetch the Admin entity or use default admin ID 6
@@ -86,52 +102,69 @@ class ClientController extends AbstractController
         return new JsonResponse(['message' => 'Client created'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'updateClient', methods: ['PUT'])]
-    public function updateClient(int $id, Request $request, EntityManagerInterface $em, ClientRepository $clientRepository): JsonResponse
+    #[Route('/{id}', name: 'updateClient', methods: ['POST'])]
+    public function updateClient(int $id, Request $request, EntityManagerInterface $em, ClientRepository $clientRepository, UploadFileService $ufService): JsonResponse
     {
-        $client = $clientRepository->find($id);
+        $client = $clientRepository->find($id); // Get the logged-in client or fetch client by ID
 
-        if (!$client) {
-            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
-        }
+        // Handle file upload
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get('imageFilename');
 
-        $data = json_decode($request->getContent(), true);
-
-        if (isset($data['email'])) {
-            $client->setEmail($data['email']);
-        }
-        if (isset($data['password'])) {
-            $client->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-        }
-        if (isset($data['firstName'])) {
-            $client->setFirstName($data['firstName']);
-        }
-        if (isset($data['lastName'])) {
-            $client->setLastName($data['lastName']);
-        }
-        if (isset($data['phoneNumber'])) {
-            $client->setPhoneNumber($data['phoneNumber']);
-        }
-        if (isset($data['roles'])) {
-            $client->setRoles($data['roles']);
-        }
-        if (isset($data['localisation'])) {
-            $client->setLocalisation($data['localisation']);
+        if ($file instanceof UploadedFile) {
+            $imageName = $ufService->uploadFile($file);
+            $client->setImageFilename($imageName); // Assuming you have a method to set the file name
         }
 
+        // Extract data from the request
+        $email = $request->request->get('email');
+        $firstName = $request->request->get('firstName');
+        $lastName = $request->request->get('lastName');
+        $phoneNumber = $request->request->get('phoneNumber');
+        $localisation = $request->request->get('localisation');
+
+        // Update client details if the provided values are not null
+        if ($email !== null) {
+            $client->setEmail($email);
+        }
+        if ($firstName !== null) {
+            $client->setFirstName($firstName);
+        }
+        if ($lastName !== null) {
+            $client->setLastName($lastName);
+        }
+        if ($phoneNumber !== null) {
+            $client->setPhoneNumber($phoneNumber);
+        }
+        if ($localisation !== null) {
+            $client->setLocalisation($localisation);
+        }
+        
         $em->persist($client);
         $em->flush();
 
-        return new JsonResponse(['message' => 'Client updated'], JsonResponse::HTTP_OK);
+        return new JsonResponse(['status' => 'Client updated successfully']);
     }
 
     #[Route('/{id}', name: 'deleteClient', methods: ['DELETE'])]
-    public function deleteClient(int $id, EntityManagerInterface $em, ClientRepository $clientRepository): JsonResponse
+    public function deleteClient(int $id, EntityManagerInterface $em, ClientRepository $clientRepository, UserRepository $userRepository): JsonResponse
     {
         $client = $clientRepository->find($id);
 
         if (!$client) {
             return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $articles = $em->getRepository(Article::class)->findBy(['writer' => $client]);
+
+        foreach ($articles as $article) {
+            // Fetch the user with ID 6
+            $superAdmin = $userRepository->find(6);
+            
+            // Set the writer to the Super Admin
+            $article->setWriter($superAdmin);
+
+            $em->persist($article);
         }
 
         $em->remove($client);
@@ -159,6 +192,7 @@ class ClientController extends AbstractController
                 'phoneNumber' => $client->getPhoneNumber(),
                 'localisation' => $client->getLocalisation(),
                 'roles' => $client->getRoles(),
+                'imageFilename' => $client->getImageFilename()
             ];
         }
 

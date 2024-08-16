@@ -19,9 +19,10 @@ export class UpdatePartnersComponent {
     companyDescription: '',
     localisation: '',
     adminId: null,
-    roles: ['PARTNER']
+    roles: ['PARTNER'],
+    imageFilename: null
   };
-  admins: any[] = [];
+  file: any;
 
   constructor(
     public dialogRef: MatDialogRef<UpdatePartnersComponent>,
@@ -36,10 +37,16 @@ export class UpdatePartnersComponent {
     if (this.data.partnerId !== undefined && this.data.partnerId !== null) {
         console.log(this.data.partnerId);
         this.loadPartnerData();
-        this.loadAdmins(); // Load admins to populate the dropdown
       } else {
         console.error('partnerId is undefined or null');
       }
+  }
+
+  selectImage(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.partner.imageFilename = file;
+    }
   }
 
   loadPartnerData(): void {
@@ -55,20 +62,11 @@ export class UpdatePartnersComponent {
     );
   }
   
-  loadAdmins(): void {
-    this.apiService.getAllAdmins().subscribe(
-      response => {
-        console.log('Loaded admins:', response); // Debugging log
-        this.admins = response;
-      },
-      error => {
-        console.error('Error loading admins:', error);
-      }
-    );
-  }
+
 
   onUpdate(): void {
-    this.apiService.updatePartner(this.data.partnerId, this.partner).subscribe(
+    this.file = this.partner.imageFilename;
+    this.apiService.updatePartner(this.data.partnerId, this.partner, this.file).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/users/partners'); // Notify other components

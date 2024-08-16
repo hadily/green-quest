@@ -3,6 +3,7 @@ import { ApiService } from "../../services/api.service";
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth';
 import { map, of, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-account',
@@ -12,6 +13,7 @@ import { map, of, switchMap } from 'rxjs';
 export class AccountComponent implements OnInit {
   
   user: any;
+  fileUrl = environment.fileUrl;
 
   constructor(
     private apiService: ApiService,

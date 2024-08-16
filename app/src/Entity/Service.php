@@ -53,9 +53,44 @@ class Service
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'service')]
     private Collection $reservations;
 
+    /**
+     * @var Collection<int, Client>
+     */
+    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'services')]
+    private Collection $participants;
+
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Client $client): self
+    {
+        if (!$this->participants->contains($client)) {
+            $this->participants->add($client);
+            $client->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Client $client): self
+    {
+        if ($this->participants->removeElement($client)) {
+            $client->removeService($this);
+        }
+
+        return $this;
+    }
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+
     }
 
     public function getId(): ?int

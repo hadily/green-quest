@@ -14,6 +14,8 @@ class Client extends User
     {
         parent::__construct();
         $this->setRoles(['CLIENT']);
+        $this->services = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -25,7 +27,7 @@ class Client extends User
     /**
      * @var Collection<int, Service>
      */
-    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'participants')]
     private Collection $services;
 
     /**

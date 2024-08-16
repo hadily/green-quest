@@ -120,8 +120,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap");
 
 :root {
-  --color-primary: #2f57ef;
-  --color-secondary: #b966e7;
+  --color-primary: #2fef4c !important;
+  --color-secondary: #c9e766 !important;
   --color-coral: #E9967A;
   --color-violet: #800080;
   --color-pink: #DB7093;
@@ -9088,7 +9088,7 @@ hr {
 }
 
 .bg_image--3 {
-  background-image: url(../images/bg/bg-image-3.jpg);
+  background-image: url(../images/bg-image-3.jpg) !important;
 }
 
 .bg_image--4 {

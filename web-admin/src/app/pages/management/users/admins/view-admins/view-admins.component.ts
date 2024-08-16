@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { NewAdminComponent } from '../new-admin/new-admin.component';
 import { UpdateAdminComponent } from '../update-admin/update-admin.component';
 import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-view-admins',
@@ -17,6 +18,7 @@ export class ViewAdminsComponent implements OnInit {
   admins: any[] = [];
   private refreshSubscription: Subscription;
   searchQuery: string = '';
+  fileUrl = environment.fileUrl;
 
   constructor(
     private apiService: ApiService, 

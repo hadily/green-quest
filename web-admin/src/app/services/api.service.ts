@@ -115,16 +115,40 @@ export class ApiService {
   }
 
   
-  createClient(client: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/client/`, client);
+  createClient(client: any, fileName: any): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('email', client.email);
+    formData.append('password', client.password);
+    formData.append('firstName', client.firstName);
+    formData.append('lastName', client.lastName);
+    formData.append('phoneNumber', client.phoneNumber);
+    formData.append('localisation', client.localisation);
+    formData.append('adminId', client.adminId);
+    formData.append('imageFilename', fileName);
+    return this.http.post<FormData>(`${this.apiUrl}/client/`, formData);
   }
 
-  createAdmin(admin: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/admin/`, admin);
+  createAdmin(admin: any, fileName: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('email', admin.email);
+    formData.append('password', admin.password);
+    formData.append('firstName', admin.firstName);
+    formData.append('lastName', admin.lastName);
+    formData.append('phoneNumber', admin.phoneNumber);
+    formData.append('imageFilename', fileName);
+    return this.http.post<any>(`${this.apiUrl}/admin/`, formData);
   }
 
-  createArticle(article: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/article/`, article);
+  createArticle(article: any, fileName: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('title', article.title);
+    formData.append('subTitle', article.subTitle);
+    formData.append('summary', article.summary);
+    formData.append('text', article.text);
+    formData.append('date', article.date);
+    formData.append('writerId', article.writerId);
+    formData.append('imageFilename', fileName);
+    return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }
 
   createEvent(event: any): Observable<any> {
@@ -133,28 +157,65 @@ export class ApiService {
 
   /** UPDATE */
 
-  updatePartner(id: number, partner: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/partner/${id}`, partner);
+  updatePartner(id: number, partnerData: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('email', partnerData.email);
+    formData.append('firstName', partnerData.firstName);
+    formData.append('lastName', partnerData.lastName);
+    formData.append('phoneNumber', partnerData.phoneNumber);
+    formData.append('localisation', partnerData.localisation);
+    formData.append('companyName', partnerData.companyName);
+    formData.append('companyDescription', partnerData.companyDescription);
+    formData.append('imageFilename', file, file.name);
+
+    return this.http.post<any>(`${this.apiUrl}/partner/${id}`, formData);
   }
 
-  updateClient(id: number, client: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/client/${id}`, client);
+  updateClient(id: number, clientData: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('email', clientData.email);
+    formData.append('firstName', clientData.firstName);
+    formData.append('lastName', clientData.lastName);
+    formData.append('phoneNumber', clientData.phoneNumber);
+    formData.append('localisation', clientData.localisation);
+    formData.append('imageFilename', file, file.name);
+
+    return this.http.post(`${this.apiUrl}/client/${id}`, formData);
   }
 
-  updateAdmin(id: number, admin: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/admin/${id}`, admin);
+  updateAdmin(id: number, adminData: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('email', adminData.email);
+    formData.append('firstName', adminData.firstName);
+    formData.append('lastName', adminData.lastName);
+    formData.append('phoneNumber', adminData.phoneNumber);
+    formData.append('imageFilename', file, file.name);
+    return this.http.post<any>(`${this.apiUrl}/admin/${id}`, formData);
   }
 
-  updateArticle(id: number, article: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/article/${id}`, article);
+  updateArticle(id: number, article: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('title', article.title);
+    formData.append('subTitle', article.subTitle);
+    formData.append('summary', article.summary);
+    formData.append('text', article.text);
+    formData.append('date', article.date);
+    formData.append('imageFilename', file);
+    return this.http.post<any>(`${this.apiUrl}/article/${id}`, formData);
   }
 
   updateComplaints(id: number, complaint: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/complaints/${id}`, complaint);
   }
 
-  updateUser(id: number, user: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/user/${id}`, user);
+  updateUser(id: number, user: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('email', user.email);
+    formData.append('firstName', user.firstName);
+    formData.append('lastName', user.lastName);
+    formData.append('phoneNumber', user.phoneNumber);
+    formData.append('imageFilename', file, file.name);
+    return this.http.post<any>(`${this.apiUrl}/user/${id}`, formData);
   }
 
   updateEvent(id: number, event: any): Observable<any> {

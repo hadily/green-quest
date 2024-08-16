@@ -12,7 +12,18 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoading: boolean;
   private unsubscribe: Subscription[] = [];
-  user: any;
+  user: Partial<{
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    location: string;
+    companyName: string;
+    companyDescription: string;
+    roles: string[];
+    imageFilename: string | null;
+  }> = {};
+  file: any;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -27,16 +38,27 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(this.isPartner());
     this.loadUser();
   }
 
+  selectImage(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.user.imageFilename = file;
+    }
+  }
+
   saveSettings() {
+    const userId = this.authService.currentUserValue?.id ?? 0;
+    this.file = this.user.imageFilename;
+
     this.isLoading$.next(true);
   
     // Check if the user is a Partner
     const updateObservable = this.isPartner()
-      ? this.apiService.updatePartner(this.user.id, this.user)
-      : this.apiService.updateUser(this.user.id, this.user);
+      ? this.apiService.updatePartner(userId, this.user, this.file)
+      : this.apiService.updateUser(userId, this.user, this.file);
   
     // Subscribe to the updateObservable to handle the API response
     updateObservable.subscribe(
@@ -61,37 +83,37 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   loadUser(): void {
     const userId = this.authService.currentUserValue?.id ?? 0;
-
-    this.apiService.getUserById(userId).pipe(
-      switchMap(user => {
-        // Check if the user data was successfully retrieved
-        if (!user) {
-          throw new Error('User not found');
-        }
   
-        this.user = user; // Store the basic user data
-        console.log('Basic user data:', this.user);
+    this.apiService.getUserById(userId).subscribe(
+      user => {
+        // Store the basic user data
+        console.log('Loaded user data:', user);
+        this.user = user;
   
-        // Based on the role, fetch additional data
-        if (user.roles.includes('PARTNER')) {
-          return this.apiService.getPartnerById(userId).pipe(
-            map((partnerData: any) => ({ ...user, ...partnerData })) // Merge Partner data with user
+        // Wait for the isPartner check to finish
+        if (this.isPartner()) {
+          // Fetch additional Partner data
+          this.apiService.getPartnerById(userId).subscribe(
+            partnerData => {
+              console.log('Loaded partner data:', partnerData);
+              // Merge the Partner data with the basic user data
+              this.user = { ...this.user, ...partnerData };
+              console.log('Final merged user data:', this.user);
+            },
+            error => {
+              console.error('Error loading partner data:', error);
+            }
           );
         } else {
-          // If the role is not recognized, return the basic user data
-          return of(user);
+          console.log('User is not a partner. No additional data needed.');
         }
-      })
-    ).subscribe(
-      (      data: {}) => {
-        this.user = data; // Store the final merged user data
-        console.log('Final user data:', this.user);
       },
-      (      error: any) => {
-        console.error("Error fetching user data:", error);
+      error => {
+        console.error('Error loading user data:', error);
       }
     );
   }
+  
 
   isPartner(): boolean {
     return this.user?.roles?.includes('PARTNER') || false;

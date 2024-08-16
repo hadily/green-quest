@@ -22,6 +22,7 @@ export class NewClientComponent implements OnInit {
     roles: ['CLIENT']
   };
   admins : any[] = [];
+  file: any;
 
   constructor(
     public dialogRef: MatDialogRef<NewClientComponent>,
@@ -41,6 +42,16 @@ export class NewClientComponent implements OnInit {
     );
   }
 
+  selectImage(event: any) {
+    this.file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output: any = document.getElementById('imageFilename');
+      output.src = reader.result;
+    }
+    reader.readAsDataURL(this.file);
+  }
+
   generateRandomPassword(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
@@ -52,7 +63,7 @@ export class NewClientComponent implements OnInit {
   
   onSubmit(): void {
     this.client['password'] = this.generateRandomPassword();
-    this.apiService.createClient(this.client).subscribe(
+    this.apiService.createClient(this.client, this.file).subscribe(
       response => {
         console.log('Client created:', response);
         this.refreshService.triggerRefresh('/users/clients'); // Emit a value to notify other components

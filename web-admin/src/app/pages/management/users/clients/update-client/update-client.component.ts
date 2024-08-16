@@ -16,10 +16,10 @@ export class UpdateClientComponent {
     lastName: '',
     phoneNumber: '',
     localisation: '',
-    adminId: null,
-    roles: ['CLIENT']
+    roles: ['CLIENT'],
+    imageFilename: null
   };
-  admins: any[] = [];
+  file: any;
 
   constructor(
     public dialogRef: MatDialogRef<UpdateClientComponent>,
@@ -34,10 +34,16 @@ export class UpdateClientComponent {
     if (this.data.clientId !== undefined && this.data.clientId !== null) {
         console.log(this.data.clientId);
         this.loadClientData();
-        this.loadAdmins(); // Load admins to populate the dropdown
       } else {
         console.error('clientId is undefined or null');
       }
+  }
+  
+  selectImage(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.client.imageFilename = file;
+    }
   }
 
   loadClientData(): void {
@@ -52,30 +58,17 @@ export class UpdateClientComponent {
       }
     );
   }
-  
-  loadAdmins(): void {
-    this.apiService.getAllAdmins().subscribe(
-      response => {
-        console.log('Loaded admins:', response); // Debugging log
-        this.admins = response;
-      },
-      error => {
-        console.error('Error loading admins:', error);
-      }
-    );
-  }
 
   onUpdate(): void {
-    this.apiService.updateClient(this.data.clientId, this.client).subscribe(
-      response => {
-        this.dialogRef.close(true);
-        this.refreshService.triggerRefresh('/users/partners'); // Notify other components
-      },
-      error => {
-        console.error('Error updating partner:', error);
-        // Optionally show an error message to the user
-      }
-    );
+    this.file = this.client.imageFilename;
+    this.apiService.updateClient(this.data.clientId, this.client, this.file)
+      .subscribe(response => {
+        console.log('Client updated successfully', response);
+        this.refreshService.triggerRefresh('/users/clients'); // Emit a value to notify other components
+        this.closeModal();
+      }, error => {
+        console.error('Error updating client', error);
+      });
   }
 
   closeModal(): void {

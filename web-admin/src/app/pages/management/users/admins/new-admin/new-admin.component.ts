@@ -17,8 +17,9 @@ export class NewAdminComponent {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    roles: ['ADMIN']
+    roles: ['ADMIN'],
   };
+  file: any;
 
   constructor(
     public dialogRef: MatDialogRef<NewAdminComponent>,
@@ -38,10 +39,20 @@ export class NewAdminComponent {
     }
     return password;
   }
+
+  selectImage(event: any) {
+    this.file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output: any = document.getElementById('imageFilename');
+      output.src = reader.result;
+    }
+    reader.readAsDataURL(this.file);
+  }
   
   onSubmit(): void {
     this.admin['password'] = this.generateRandomPassword();
-    this.apiService.createAdmin(this.admin).subscribe(
+    this.apiService.createAdmin(this.admin, this.file).subscribe(
       response => {
         console.log('Admin created:', response);
         this.refreshService.triggerRefresh('/users/admins'); // Emit a value to notify other components

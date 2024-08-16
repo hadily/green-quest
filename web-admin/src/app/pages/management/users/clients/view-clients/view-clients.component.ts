@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { NewClientComponent } from '../new-client/new-client.component';
 import { UpdateClientComponent } from '../update-client/update-client.component';
 import { DeleteClientComponent } from '../delete-client/delete-client.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-view-clients',
@@ -17,6 +18,7 @@ export class ViewClientsComponent implements OnInit{
   clients: any[] = [];
   private refreshSubscription: Subscription;
   searchQuery: string = '';
+  fileUrl = environment.fileUrl;
 
   constructor(
     private apiService: ApiService, 

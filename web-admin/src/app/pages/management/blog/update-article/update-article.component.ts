@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-update-article',
@@ -14,8 +15,12 @@ export class UpdateArticleComponent {
     subTitle: '',
     summary: '',
     text: '',
-    date: ''
+    date: '',
+    imageFilename: null
   };
+  file: any;
+  fileUrl = environment.fileUrl;
+
 
   constructor(
     public dialogRef: MatDialogRef<UpdateArticleComponent>,
@@ -28,6 +33,13 @@ export class UpdateArticleComponent {
 
   ngOnInit(): void {
       this.loadArticleData();
+  }
+
+  selectImage(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.article.imageFilename = file;
+    }
   }
 
   loadArticleData(): void {
@@ -44,7 +56,8 @@ export class UpdateArticleComponent {
   }
 
   onUpdate(): void {
-    this.apiService.updateArticle(this.data.articleId, this.article).subscribe(
+    this.file = this.article.imageFilename;
+    this.apiService.updateArticle(this.data.articleId, this.article, this.file).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/blog/articles'); // Notify other components

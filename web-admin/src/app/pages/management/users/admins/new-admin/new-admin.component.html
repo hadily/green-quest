@@ -4,6 +4,10 @@
 <h2>Create New Admint</h2>
 <form (ngSubmit)="onSubmit()" #partnerForm="ngForm">
   <div class="form-group">
+    <div class="form-group">
+      <label for="imageFilename">Profile Picture</label>
+      <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
+    </div>
     <label for="email">Email</label>
     <input type="email" id="email" [(ngModel)]="admin.email" name="email" required>
   </div>

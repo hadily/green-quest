@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use \Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Service\UploadFileService;
 
 
 
@@ -56,7 +58,8 @@ class UserController extends AbstractController
                 'role' => $user->getRoles(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
-                'phoneNumber' => $user->getPhoneNumber()
+                'phoneNumber' => $user->getPhoneNumber(),
+                'imageFilename' => $user->getImageFilename()
             ];
         }
         return new JsonResponse($data, Response::HTTP_OK);
@@ -78,6 +81,7 @@ class UserController extends AbstractController
             'lastName' => $user->getLastName(),
             'phoneNumber' => $user->getPhoneNumber(),
             'roles' => $user->getRoles(),
+            'imageFilename' => $user->getImageFilename()
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
@@ -102,8 +106,8 @@ class UserController extends AbstractController
     //     return new JsonResponse(['message' => 'User created'], Response::HTTP_CREATED);
     // }
 
-    #[Route('/{id}', name: 'updateUser', methods: ['PUT'])]
-    public function updateUser(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
+    #[Route('/{id}', name: 'updateUser', methods: ['POST'])]
+    public function updateUser(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UploadFileService $ufService): JsonResponse
     {
         $user = $userRepository->find($id);
         if (!$user) {
@@ -114,25 +118,31 @@ class UserController extends AbstractController
             return new JsonResponse(['message' => 'Cannot update this user'], Response::HTTP_FORBIDDEN);
         }
 
-        $data = json_decode($request->getContent(), true);
+        // Handle file upload
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get('imageFilename');
 
-        if (isset($data['email'])) {
-            $user->setEmail($data['email']);
+        if ($file instanceof UploadedFile) {
+            $imageName = $ufService->uploadFile($file);
+            $user->setImageFilename($imageName); // Assuming you have a method to set the file name
         }
-        if (isset($data['password'])) {
-            $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+
+        $email = $request->request->get('email');
+        $firstName = $request->request->get('firstName');
+        $lastName = $request->request->get('lastName');
+        $phoneNumber = $request->request->get('phoneNumber');
+
+        if ($email !== null) {
+            $user->setEmail($email);
         }
-        if (isset($data['firstName'])) {
-            $user->setFirstName($data['firstName']);
+        if ($firstName !== null) {
+            $user->setFirstName($firstName);
         }
-        if (isset($data['lastName'])) {
-            $user->setLastName($data['lastName']);
+        if ($lastName !== null) {
+            $user->setLastName($lastName);
         }
-        if (isset($data['phoneNumber'])) {
-            $user->setPhoneNumber($data['phoneNumber']);
-        }
-        if (isset($data['roles'])) {
-            $user->setRoles($data['roles']);
+        if ($phoneNumber !== null) {
+            $user->setPhoneNumber($phoneNumber);
         }
 
         $entityManager->persist($user);

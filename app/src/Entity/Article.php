@@ -3,14 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    private $entityManager; 
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -32,7 +37,7 @@ class Article
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, name:"writer_id", referencedColumnName:"id", onDelete:"SET NULL")]
     private ?User $writer = null;
 
     #[ORM\Column(nullable: true)]
@@ -44,9 +49,13 @@ class Article
     #[ORM\OneToMany(targetEntity: Complaints::class, mappedBy: 'relatedTo')]
     private Collection $complaints;
 
+    #[ORM\Column(length: 255)]
+    private ?string $imageFilename;
+
     public function __construct()
     {
         $this->complaints = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -164,6 +173,18 @@ class Article
                 $complaint->setRelatedTo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(string $imageFilename): static
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }

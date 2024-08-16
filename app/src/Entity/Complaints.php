@@ -30,7 +30,7 @@ class Complaints
     #[ORM\ManyToOne(inversedBy: 'complaints')]
     private ?Article $relatedTo = null;
 
-    #[ORM\ManyToOne(inversedBy: 'complaints')]
+    #[ORM\ManyToOne(targetEntity: Admin::class, inversedBy: 'fixedComplaints')]
     private ?Admin $admin = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
