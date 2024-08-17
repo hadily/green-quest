@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from 'src/app/modules/auth';
 import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
 
@@ -28,7 +29,8 @@ export class UpdatePartnersComponent {
     public dialogRef: MatDialogRef<UpdatePartnersComponent>,
       @Inject(MAT_DIALOG_DATA) public data: { partnerId: number },
       private apiService: ApiService,
-      private refreshService: RefreshService
+      private refreshService: RefreshService,
+      private authService: AuthService,
     ) {
       console.log('Dialog data:', data);
     }

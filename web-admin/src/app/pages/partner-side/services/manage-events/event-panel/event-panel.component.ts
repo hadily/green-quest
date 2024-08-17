@@ -1,5 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from 'src/app/modules/auth';
 import { ApiService } from 'src/app/services/api.service';
+import { RefreshService } from 'src/app/services/refresh.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-event-panel',
@@ -7,45 +11,70 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./event-panel.component.scss']
 })
 export class EventPanelComponent implements OnInit {
-  @Input() event!: any;
-  eventDetails: any;
-  ownerDetails: any;
+  event = {
+    serviceName: '',
+    description: '',
+    startDate: '',
+    endDate: '',
+    available: '',
+    price: '',
+    ownerId: 0,
+    imageFilename: null
+  };
+  file: any;  
+  fileUrl = environment.fileUrl;
 
   constructor(
-    private apiService: ApiService
+    public dialogRef: MatDialogRef<EventPanelComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
+    private apiService: ApiService,
+    private refreshService: RefreshService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
-    console.log('Received event: ', this.event);
-    if (this.event && this.event.id) {
-      this.loadEventDetails();
+  ngOnInit(): void {}
+
+  selectImage(event: any) {
+    this.file = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output: any = document.getElementById('imageFilename');
+      output.src = reader.result;
     }
+    reader.readAsDataURL(this.file);
   }
 
-  loadEventDetails(): void {
-    this.apiService.getEventById(this.event.id).subscribe(
-      (data) => {
-        this.eventDetails = data;
-        console.log('eventDetails ', this.eventDetails);
-        if (this.eventDetails && this.eventDetails.owner) {
-          this.loadOwnerDetails(this.eventDetails.owner.id);
-        }
+  loadArticleData(): void {
+    this.apiService.getEventById(this.data.eventId).subscribe(
+      response => {
+        console.log('onsode apiService arrow fun', this.data.eventId);
+        console.log('Loaded article data:', response); // Debugging log
+        this.event = response;
       },
-      (error) => {
-        console.error('Error fetching event details', error);
+      error => {
+        console.error('Error loading partner data:', error);
       }
     );
   }
 
-  loadOwnerDetails(ownerId: number): void {
-    this.apiService.getPartnerById(ownerId).subscribe(
-      (data) => {
-        this.ownerDetails = data;
-        console.log('ownerDetails ', this.ownerDetails);
+  onUpdate(): void {
+    this.event.ownerId = this.authService.currentUserValue?.id ?? 0;
+    this.file = this.event.imageFilename;
+    this.apiService.updateEvent(this.data.eventId, this.event, this.file).subscribe(
+      response => {
+        this.dialogRef.close(true);
+        this.refreshService.triggerRefresh('/partner/services/events'); // Notify other components
       },
-      (error) => {
-        console.error('Error fetching owner details', error);
+      error => {
+        console.error('Error updating event:', error);
+        // Optionally show an error message to the user
       }
     );
   }
+
+  closeModal(): void {
+    this.dialogRef.close(); // Close the modal without any action
+  }
+
+  
 }

@@ -59,6 +59,9 @@ class Service
     #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'services')]
     private Collection $participants;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFilename = null;
+
     /**
      * @return Collection<int, Client>
      */
@@ -232,6 +235,18 @@ class Service
                 $reservation->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): static
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }

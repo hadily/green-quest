@@ -97,6 +97,10 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/event/${id}`);
   }
 
+  getAllEventsByOwner(ownerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/event/owner/${ownerId}`);
+  }
+
   /** CREATE */
 
   createPartner(partner: any, fileName: any): Observable<any> {
@@ -151,7 +155,16 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }
 
-  createEvent(event: any): Observable<any> {
+  createEvent(owner: any, event: any, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('serviceName', event.serviceName);
+    formData.append('description', event.description);
+    formData.append('startDate', event.startDate);
+    formData.append('endDate', event.endDate);
+    formData.append('price', event.price);
+    formData.append('available', event.available);
+    formData.append('ownerId', owner);
+    formData.append('imageFilename', file);
     return this.http.post<any>(`${this.apiUrl}/event/`, event);
   }
 
@@ -218,8 +231,16 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/user/${id}`, formData);
   }
 
-  updateEvent(id: number, event: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/event/${id}`, event);
+  updateEvent(id: number, event: any, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('serviceName', event.serviceName);
+    formData.append('descritpion', event.descritpion);
+    formData.append('startdate', event.startdate);
+    formData.append('endDate', event.endDate);
+    formData.append('available', event.available);
+    formData.append('price', event.price);
+    formData.append('imageFilename', file, file.name);
+    return this.http.put<any>(`${this.apiUrl}/event/${id}`, formData);
   }
 
   /** DELETE */

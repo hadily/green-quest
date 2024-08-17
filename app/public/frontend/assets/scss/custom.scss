@@ -1,0 +1,22 @@
+.home-bg {
+    background-image: url(../images/bg/bg-image-3.jpg) !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    background: linear-gradient(90deg, #2fef4c, #c9e766) !important;
+    height: 750rem;
+    display: flex;
+    align-items: center;
+    background-position: center;
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "Euclid Circular";
+    color: #ffffff;
+    font-weight: 400;
+  }
+
+.title, .display-one {
+    color: #ffffff;
+}

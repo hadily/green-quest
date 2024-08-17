@@ -1,68 +1,37 @@
-<!--begin::Body -->
-<div class="card-body pb-0">
-    <!--begin::Header -->
-    <div class="d-flex align-items-center mb-5">
-      <!--begin::User -->
-      <div class="d-flex align-items-center flex-grow-1">
-        <!--begin::Avatar -->
-        <div class="symbol symbol-45px me-5">
-          <img src="./assets/media/avatars/300-25.jpg" alt="" />
-        </div>
-        <!--end::Avatar -->
-  
-        <!--begin::Info -->
-        <div class="d-flex flex-column">
-          <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder">
-            {{ ownerDetails.firstName }}  {{ ownerDetails.lastName }}
-          </a>
-  
-          <span class="text-gray-500 fw-bold">{{ ownerDetails.location }}</span>
-        </div>
-        <!--end::Info -->
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <h2>Update Partner</h2>
+  <form (ngSubmit)="onUpdate()" #partnerForm="ngForm">
+    <div class="form-group">
+      <div class="form-group">
+        <label for="imageFilename">Image</label>
+        <img  src="{{fileUrl}}/uploads/{{event.imageFilename}}">
+        <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
       </div>
-      <!--end::User -->
-  
-      <!--begin::Menu -->
-      <div class="my-0">
-        <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-          <i class="bi bi-pen"></i>
-        </button>
-        <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
-          <i class="bi bi-trash2"></i>
-        </button>
-      </div>
-      <!--end::Menu -->
+      <label for="serviceName">Event Name</label>
+      <input type="serviceName" id="serviceName" [(ngModel)]="event.serviceName" name="serviceName" required>
     </div>
-    <!--end::Header -->
-  
-    <!--begin::Post -->
-    <div class="mb-5">
-      <!--begin::Image -->
-      <div
-        class="bgi-no-repeat bgi-size-cover rounded min-h-250px mb-5"
-        [style.background-image]="'url(./assets/media/stock/900x600/20.jpg)'"
-      ></div>
-      <!--end::Image -->
-  
-      <!-- Event Title -->
-      <div class="text-gray-800 mb-5">
-        <h2 class="font-bold text-xl">{{ eventDetails.serviceName }}</h2>
-      </div>
-  
-      <!-- Event Description -->
-      <div class="text-gray-800 mb-5">
-        {{ eventDetails.description }}
-      </div>
-
-      <!-- Event Details -->
-      <div class="text-gray-600 mb-5">
-        <p><strong>Start Date:</strong> {{ eventDetails.startDate | date }}</p>
-        <p><strong>End Date:</strong> {{ eventDetails.endDate | date }}</p>
-        <p><strong>Price:</strong> {{ eventDetails.price | currency }}</p>
-        <p><strong>Available:</strong> {{ eventDetails.available ? 'Yes' : 'No' }}</p>
-      </div>
+    <div class="form-group">
+      <label for="description">Event Description</label>
+      <textarea id="description" [(ngModel)]="event.description" name="description" required></textarea>
     </div>
-    <!--end::Post -->
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" [(ngModel)]="event.startDate" name="startDate" required>
+    </div>
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" [(ngModel)]="event.endDate" name="endDate" required>
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="text" id="price" [(ngModel)]="event.price" name="price" required>
+    </div>
+    <div class="form-group">
+      <label for="available">Available</label>
+      <input type="text" id="available" [(ngModel)]="event.available" name="available" required>
+    </div>
+    <button type="submit">Update</button>
+    <button type="button" (click)="closeModal()">Cancel</button>
+  </form>
 </div>
-<!--end::Body -->
-  

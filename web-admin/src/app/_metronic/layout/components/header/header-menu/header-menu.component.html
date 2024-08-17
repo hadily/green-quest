@@ -10,6 +10,7 @@
   class="menu-item menu-lg-down-accordion me-lg-1 menu-dropdown"
   data-kt-menu-trigger="click"
   data-kt-menu-placement="bottom-start"
+  *ngIf="!isPartnerUser"
 >
   <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/crafted')">
     <span class="menu-title">Management</span>
@@ -167,6 +168,7 @@
   class="menu-item menu-lg-down-accordion me-lg-1 menu-dropdown"
   data-kt-menu-trigger="click"
   data-kt-menu-placement="bottom-start"
+  *ngIf="isPartnerUser"
 >
   <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/crafted')">
     <span class="menu-title">Partner Management</span>

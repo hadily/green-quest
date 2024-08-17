@@ -47,7 +47,8 @@ class ArticleController extends AbstractController
                 'summary' => $article->getSummary(),
                 'text' => $article->getText(),
                 'date' => $article->getDate()->format('Y-m-d'),
-                'likes' => $article->getLikes()
+                'likes' => $article->getLikes(),
+                'imageFilename' => $article->getImageFilename()
             ];
         }
 

@@ -2,6 +2,10 @@
     <h2>Create New Event</h2>
     <form (ngSubmit)="onSubmit()" #eventForm="ngForm">
       <div class="form-group">
+        <div class="form-group">
+          <label for="imageFilename">Image</label>
+          <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
+        </div>
         <label for="serviceName">Service Name</label>
         <input type="text" id="serviceName" [(ngModel)]="event.serviceName" name="serviceName" required>
       </div>

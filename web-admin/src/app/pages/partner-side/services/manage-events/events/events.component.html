@@ -1,20 +1,80 @@
-<div class="row g-5 g-xl-8">
-    <!-- First Column -->
-    <div class="col-xl-6">
-      <ng-container *ngFor="let event of events; let i = index"> <!-- getFilteredEvents() -->
-        <ng-container *ngIf="i % 2 === 0">
-          <app-event-panel class="card mb-5 mb-xl-8" [event]="event"></app-event-panel>
-        </ng-container>
-      </ng-container>
-    </div>
-  
-    <!-- Second Column -->
-    <div class="col-xl-6">
-      <ng-container *ngFor="let event of events; let i = index">
-        <ng-container *ngIf="i % 2 !== 0">
-          <app-event-panel class="card mb-5 mb-xl-8" [event]="event"></app-event-panel>
-        </ng-container>
-      </ng-container>
+<div class="table-container">
+  <!-- begin::Header -->
+  <div class="card-header border-0 pt-5">
+    <h3 class="card-title align-items-start flex-column">
+      <span class="card-label fw-bolder fs-3 mb-1">Latest Events</span>
+      <span class="text-muted mt-1 fw-bold fs-7">Total Events : {{ events.length }}</span>
+    </h3>
+
+    <div class="header-actions">
+      <div class="card-toolbar" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-trigger="hover" title="Click to add a user">
+        <button (click)="openModal()" class="btn btn-sm btn-light-primary">
+          <i class="bi bi-plus-lg"></i>
+          New Event
+        </button>
+      </div>
     </div>
   </div>
-  
+  <!-- end::Header -->
+
+  <!-- begin::Body -->
+  <div class="card-body py-3">
+    <!-- begin::Table container -->
+    <div class="table-responsive">
+      <!-- begin::Table -->
+      <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+        <!-- begin::Table head -->
+        <thead>
+          <tr class="fw-bolder text-muted">
+            <th class="min-w-100px">Event</th>
+            <th class="min-w-80px">Start Date</th>
+            <th class="min-w-80px">End Date</th>
+            <th class="min-w-80px">Available</th>
+            <th class="min-w-80px">Price</th>
+            <th class="min-w-60px text-end">Actions</th>
+          </tr>
+        </thead>
+        <!-- end::Table head -->
+        
+        <!-- begin::Table body -->
+        <tbody>
+            <tr *ngFor="let article of events">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex justify-content-start flex-column">
+                      <a href="#" class="text-gray-900 fw-bolder text-hover-primary fs-6">{{article.serviceName}}</a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.startDate}}</a>
+                </td>
+                <td>
+                  <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.endDate}}</a>
+                </td>
+                <td>
+                  <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.available}}</a>
+                </td>
+                <td>
+                  <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.price}}</a>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-end flex-shrink-0">
+                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(article.id)">
+                      <i class="bi bi-pen"></i>
+                    </button>
+                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="openDeleteModal(article.id)">
+                      <i class="bi bi-trash2"></i>
+                    </button>
+                  </div>
+                </td>
+            </tr>
+        </tbody>
+        <!-- end::Table body -->
+      </table>
+      <!-- end::Table -->
+    </div>
+    <!-- end::Table container -->
+  </div>
+  <!-- end::Body -->
+</div>

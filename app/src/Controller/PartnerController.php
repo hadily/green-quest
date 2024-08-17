@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Partner;
 use App\Entity\Admin;
+use App\Repository\EventRepository;
 use App\Repository\PartnerRepository;
 use App\Service\UploadFileService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 #[Route('/api/partner')]
 class PartnerController extends AbstractController
@@ -199,6 +202,25 @@ class PartnerController extends AbstractController
         }
 
         return new JsonResponse($data);
+    }
+
+    #[Route('/{id}/events', name:'getAllEvents', methods:['GET'])]
+    public function getPartnerEvents(int $id, PartnerRepository $partnerRepository, SerializerInterface $serializer, EventRepository $eventRepository): Response
+    {
+        // Fetch the partner from the database
+        $partner = $partnerRepository->find($id);
+        
+        if (!$partner) {
+            return new JsonResponse(['message' => 'Partner not found'], Response::HTTP_NOT_FOUND);
+        }
+        
+        // Fetch events associated with the partner
+        $events = $eventRepository->findBy(['owner' => $partner]);
+        
+        // Serialize the events data
+        $jsonEvents = $serializer->serialize($events, 'json', ['groups' => ['event_details']]);
+        
+        return new JsonResponse($jsonEvents, Response::HTTP_OK, [], true);
     }
 }
 

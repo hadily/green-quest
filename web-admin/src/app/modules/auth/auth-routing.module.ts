@@ -6,7 +6,12 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { LogoutComponent } from './components/logout/logout.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

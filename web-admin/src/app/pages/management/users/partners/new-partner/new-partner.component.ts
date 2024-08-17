@@ -71,6 +71,7 @@ export class NewPartnerComponent implements OnInit {
   onSubmit(): void {
     console.log(this.partner)
     this.partner['password'] = this.generateRandomPassword();
+    console.log('pwd : ',this.partner['password']);
     this.apiService.createPartner(this.partner, this.file).subscribe(
       response => {
         console.log('Partner created:', response);
