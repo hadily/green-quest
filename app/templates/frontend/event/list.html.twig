@@ -24,6 +24,107 @@
 										<i class="feather-chevron-right"></i>
 									</div>
 								</li>
+								<li class="rbt-breadcrumb-item active">All Events</li>
+							</ul>
+							<!-- End Breadcrumb Area  -->
+
+							<div class=" title-wrapper">
+								<h1 class="title mb--0">All Events</h1>
+								<a href="#" class="rbt-badge-2">
+									{{list | length}} Events
+								</a>
+							</div>
+
+							<p class="description">Explore and Embrace Nature: Discover Our Top Outdoor Activities and Events</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Banner Content Top  -->
+		</div>
+	</div>
+
+	<div class="rbt-shop-area rbt-section-overlayping-top rbt-section-gapBottom">
+		<div class="container">
+			<div class="row g-5">
+				{% for product in list %}
+					<!-- Start Single Product  -->
+					<div class="col-lg-4 col-md-6 col-12">
+						<div class="rbt-default-card style-three rbt-hover">
+							<div class="inner">
+								<div class="content pt--0 pb--10">
+									<h2 class="title">
+										<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">{{event.serviceName}}</a>
+									</h2>
+								</div>
+								<div class="thumbnail">
+									<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">
+										<img src="{{ asset('uploads/') ~ event.imageFilename }}" alt="{{event.serviceName}}">
+									</a>
+								</div>
+								<div class="content">
+									<div class="justify-content-center">
+										{{event.description}}
+									</div>
+									<div class="rbt-price justify-content-center mt--10">
+										<span class="current-price theme-gradient">{{event.price}}
+											Dt</span>
+									</div>
+									<div class="addto-cart-btn mt--20">
+										<a class="rbt-btn btn-gradient hover-icon-reverse" href="{{ path('frontend_event_detail', {'id': event.id}) }}">
+											<span class="icon-reverse-wrapper">
+												<span class="btn-text">Details</span>
+												<span class="btn-icon">
+													<i class="feather-arrow-right"></i>
+												</span>
+												<span class="btn-icon">
+													<i class="feather-arrow-right"></i>
+												</span>
+											</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Product  -->
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="rbt-separator-mid">
+		<div class="container">
+			<hr class="rbt-separator m-0">
+		</div>
+	</div>
+{% endblock %}
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+	<div
+		class="rbt-page-banner-wrapper">
+		<!-- Start Banner BG Image  -->
+		<div class="rbt-banner-image"></div>
+		<!-- End Banner BG Image  -->
+		<div
+			class="rbt-banner-content">
+			<!-- Start Banner Content Top  -->
+			<div class="rbt-banner-content-top">
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-12">
+							<!-- Start Breadcrumb Area  -->
+							<ul class="page-list">
+								<li class="rbt-breadcrumb-item">
+									<a href="{{ path('frontend_index') }}">Home</a>
+								</li>
+								<li>
+									<div class="icon-right">
+										<i class="feather-chevron-right"></i>
+									</div>
+								</li>
 								<li class="rbt-breadcrumb-item active">All Products</li>
 							</ul>
 							<!-- End Breadcrumb Area  -->

@@ -41,6 +41,16 @@ class PartnerRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function findById($value): array
+       {
+           return $this->createQueryBuilder('p')
+               ->andWhere('p.id = :val')
+               ->setParameter('val', $value)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+
     public function searchPartners(string $query)
     {
         return $this->createQueryBuilder('p')

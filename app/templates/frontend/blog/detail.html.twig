@@ -5,18 +5,18 @@
 		<div class="breadcrumb-image-container breadcrumb-style-max-width">
 			<div class="breadcrumb-image-wrapper">
 				<div class="breadcrumb-dark">
-					<img src="{{ asset('frontend/assets/images/bg/bg-image-10.jpg') }}" alt="Education Images">
+					<img src="{{ asset('frontend/assets/images/bg/bg-image-3.jpg') }}" alt="Nature Images">
 				</div>
 			</div>
 			<div class="breadcrumb-content-top text-center">
 				<ul class="meta-list justify-content-center mb--10">
 					<li class="list-item">
 						<i class="feather-clock"></i>
-						<span>{{blog.createdAt | date('d/m/Y')}}</span>
+						<span>{{blog.date | date('d/m/Y')}}</span>
 					</li>
 				</ul>
 				<h1 class="title">{{blog.title}}</h1>
-				<p>{{blog.description}}</p>
+				<p>{{blog.subTitle}}</p>
 			</div>
 		</div>
 
@@ -25,10 +25,11 @@
 				<div class="content">
 					<div class="post-thumbnail mb--30 position-relative wp-block-image alignwide">
 						<figure>
-							<img src="{{ asset('frontend/assets/images/blog/blog-single-03.png') }}" alt="Blog Images">
+							<img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="Blog Image">
 						</figure>
 					</div>
-                    {{blog.detailedDescription | raw}}
+					<strong>{{blog.summary}}</strong>
+				    <p>{{blog.text | raw}}</p>
 				</div>
 			</div>
 		</div>

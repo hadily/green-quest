@@ -6,25 +6,25 @@
 			<div class="row g-5 row--30 align-items-center">
 				<div class="col-lg-6">
 					<div class="thumbnail">
-						<img class="w-100 radius-10" src="{{ asset('uploads/') ~ product.imageFilename }}" alt="{{product.serviceName}}">
+						<img class="w-100 radius-10" src="{{ asset('uploads/') ~ event.imageFilename }}" alt="{{event.serviceName}}">
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="content">
-						<h2 class="title mt--10 mb--10">{{product.serviceName}}</h2>
+						<h2 class="title mt--10 mb--10">{{event.serviceName}}</h2>
 						<div class="rbt-price justify-content-start mt--10">
-							<span class="current-price theme-gradient">{{product.price}} Dt</span>
+							<span class="current-price theme-gradient">{{event.price}} Dt</span>
 						</div>
 						
 						
                         <div class="rbt-price justify-content-start mt--10">
                             <strong>Available: </strong>
                             <span class="current-price theme-gradient">
-                                {{ product.available == 1 ? 'Yes' : 'No' }}
+                                {{ event.available == 1 ? 'Yes' : 'No' }}
                             </span>
                         </div>
                         <div class="rbt-price justify-content-start mt--10">
-							<span class="current-price theme-gradient"> {{product.startDate}} - {{product.endDate}}</span>
+							<span class="current-price theme-gradient"> {{event.startDate}} - {{event.endDate}}</span>
 						</div>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 
 					<div class="tab-content" id="myTabContent">
 						<div class="product-description-content tab-pane fade active show" id="home-4" role="tabpanel" aria-labelledby="home-tab-4">
-							<p>{{product.description | raw }}</p>
+							<p>{{event.description | raw }}</p>
 						</div>
 					</div>
 				</div>

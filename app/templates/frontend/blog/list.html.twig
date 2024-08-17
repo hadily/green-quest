@@ -17,23 +17,21 @@
 							<!-- Start Breadcrumb Area  -->
 							<ul class="page-list">
 								<li class="rbt-breadcrumb-item">
-									<a href="{{ path('frontend_index') }}">Accueil</a>
+									<a href="{{ path('frontend_index') }}">Home</a>
 								</li>
 								<li>
 									<div class="icon-right">
 										<i class="feather-chevron-right"></i>
 									</div>
 								</li>
-								<li class="rbt-breadcrumb-item active">Tous les articles</li>
+								<li class="rbt-breadcrumb-item active">All Articles</li>
 							</ul>
 							<!-- End Breadcrumb Area  -->
 
 							<div class=" title-wrapper">
-								<h1 class="title mb--0">Tous les articles</h1>
+								<h1 class="title mb--0">All Articles</h1>
 								<a href="#" class="rbt-badge-2">
-									<div class="image">🎉</div>
-									{{list | length }}
-									Articles
+									{{list | length }}  Articles
 								</a>
 							</div>
 
@@ -55,7 +53,7 @@
 								<ul class="meta-list justify-content-end mb--10">
 									<li class="list-item">
 										<i class="feather-clock"></i>
-										<span>{{blog.createdAt | date("m/d/Y") }}</span>
+										<span>{{blog.date | date("m/d/Y") }}</span>
 									</li>
 								</ul>
 								<div class="content pt--0 pb--10">
@@ -63,19 +61,19 @@
 										<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">{{blog.title}}</a>
 									</h2>
 									<span class="team-form">
-										<span class="location">{{blog.category.title}}</span>
+										<span class="location">{{blog.subTitle}}</span>
 									</span>
 
 								</div>
 								<div class="thumbnail">
 									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">
-										<img src="{{ asset('uploads/') ~ blog.image }}" alt="{{blog.title}}">
+										<img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="{{blog.title}}">
 									</a>
 								</div>
 								<div class="content">
-									{{blog.description}}
+									{{blog.summary}}
 									<div class="rbt-card-bottom mt--40">
-										<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">Lire plus<i>
+										<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">Read more<i>
 												<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">
 													<g stroke="#27374D" fill="none" fill-rule="evenodd">
 														<path d="M10.614 0l5.629 5.629-5.63 5.629"/>

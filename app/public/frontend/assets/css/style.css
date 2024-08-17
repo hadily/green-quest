@@ -249,7 +249,7 @@
   --gradient-5: linear-gradient(rgb(239, 241, 255) 0%, rgb(239, 241, 255) 100%);
   --gradient-6: linear-gradient(to right, rgba(255, 255, 255, 0.15), rgba(251, 199, 226, 0.15), rgba(220, 217, 254, 0.15));
   --gradient-7: linear-gradient(218.15deg, var(--color-secondary) 0%, var(--color-primary) 100%);
-  --gradient-8: linear-gradient(270deg, #9e77ff 0%, #4460ff 100%);
+  --gradient-8: linear-gradient(270deg, #c9e76f 0%, #2fef4c 100%);
   --gradient-9: linear-gradient(180deg, #6827FF 0%, #E3F0FF 100%);
   --gradient-10: linear-gradient(180deg, #353e54d9 0%, #27304117 100%);
 }
@@ -1581,7 +1581,7 @@ ul.rbt-dropdown-menu li a {
 }
 
 .bg-gradient-8 {
-  background: var(--gradient-8) !important;
+  background: linear-gradient(270deg, #c9e76f 0%, #2fef4c 100%) !important;
 }
 
 .bg-gradient-10 {
@@ -8670,7 +8670,6 @@ textarea:-ms-input-placeholder {
   position: absolute;
   bottom: -2px;
   left: 0;
-  background: url(../images/bg/banner-bg-shape-1.png);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -19723,8 +19722,8 @@ span.transparent-button:hover i {
 .rbt-badge-2 {
   display: flex;
   align-items: center;
-  background: rgba(226, 213, 252, 0.8);
-  box-shadow: 0 12px 22px 0 rgba(214, 191, 242, 0.28);
+  /*background: rgba(247, 243, 255, 0.8);*/
+  box-shadow: 0 12px 22px 0 rgba(151, 141, 163, 0.28);
   padding: 0 20px;
   border: 1px solid #fff;
   border-radius: 500px;
@@ -36569,7 +36568,7 @@ Course Sidebar
 }
 
 .active-dark-mode .rbt-round-bottom-shape::after {
-  background: url(../images/dark/bg/banner-bg-shape-1.svg);
+  backgrond: url(../images/dark/bg/banner-bg-shape-1.svg);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

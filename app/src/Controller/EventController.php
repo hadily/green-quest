@@ -63,6 +63,30 @@ class EventController extends AbstractController
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
+    #[Route('/{id}', name: 'getEventeById', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function getEventById(int $id): JsonResponse
+    {
+        $event = $this->eventRepository->find($id);
+
+        if (!$event) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'id' => $event->getId(),
+            'serviceName' => $event->getServiceName(),
+            'description' => $event->getDescription(),
+            'startDate' => $event->getStartDate()?->format('Y-m-d'),
+            'endDate' => $event->getEndDate()?->format('Y-m-d'),
+            'price' => $event->getPrice(),
+            'ownerId' => $event->getOwner()->getId(),
+            'available' => $event->isAvailable(),
+            'imageFilename' => $event->getImageFilename()
+        ];
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
+    }
+
     #[Route('/', name: 'list_events', methods: ['GET'])]
     public function listEvents(): JsonResponse
     {
@@ -146,23 +170,23 @@ class EventController extends AbstractController
         $price = $request->request->get('price');
         $available = $request->request->get('available');
 
-        if (isset($data['serviceName'])) {
-          $event->setServiceName($data['serviceName']);
+        if ($serviceName !== null) {
+          $event->setServiceName($serviceName);
         }
-        if (isset($data['description'])) {
-          $event->setDescription($data['description']);
+        if ($description !== null) {
+          $event->setDescription($description);
         }
-        if (isset($data['startDate'])) {
-          $event->setStartDate($data['startDate']);
+        if ($startDate !== null) {
+          $event->setStartDate($startDate);
         }
-        if (isset($data['endDate'])) {
-          $event->setEndDate($data['endDate']);
+        if ($endDate !== null) {
+          $event->setEndDate($endDate);
         }
-        if (isset($data['price'])) {
-          $event->setPrice($data['price']);
+        if ($price !== null) {
+          $event->setPrice($price);
         }
-        if (isset($data['available'])) {
-          $event->setAvailable($data['available']);
+        if ($available !== null) {
+          $event->setAvailable($available);
         }
 
         $this->entityManager->flush();

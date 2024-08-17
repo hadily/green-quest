@@ -27,6 +27,24 @@ class EventRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAll(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.id, e.serviceName, e.description, e.startDate, e.endDate, e.price, e.available, e.imageFilename')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function getDetailsById(int $id): ?array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.id, e.serviceName, e.description, e.startDate, e.endDate, e.price, e.available, e.imageFilename')
+            ->where('e.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();;
+    }
+
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

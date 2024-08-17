@@ -11,7 +11,8 @@ use App\Repository\PartnerRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
+use App\Service\UploadFileService;
+use Symfony\Component\HttpFoundation\File\UploadedFile; 
 
 #[Route('/api/product')]
 class ProductController extends AbstractController
@@ -20,17 +21,20 @@ class ProductController extends AbstractController
     private $partnerRepository;
     private $entityManager;
     private $validator;
+    private $ufService;
 
     public function __construct(
         ProductRepository $productRepository,
         PartnerRepository $partnerRepository,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        UploadFileService $ufService
     ) {
         $this->productRepository = $productRepository;
         $this->partnerRepository = $partnerRepository;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->ufService = $ufService;
     }
 
     #[Route('/{id}', name: 'get_product', methods: ['GET'])]
@@ -39,21 +43,46 @@ class ProductController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if (!$product) {
-            return new JsonResponse(['message' => 'Product not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Event not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse([
+        $data = [
             'id' => $product->getId(),
             'serviceName' => $product->getServiceName(),
             'description' => $product->getDescription(),
             'startDate' => $product->getStartDate()?->format('Y-m-d'),
             'endDate' => $product->getEndDate()?->format('Y-m-d'),
             'price' => $product->getPrice(),
-            'maxParticipants' => $product->getMaxParticipants(),
-            'available' => $product->isAvailable(),
-            'promotion' => $product->isPromotion(),
             'ownerId' => $product->getOwner()->getId(),
-        ]);
+            'available' => $product->isAvailable(),
+            'imageFilename' => $product->getImageFilename()
+        ];
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/{id}', name: 'getProductById', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function getProductById(int $id): JsonResponse
+    {
+        $product = $this->productRepository->find($id);
+
+        if (!$product) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = [
+            'id' => $product->getId(),
+            'serviceName' => $product->getServiceName(),
+            'description' => $product->getDescription(),
+            'startDate' => $product->getStartDate()?->format('Y-m-d'),
+            'endDate' => $product->getEndDate()?->format('Y-m-d'),
+            'price' => $product->getPrice(),
+            'ownerId' => $product->getOwner()->getId(),
+            'available' => $product->isAvailable(),
+            'imageFilename' => $product->getImageFilename()
+        ];
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
     #[Route('/', name: 'list_products', methods: ['GET'])]
@@ -61,116 +90,106 @@ class ProductController extends AbstractController
     {
         $products = $this->productRepository->findAll();
 
-        $data = array_map(function (Product $product) {
-            return [
+        foreach ($products as $product) {
+            $data[] = [
                 'id' => $product->getId(),
                 'serviceName' => $product->getServiceName(),
                 'description' => $product->getDescription(),
                 'startDate' => $product->getStartDate()?->format('Y-m-d'),
                 'endDate' => $product->getEndDate()?->format('Y-m-d'),
                 'price' => $product->getPrice(),
-                'maxParticipants' => $product->getMaxParticipants(),
-                'available' => $product->isAvailable(),
-                'promotion' => $product->isPromotion(),
                 'ownerId' => $product->getOwner()->getId(),
-            ];
-        }, $products);
+                'available' => $product->isAvailable(),
+                'imageFilename' => $product->getImageFilename()
 
-        return new JsonResponse($data);
+            ];
+        }
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
     #[Route('/', name: 'create_product', methods: ['POST'])]
     public function createProduct(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!isset($data['serviceName'], $data['ownerId'])) {
-            return new JsonResponse(['message' => 'Missing required fields'], JsonResponse::HTTP_BAD_REQUEST);
-        }
+        $data = $request->request->all();
 
         $product = new Product();
+
+        $imageFilename = $request->files->get('imageFilename');
+
+        if ($imageFilename) {
+            $imageName = $this->ufService->uploadFile($imageFilename);
+            $product->setImageFilename($imageName);
+        }
+
         $product->setServiceName($data['serviceName']);
         $product->setDescription($data['description'] ?? '');
         $product->setStartDate(isset($data['startDate']) ? new \DateTime($data['startDate']) : null);
         $product->setEndDate(isset($data['endDate']) ? new \DateTime($data['endDate']) : null);
         $product->setPrice($data['price'] ?? null);
-        $product->setMaxParticipants($data['maxParticipants'] ?? null);
         $product->setAvailable($data['available'] ?? false);
-        $product->setPromotion($data['promotion'] ?? null);
 
         $owner = $this->partnerRepository->find($data['ownerId']);
         if (!$owner) {
-            return new JsonResponse(['message' => 'Owner not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Owner not found'], JsonResponse::HTTP_BAD_REQUEST);
         }
         $product->setOwner($owner);
-
-        $errors = $this->validator->validate($product);
-        if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string) $errors], JsonResponse::HTTP_BAD_REQUEST);
-        }
+    
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
-        return new JsonResponse([
-            'id' => $product->getId(),
-            'serviceName' => $product->getServiceName(),
-            'description' => $product->getDescription(),
-            'startDate' => $product->getStartDate()?->format('Y-m-d'),
-            'endDate' => $product->getEndDate()?->format('Y-m-d'),
-            'price' => $product->getPrice(),
-            'maxParticipants' => $product->getMaxParticipants(),
-            'available' => $product->isAvailable(),
-            'promotion' => $product->isPromotion(),
-            'ownerId' => $product->getOwner()->getId(),
-        ], JsonResponse::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Event created'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update_product', methods: ['PUT'])]
+    #[Route('/{id}', name: 'update_product', methods: ['POST'])]
     public function updateProduct(Request $request, int $id): JsonResponse
     {
         $product = $this->productRepository->find($id);
 
         if (!$product) {
-            return new JsonResponse(['message' => 'Product not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Event not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $imageFilename = $request->files->get('imageFilename');
 
-        $product->setServiceName($data['serviceName'] ?? $product->getServiceName());
-        $product->setDescription($data['description'] ?? $product->getDescription());
-        $product->setStartDate(isset($data['startDate']) ? new \DateTime($data['startDate']) : $product->getStartDate());
-        $product->setEndDate(isset($data['endDate']) ? new \DateTime($data['endDate']) : $product->getEndDate());
-        $product->setPrice($data['price'] ?? $product->getPrice());
-        $product->setMaxParticipants($data['maxParticipants'] ?? $product->getMaxParticipants());
-        $product->setAvailable($data['available'] ?? $product->isAvailable());
-        $product->setPromotion($data['promotion'] ?? $product->isPromotion());
-
-        $owner = $this->partnerRepository->find($data['ownerId'] ?? $product->getOwner()->getId());
-        if (!$owner) {
-            return new JsonResponse(['message' => 'Owner not found'], JsonResponse::HTTP_NOT_FOUND);
+        if ($imageFilename) {
+            $imageName = $this->ufService->uploadFile($imageFilename);
+            $product->setImageFilename($imageName);
+        } else {
+            return new JsonResponse(['error' => 'Image is required'], JsonResponse::HTTP_BAD_REQUEST);
         }
-        $product->setOwner($owner);
 
-        $errors = $this->validator->validate($product);
-        if (count($errors) > 0) {
-            return new JsonResponse(['errors' => (string) $errors], JsonResponse::HTTP_BAD_REQUEST);
+        // Extract data from the request
+        $serviceName = $request->request->get('serviceName');
+        $description = $request->request->get('description');
+        $startDate = $request->request->get('startDate');
+        $endDate = $request->request->get('endDate');
+        $price = $request->request->get('price');
+        $available = $request->request->get('available');
+
+        if ($serviceName !== null) {
+          $product->setServiceName($serviceName);
+        }
+        if ($description !== null) {
+          $product->setDescription($description);
+        }
+        if ($startDate !== null) {
+          $product->setStartDate($startDate);
+        }
+        if ($endDate !== null) {
+          $product->setEndDate($endDate);
+        }
+        if ($price !== null) {
+          $product->setPrice($price);
+        }
+        if ($available !== null) {
+          $product->setAvailable($available);
         }
 
         $this->entityManager->flush();
 
-        return new JsonResponse([
-            'id' => $product->getId(),
-            'serviceName' => $product->getServiceName(),
-            'description' => $product->getDescription(),
-            'startDate' => $product->getStartDate()?->format('Y-m-d'),
-            'endDate' => $product->getEndDate()?->format('Y-m-d'),
-            'price' => $product->getPrice(),
-            'maxParticipants' => $product->getMaxParticipants(),
-            'available' => $product->isAvailable(),
-            'promotion' => $product->isPromotion(),
-            'ownerId' => $product->getOwner()->getId(),
-        ]);
+        return new JsonResponse(['event created']);
     }
 
     #[Route('/{id}', name: 'delete_product', methods: ['DELETE'])]
@@ -186,6 +205,38 @@ class ProductController extends AbstractController
         $this->entityManager->flush();
 
         return new JsonResponse(['message' => 'Product deleted successfully']);
+    }
+
+    #[Route('/owner/{id}', name:'getProductByOwner', methods:['GET'])]
+    public function getProductsByOwner(int $id): JsonResponse
+    {
+        $partner = $this->partnerRepository->find($id);
+
+        if (!$partner) {
+            return new JsonResponse(['message' => 'Partner not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $products = $this->productRepository->findBy(['owner' => $partner]);
+
+        if (!$products) {
+            return new JsonResponse(['message' => 'No products found for this partner'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        foreach ($products as $product) {
+            $data[] = [
+                'id' => $product->getId(),
+                'serviceName' => $product->getServiceName(),
+                'description' => $product->getDescription(),
+                'startDate' => $product->getStartDate()?->format('Y-m-d'),
+                'endDate' => $product->getEndDate()?->format('Y-m-d'),
+                'price' => $product->getPrice(),
+                'ownerId' => $product->getOwner()->getId(),
+                'available' => $product->isAvailable(),
+                'imageFilename' => $product->getImageFilename()
+            ];
+        }
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
 }

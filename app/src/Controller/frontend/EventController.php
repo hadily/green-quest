@@ -28,8 +28,13 @@ class EventController extends AbstractController
     }
 
     #[Route('/{id}/detail', name: '_detail')]
-    public function detail(Event $event)
+    public function detail(int $id, Event $event)
     {
-        return $this->render('frontend/event/detail.html.twig', ['blog'=>$event]);
+        $event = $this->eventRepository->getDetailsById($id);
+        if ($event) {
+            $event['startDate'] = $event['startDate'] ? $event['startDate']->format('Y-m-d') : null;
+            $event['endDate'] = $event['endDate'] ? $event['endDate']->format('Y-m-d') : null;
+        }
+        return $this->render('frontend/event/detail.html.twig', ['event'=>$event]);
     }
 }
