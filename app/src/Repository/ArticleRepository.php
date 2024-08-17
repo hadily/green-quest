@@ -44,6 +44,15 @@ class ArticleRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findAllByOwner(int $ownerId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.writer = :ownerId')
+            ->setParameter('ownerId', $ownerId)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Article[] Returns an array of Article objects
     //     */

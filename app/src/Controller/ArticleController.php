@@ -117,15 +117,8 @@ class ArticleController extends AbstractController
         $article->setSummary($data['summary']);
         $article->setText($data['text']);
         $article->setDate(new \DateTime());
+        $article->setWriter($data['writerId']);
         
-
-        // Fetch the User entity 
-        $writerId = $data['writerId'];
-        $writer = $em->getRepository(User::class)->find($writerId);
-        if (!$writer) {
-            return new JsonResponse(['error' => 'User with ID ' . $writerId . ' not found'], Response::HTTP_NOT_FOUND);
-        }
-        $article->setWriter($writer);
 
         $em->persist($article);
         $em->flush();
@@ -216,11 +209,41 @@ class ArticleController extends AbstractController
                 'title' => $article->getTitle(),
                 'subTitle' => $article->getSubTitle(),
                 'writer' => $article->getWriter(),
-                'date' => $article->getDate() ? $article->getDate()->format('Y-m-d') : null,
+                'text' => $article->getText(),
+                'date' => $article->getDate() ? $article->getDate()->format('Y-m-d') :new \DateTime(),
                 'imageFilename' => $article->getImageFilename()
             ];
         }
 
     return new JsonResponse($data);
     }
+
+    // Symfony Route
+    #[Route('/writer/{id}', name: 'getArticlesByWriter', methods:['GET'])]
+    public function getArticlesByWriter(int $ownerId, ArticleRepository $articleRepository): JsonResponse
+    {
+        $articles = $articleRepository->findAllByOwner($ownerId);
+        $data = [];
+
+        foreach($articles as $article) {
+            $writer = $article->getWriter(); // Get the writer (User object)
+            $writerName = $writer ? $writer->getFullName() : null; // Extract the ID from the User object
+
+
+            $data[] = [
+                'id' => $article->getId(),
+                'writer' => $writerName,
+                'title' => $article->getTitle(),
+                'subTitle' => $article->getSubTitle(),
+                'summary' => $article->getSummary(),
+                'text' => $article->getText(),
+                'date' => $article->getDate()->format('Y-m-d'),
+                'likes' => $article->getLikes(),
+                'imageFilename' => $article->getImageFilename()
+            ];
+        }
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
 }

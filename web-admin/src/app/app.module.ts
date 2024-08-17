@@ -40,6 +40,10 @@ import { NewProductComponent } from './pages/partner-side/services/manage-produc
 import { DeleteProductComponent } from './pages/partner-side/services/manage-products/delete-product/delete-product.component';
 import { UpdateProductComponent } from './pages/partner-side/services/manage-products/update-product/update-product.component';
 import { DeleteEventComponent } from './pages/partner-side/services/manage-events/delete-event/delete-event.component';
+import { NewArticlePartnerComponent } from './pages/partner-side/blog/new-article-partner/new-article-partner.component';
+import { ArticlesPartnerComponent } from './pages/partner-side/blog/articles-partner/articles-partner.component';
+import { DeleteArticlePartnerComponent } from './pages/partner-side/blog/delete-article-partner/delete-article-partner.component';
+import { UpdateArticlePartnerComponent } from './pages/partner-side/blog/update-article-partner/update-article-partner.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -77,7 +81,11 @@ function appInitializer(authService: AuthService) {
     ProductsComponent,
     NewProductComponent,
     UpdateProductComponent,
-    DeleteProductComponent
+    DeleteProductComponent,
+    ArticlesPartnerComponent,
+    NewArticlePartnerComponent,
+    DeleteArticlePartnerComponent,
+    UpdateArticlePartnerComponent
   ],
   imports: [
     BrowserModule,

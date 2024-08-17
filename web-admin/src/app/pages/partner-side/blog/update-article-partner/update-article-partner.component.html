@@ -1,0 +1,29 @@
+<div class="modal-backdrop" (click)="closeModal()"></div>
+<div class="modal-content">
+  <h2>Update Article</h2>
+  <form (ngSubmit)="onUpdate()" #partnerForm="ngForm">
+    <div class="form-group">
+      <div class="form-group">
+        <label for="imageFilename">Image</label>
+        <img  src="{{fileUrl}}/uploads/{{article.imageFilename}}">
+        <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
+      </div>
+      <label for="title">Title</label>
+      <input type="text" id="title" [(ngModel)]="article.title" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="subtitle">Sub Title</label>
+      <input type="text" id="subtitle" [(ngModel)]="article.subTitle" name="subtitle" required>
+    </div>
+    <div class="form-group">
+        <label for="summary">Summary</label>
+        <input type="text" id="summary" [(ngModel)]="article.summary" name="summary" required>
+      </div>
+    <div class="form-group">
+      <label for="text">Article Body</label>
+      <textarea type="text" id="text" [(ngModel)]="article.text" name="text"  rows="5" class="form-control" required></textarea>
+    </div>
+    <button type="submit">Update</button>
+    <button type="button" (click)="closeModal()">Cancel</button>
+  </form>
+</div>

@@ -114,6 +114,10 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/product/owner/${ownerId}`);
   }
 
+  getAllArticlesByWriter(ownerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/article/writer/${ownerId}`);
+}
+
   /** CREATE */
 
   createPartner(partner: any, fileName: any): Observable<any> {
