@@ -1,0 +1,39 @@
+.table-container {
+    background-color: white;
+    border-radius: 10px; /* Adjust the value as needed for slightly rounded corners */
+    padding: 20px; /* Adjust as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: for a subtle shadow effect */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items to the center vertically */
+}
+
+.card-title {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow the card title to take up more space */
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.search-form {
+    margin-right: 20px; /* Space between search form and button */
+}
+
+.card-toolbar {
+    display: flex;
+    gap: 10px; /* Add spacing between buttons */
+}
+
+.card-toolbar button {
+    white-space: nowrap; /* Prevent the button text from wrapping */
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 0.5rem 1rem; /* Padding inside the buttons */
+    font-weight: bold; /* Bold text */
+  }

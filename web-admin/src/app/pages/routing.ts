@@ -9,6 +9,7 @@ import { EventsComponent } from './partner-side/services/manage-events/events/ev
 import { ProductsComponent } from './partner-side/services/manage-products/products/products.component';
 import { NewEventComponent } from './partner-side/services/manage-events/new-event/new-event.component';
 import { ArticlesPartnerComponent } from './partner-side/blog/articles-partner/articles-partner.component';
+import { PartnerComplaintsComponent } from './partner-side/complaints/partner-complaints/partner-complaints.component';
 
 const Routing: Routes = [
   {
@@ -96,6 +97,10 @@ const Routing: Routes = [
   {
     path: 'partner/blog/articles',
     component: ArticlesPartnerComponent
+  },
+  {
+    path: 'partner/complaints',
+    component: PartnerComplaintsComponent
   }
 ];
 

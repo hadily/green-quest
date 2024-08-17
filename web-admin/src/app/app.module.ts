@@ -44,6 +44,8 @@ import { NewArticlePartnerComponent } from './pages/partner-side/blog/new-articl
 import { ArticlesPartnerComponent } from './pages/partner-side/blog/articles-partner/articles-partner.component';
 import { DeleteArticlePartnerComponent } from './pages/partner-side/blog/delete-article-partner/delete-article-partner.component';
 import { UpdateArticlePartnerComponent } from './pages/partner-side/blog/update-article-partner/update-article-partner.component';
+import { PartnerComplaintsComponent } from './pages/partner-side/complaints/partner-complaints/partner-complaints.component';
+import { PartnerCreateComplaintComponent } from './pages/partner-side/complaints/partner-create-complaint/partner-create-complaint.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -85,7 +87,9 @@ function appInitializer(authService: AuthService) {
     ArticlesPartnerComponent,
     NewArticlePartnerComponent,
     DeleteArticlePartnerComponent,
-    UpdateArticlePartnerComponent
+    UpdateArticlePartnerComponent,
+    PartnerComplaintsComponent,
+    PartnerCreateComplaintComponent
   ],
   imports: [
     BrowserModule,
