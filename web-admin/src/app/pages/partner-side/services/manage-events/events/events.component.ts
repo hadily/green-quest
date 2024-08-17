@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/modules/auth';
 import { Subscription } from 'rxjs';
 import { RefreshService } from 'src/app/services/refresh.service';
 import { MatDialog } from '@angular/material/dialog';
+import { DeleteEventComponent } from '../delete-event/delete-event.component';
+import { NewEventComponent } from '../new-event/new-event.component';
 
 @Component({
   selector: 'app-events',
@@ -53,7 +55,7 @@ export class EventsComponent implements OnInit {
   }
 
   openModal(): void {
-    const dialogRef = this.dialog.open(EventPanelComponent);
+    const dialogRef = this.dialog.open(NewEventComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The modal was closed');
@@ -61,7 +63,7 @@ export class EventsComponent implements OnInit {
   }
 
   openDeleteModal(id: number): void {
-    const dialogRef = this.dialog.open(EventPanelComponent, {
+    const dialogRef = this.dialog.open(DeleteEventComponent, {
       data: { id } 
     });
 
