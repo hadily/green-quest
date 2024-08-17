@@ -6,12 +6,12 @@ import { RefreshService } from 'src/app/services/refresh.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-event-panel',
-  templateUrl: './event-panel.component.html',
-  styleUrls: ['./event-panel.component.scss']
+  selector: 'app-update-product',
+  templateUrl: './update-product.component.html',
+  styleUrl: './update-product.component.scss'
 })
-export class EventPanelComponent implements OnInit {
-  event = {
+export class UpdateProductComponent implements OnInit{
+  product = {
     serviceName: '',
     description: '',
     startDate: '',
@@ -25,15 +25,18 @@ export class EventPanelComponent implements OnInit {
   fileUrl = environment.fileUrl;
 
   constructor(
-    public dialogRef: MatDialogRef<EventPanelComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
+    public dialogRef: MatDialogRef<UpdateProductComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: { productId: number },
     private apiService: ApiService,
     private refreshService: RefreshService,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.loadArticleData();
+    const userId = this.authService.currentUserValue?.id ?? 0;
+    console.log(userId);
+    this.product.ownerId = userId;
+    this.loadProductData();
   }
 
   selectImage(event: any) {
@@ -46,37 +49,45 @@ export class EventPanelComponent implements OnInit {
     reader.readAsDataURL(this.file);
   }
 
-  loadArticleData(): void {
-    this.apiService.getEventById(this.data.eventId).subscribe(
+  loadProductData(): void {
+    console.log(this.data.productId);
+    this.apiService.getProductById(this.data.productId).subscribe(
       response => {
-        console.log('onsode apiService arrow fun', this.data.eventId);
-        console.log('Loaded article data:', response); // Debugging log
-        this.event = response;
+        console.log('onsode apiService arrow fun', this.data.productId);
+        console.log('Loaded partner data:', response); // Debugging log
+        this.product = response;
       },
       error => {
         console.error('Error loading partner data:', error);
       }
     );
   }
+  
 
   onUpdate(): void {
-    this.event.ownerId = this.authService.currentUserValue?.id ?? 0;
-    this.file = this.event.imageFilename;
-    this.apiService.updateEvent(this.data.eventId, this.event, this.file).subscribe(
+    console.log('Product ID:', this.data.productId);
+    this.file = this.product.imageFilename;
+    console.log('Inside onUpdate');
+  
+    this.apiService.updateProduct(this.data.productId, this.product, this.file).subscribe(
       response => {
+        console.log('After updateProduct function', response);
+  
+        // Close the modal and trigger a refresh after a successful update
         this.dialogRef.close(true);
-        this.refreshService.triggerRefresh('/partner/services/events'); // Notify other components
+        this.refreshService.triggerRefresh('/partner/services/products'); 
       },
       error => {
-        console.error('Error updating event:', error);
+        console.error('Error updating product:', error);
         // Optionally show an error message to the user
       }
     );
   }
+  
 
   closeModal(): void {
     this.dialogRef.close(); // Close the modal without any action
   }
 
-  
+
 }

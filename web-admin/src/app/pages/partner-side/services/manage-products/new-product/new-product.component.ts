@@ -6,29 +6,28 @@ import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
 
 @Component({
-  selector: 'app-new-event',
-  templateUrl: './new-event.component.html',
-  styleUrl: './new-event.component.scss'
+  selector: 'app-new-product',
+  templateUrl: './new-product.component.html',
+  styleUrl: './new-product.component.scss'
 })
-export class NewEventComponent implements OnInit {
-  event = {
+export class NewProductComponent implements OnInit{
+  product = {
     serviceName: '',
     description: '',
     startDate: '',
     endDate: '',
     price: 0,
-    available: true
+    available: true,
   };
   file: any;
 
   constructor(
-    public dialogRef: MatDialogRef<NewEventComponent>,
+    public dialogRef: MatDialogRef<NewProductComponent>,
     private apiService: ApiService,
     private authService: AuthService,
     private refreshService: RefreshService,
     private router: Router
   ) {}
-
 
   ngOnInit(): void {}
 
@@ -42,13 +41,12 @@ export class NewEventComponent implements OnInit {
     reader.readAsDataURL(this.file);
   }
 
-
   onSubmit(): void {
     const userId = this.authService.currentUserValue?.id ?? 0;
     console.log(userId);
-    this.apiService.createEvent(userId, this.event, this.file).subscribe(response => {
+    this.apiService.createProduct(userId, this.product, this.file).subscribe(response => {
       console.log('Event created:', response);
-      this.router.navigate(['/partner/services/events']); 
+      this.router.navigate(['/partner/services/products']); 
       this.closeModal();
     },
     error => {
@@ -60,7 +58,5 @@ export class NewEventComponent implements OnInit {
   closeModal(): void {
     this.dialogRef.close();
   }
-
-  
 
 }

@@ -101,6 +101,19 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/event/owner/${ownerId}`);
   }
 
+  getProducts(): Observable<any> {
+    const url = `${this.apiUrl}/product/`;
+    return this.http.get<any[]>(url);
+  }
+
+  getProductById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/product/${id}`);
+  }
+
+  getAllProductsByOwner(ownerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/product/owner/${ownerId}`);
+  }
+
   /** CREATE */
 
   createPartner(partner: any, fileName: any): Observable<any> {
@@ -166,6 +179,19 @@ export class ApiService {
     formData.append('ownerId', owner);
     formData.append('imageFilename', file);
     return this.http.post<any>(`${this.apiUrl}/event/`, event);
+  }
+
+  createProduct(owner: any, product: any, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('serviceName', product.serviceName);
+    formData.append('description', product.description);
+    formData.append('startDate', product.startDate);
+    formData.append('endDate', product.endDate);
+    formData.append('price', product.price);
+    formData.append('available', product.available);
+    formData.append('ownerId', owner);
+    formData.append('imageFilename', file);
+    return this.http.post<any>(`${this.apiUrl}/product/`, formData);
   }
 
   /** UPDATE */
@@ -239,8 +265,23 @@ export class ApiService {
     formData.append('endDate', event.endDate);
     formData.append('available', event.available);
     formData.append('price', event.price);
+    formData.append('ownerId', event.ownerId);
     formData.append('imageFilename', file, file.name);
-    return this.http.put<any>(`${this.apiUrl}/event/${id}`, formData);
+    return this.http.post<any>(`${this.apiUrl}/event/${id}`, formData);
+  }
+
+  updateProduct(id: number, product: any, file: File): Observable<any> {
+    console.log('updateProduct called with:', id, product, file);
+    const formData = new FormData();
+    formData.append('serviceName', product.serviceName);
+    formData.append('descritpion', product.descritpion);
+    formData.append('startdate', product.startdate);
+    formData.append('endDate', product.endDate);
+    formData.append('available', product.available);
+    formData.append('price', product.price);
+    formData.append('ownerId', product.ownerId);
+    formData.append('imageFilename', file, file.name);
+    return this.http.post<any>(`${this.apiUrl}/product/${id}`, formData);
   }
 
   /** DELETE */
@@ -263,6 +304,10 @@ export class ApiService {
 
   deleteEvent(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/event/${id}`);
+  }
+
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/product/${id}`);
   }
 
 

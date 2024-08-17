@@ -36,6 +36,10 @@ import { EventsComponent } from './pages/partner-side/services/manage-events/eve
 import { EventPanelComponent } from './pages/partner-side/services/manage-events/event-panel/event-panel.component';
 import { NewEventComponent } from './pages/partner-side/services/manage-events/new-event/new-event.component';
 import { ProductsComponent } from './pages/partner-side/services/manage-products/products/products.component';
+import { NewProductComponent } from './pages/partner-side/services/manage-products/new-product/new-product.component';
+import { DeleteProductComponent } from './pages/partner-side/services/manage-products/delete-product/delete-product.component';
+import { UpdateProductComponent } from './pages/partner-side/services/manage-products/update-product/update-product.component';
+import { DeleteEventComponent } from './pages/partner-side/services/manage-events/delete-event/delete-event.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -69,7 +73,11 @@ function appInitializer(authService: AuthService) {
     EventsComponent,
     EventPanelComponent,
     NewEventComponent,
-    ProductsComponent
+    DeleteEventComponent,
+    ProductsComponent,
+    NewProductComponent,
+    UpdateProductComponent,
+    DeleteProductComponent
   ],
   imports: [
     BrowserModule,

@@ -4,28 +4,27 @@ import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
 
 @Component({
-  selector: 'app-delete-event',
-  templateUrl: './delete-event.component.html',
-  styleUrl: './delete-event.component.scss'
+  selector: 'app-delete-product',
+  templateUrl: './delete-product.component.html',
+  styleUrl: './delete-product.component.scss'
 })
-export class DeleteEventComponent implements OnInit{
+export class DeleteProductComponent implements OnInit{
 
   constructor(
-    public dialogRef: MatDialogRef<DeleteEventComponent>,
+    public dialogRef: MatDialogRef<DeleteProductComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id: number },
     private apiService: ApiService,
     private refreshService: RefreshService
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onDelete(): void {
-    this.apiService.deleteEvent(this.data.id).subscribe(
+    this.apiService.deleteProduct(this.data.id).subscribe(
       response => {
-        console.log('event deleted:', response);
+        console.log('product deleted:', response);
         this.dialogRef.close(true); 
-        this.refreshService.triggerRefresh('/partner/services/events'); // Navigate to the partner list page
+        this.refreshService.triggerRefresh('/partner/services/products'); // Navigate to the partner list page
 
       },
       error => {
@@ -37,5 +36,6 @@ export class DeleteEventComponent implements OnInit{
   closeModal(): void {
     this.dialogRef.close(); 
   }
+
 
 }
