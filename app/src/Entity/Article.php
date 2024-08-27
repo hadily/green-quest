@@ -30,14 +30,14 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $summary = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $text = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: true, name:"writer_id", referencedColumnName:"id", onDelete:"SET NULL")]
+    #[ORM\JoinColumn(name: "writer_id", referencedColumnName:"id", nullable: true)]
     private ?User $writer = null;
 
     #[ORM\Column(nullable: true)]

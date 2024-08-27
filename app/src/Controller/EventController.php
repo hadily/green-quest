@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\EventRepository;
 use App\Repository\PartnerRepository;
+use App\Repository\UserRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Event;
@@ -24,19 +26,22 @@ class EventController extends AbstractController
     private $entityManager;
     private $validator;
     private $ufService;
+    private $UserRepository;
 
     public function __construct(
         EventRepository $eventRepository,
         PartnerRepository $partnerRepository,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
-        UploadFileService $ufService
+        UploadFileService $ufService,
+        UserRepository $UserRepository
     ) {
         $this->eventRepository = $eventRepository;
         $this->partnerRepository = $partnerRepository;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->ufService = $ufService;
+        $this->UserRepository = $UserRepository;
     }
 
     #[Route('/{id}', name: 'get_event', methods: ['GET'])]
@@ -124,18 +129,19 @@ class EventController extends AbstractController
             $event->setImageFilename($imageName);
         }
 
-        $event->setServiceName($data['serviceName']);
+        $event->setServiceName($data['serviceName'] ?? '');
         $event->setDescription($data['description'] ?? '');
         $event->setStartDate(isset($data['startDate']) ? new \DateTime($data['startDate']) : null);
         $event->setEndDate(isset($data['endDate']) ? new \DateTime($data['endDate']) : null);
         $event->setPrice($data['price'] ?? null);
         $event->setAvailable($data['available'] ?? false);
-
-        $owner = $this->partnerRepository->find($data['ownerId']);
-        if (!$owner) {
-            $owner = $this->partnerRepository->find(15);
-        }
-        $event->setOwner($owner);
+        $event->setOwner( $this->UserRepository->find($data['ownerId']) ?? 6);
+       // dd($this->partnerRepository->find($data['ownerId']));
+        // $owner = $this->partnerRepository->find($data['ownerId']);
+        // if (!$owner) {
+        //     $owner = $this->partnerRepository->find(15);
+        // }
+       // $event->setOwner($owner);
 
 
         $this->entityManager->persist($event);
