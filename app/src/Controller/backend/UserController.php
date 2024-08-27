@@ -87,25 +87,6 @@ class UserController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    // #[Route('/', name: 'createUser', methods: ['POST'])]
-    // public function createUser(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    // {
-    //     $data = json_decode($request->getContent(), true);
-
-    //     $user = new User();
-    //     $user->setEmail($data['email']);
-    //     $user->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-    //     $user->setFirstName($data['firstName']);
-    //     $user->setLastName($data['lastName']);
-    //     $user->setPhoneNumber($data['phoneNumber']);
-    //     $user->setRoles($data['roles'] ?? ['USER']);
-
-    //     $entityManager->persist($user);
-    //     $entityManager->flush();
-
-    //     return new JsonResponse(['message' => 'User created'], Response::HTTP_CREATED);
-    // }
-
     #[Route('/{id}', name: 'updateUser', methods: ['POST'])]
     public function updateUser(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UploadFileService $ufService): JsonResponse
     {
@@ -179,22 +160,4 @@ class UserController extends AbstractController
         return new JsonResponse(['message' => 'Password updated successfully'], Response::HTTP_OK);
     }
 
-    // #[Route('/{id}', name: 'deleteUser', methods: ['DELETE'])]
-    // public function deleteUser(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
-    // {
-    //     $user = $userRepository->find($id);
-
-    //     if (!$user) {
-    //         return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-    //     }
-
-    //     if ($id === 1 || in_array('SUPER_USER', $user->getRoles())) {
-    //         return new JsonResponse(['message' => 'Cannot delete this user'], Response::HTTP_FORBIDDEN);
-    //     }
-
-    //     $entityManager->remove($user);
-    //     $entityManager->flush();
-
-    //     return new JsonResponse(['message' => 'User deleted'], Response::HTTP_NO_CONTENT);
-    // }
 }
