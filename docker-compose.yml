@@ -12,4 +12,4 @@ services:
       - ./app:/var/www/html  # Mount the application code but be cautious with vendor directory
     environment:
       APP_ENV: dev
-      DATABASE_URL: "mysql://root@host.docker.internal:3306/expDouce"
+      DATABASE_URL: "mysql://root@host.docker.internal:3306/expDouce1"

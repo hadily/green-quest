@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
+use App\Form\AdminType;
 use App\Repository\AdminRepository;
 use App\Repository\PartnerRepository;
 use App\Repository\ClientRepository;
@@ -12,8 +13,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Service\UploadFileService;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Service\UploadFileService;
 use App\Service\EmailService;
 
 
@@ -21,6 +24,18 @@ use App\Service\EmailService;
 #[Route('/api/admin')]
 class AdminController extends AbstractController
 {
+    private $formFactory;
+    private $uploadFileService;
+    private $emailService;
+
+    public function __construct(FormFactoryInterface $formFactory, UploadFileService $uploadFileService, EmailService $emailService)
+    {
+        $this->formFactory = $formFactory;
+        $this->uploadFileService = $uploadFileService;
+        $this->emailService = $emailService;
+    }
+
+
     #[Route('/', name: 'getAllAdmins', methods: ['GET'])]
     public function getAllAdmins(EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
     {
@@ -66,77 +81,63 @@ class AdminController extends AbstractController
     }
 
     #[Route('/', name: 'createAdmin', methods: ['POST'])]
-    public function createAdmin(Request $request, EntityManagerInterface $em, UploadFileService $ufService, EmailService $emailService): JsonResponse
+    public function createAdmin(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        // $data = json_decode($request->getContent(), true);
-        $data = $request->request->all();
-
+        $data = json_decode($request->getContent(), true);
         $admin = new Admin();
+        $form = $this->createForm(AdminType::class, $admin);
+        $form->submit($data);
 
-        $imageFilename = $request->files->get('imageFilename');
+        // Handle file upload
+        /** @var UploadedFile|null $file */
+        $file = $form->get('imageFilename')->getData();
 
-        if ($imageFilename) {
-            $imageName = $ufService->uploadFile($imageFilename);
+        if ($file instanceof UploadedFile) {
+            $imageName = $this->uploadFileService->uploadFile($file);
             $admin->setImageFilename($imageName);
         }
 
-        $admin->setEmail($data['email']);
-        $admin->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-        $admin->setFirstName($data['firstName']);
-        $admin->setLastName($data['lastName']);
-        $admin->setPhoneNumber($data['phoneNumber']);
-        $admin->setRoles($data['roles'] ?? ['ADMIN']);
-        
         $em->persist($admin);
         $em->flush();
 
         // Send an email with the plain password
-        $emailService->sendWelcomeEmail(
+        $this->emailService->sendWelcomeEmail(
             $admin->getEmail(),
-            $data['password'] // Sending the plain password in the email
+            $admin->getPassword() // Sending the plain password in the email
         );
 
-        return new JsonResponse(['message' => 'Client created'], JsonResponse::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Admin created'], JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'updateAdmin', methods: ['POST'])]
-    public function updateAdmin(int $id, Request $request, EntityManagerInterface $em, AdminRepository $adminRepository, UploadFileService $ufService): JsonResponse
+    public function updateAdmin(int $id, Request $request, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
     {
-        $admin = $adminRepository->find($id); // Get the logged-in client or fetch client by ID
+        $admin = $adminRepository->find($id);
+
+        if (!$admin) {
+            return new JsonResponse(['message' => 'Admin not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->formFactory->create(AdminType::class, $admin);
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return new JsonResponse(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
+        }
 
         // Handle file upload
         /** @var UploadedFile|null $file */
-        $file = $request->files->get('imageFilename');
+        $file = $form->get('imageFilename')->getData();
 
         if ($file instanceof UploadedFile) {
-            $imageName = $ufService->uploadFile($file);
-            $admin->setImageFilename($imageName); // Assuming you have a method to set the file name
+            $imageName = $this->uploadFileService->uploadFile($file);
+            $admin->setImageFilename($imageName);
         }
 
-        // Extract data from the request
-        $email = $request->request->get('email');
-        $firstName = $request->request->get('firstName');
-        $lastName = $request->request->get('lastName');
-        $phoneNumber = $request->request->get('phoneNumber');
-
-        // Update client details if the provided values are not null
-        if ($email !== null) {
-            $admin->setEmail($email);
-        }
-        if ($firstName !== null) {
-            $admin->setFirstName($firstName);
-        }
-        if ($lastName !== null) {
-            $admin->setLastName($lastName);
-        }
-        if ($phoneNumber !== null) {
-            $admin->setPhoneNumber($phoneNumber);
-        }
-        
         $em->persist($admin);
         $em->flush();
 
-        return new JsonResponse(['status' => 'Client updated successfully']);
+        return new JsonResponse(['message' => 'Admin updated successfully']);
     }
 
     #[Route('/{id}', name: 'deleteAdmin', methods: ['DELETE'])]

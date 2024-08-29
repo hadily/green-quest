@@ -1,5 +1,7 @@
 <?php
 
+// src/Controller/ClientController.php
+
 namespace App\Controller;
 
 use App\Entity\Client;
@@ -13,9 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 
 #[Route('/api/client')]
 class ClientController extends AbstractController
@@ -26,7 +27,7 @@ class ClientController extends AbstractController
         $clients = $clientRepository->findAll();
         $data = [];
 
-        foreach($clients as $client) {
+        foreach ($clients as $client) {
             $data[] = [
                 'id' => $client->getId(),
                 'email' => $client->getEmail(),
@@ -68,15 +69,13 @@ class ClientController extends AbstractController
     #[Route('/', name: 'createClient', methods: ['POST'])]
     public function createClient(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
     {
-        // $data = json_decode($request->getContent(), true);
         $data = $request->request->all();
 
         $client = new Client();
 
-        $imageFilename = $request->files->get('imageFilename');
-
-        if ($imageFilename) {
-            $imageName = $ufService->uploadFile($imageFilename);
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile instanceof UploadedFile) {
+            $imageName = $ufService->uploadFile($imageFile);
             $client->setImageFilename($imageName);
         }
 
@@ -87,7 +86,7 @@ class ClientController extends AbstractController
         $client->setPhoneNumber($data['phoneNumber']);
         $client->setRoles($data['roles'] ?? ['CLIENT']);
         $client->setLocalisation($data['localisation']);
-        
+
         // Fetch the Admin entity or use default admin ID 6
         $adminId = $data['admin_id'] ?? 6;
         $admin = $em->getRepository(Admin::class)->find($adminId);
@@ -105,15 +104,17 @@ class ClientController extends AbstractController
     #[Route('/{id}', name: 'updateClient', methods: ['POST'])]
     public function updateClient(int $id, Request $request, EntityManagerInterface $em, ClientRepository $clientRepository, UploadFileService $ufService): JsonResponse
     {
-        $client = $clientRepository->find($id); // Get the logged-in client or fetch client by ID
+        $client = $clientRepository->find($id);
+
+        if (!$client) {
+            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
 
         // Handle file upload
-        /** @var UploadedFile|null $file */
         $file = $request->files->get('imageFilename');
-
         if ($file instanceof UploadedFile) {
             $imageName = $ufService->uploadFile($file);
-            $client->setImageFilename($imageName); // Assuming you have a method to set the file name
+            $client->setImageFilename($imageName);
         }
 
         // Extract data from the request
@@ -158,12 +159,8 @@ class ClientController extends AbstractController
         $articles = $em->getRepository(Article::class)->findBy(['writer' => $client]);
 
         foreach ($articles as $article) {
-            // Fetch the user with ID 6
             $superAdmin = $userRepository->find(6);
-            
-            // Set the writer to the Super Admin
             $article->setWriter($superAdmin);
-
             $em->persist($article);
         }
 
@@ -178,10 +175,8 @@ class ClientController extends AbstractController
     {
         $query = $request->query->get('query', '');
 
-        // Perform the search based on the query
         $clients = $clientRepository->searchClients($query);
 
-        // Convert entities to array
         $data = [];
         foreach ($clients as $client) {
             $data[] = [
@@ -196,7 +191,6 @@ class ClientController extends AbstractController
             ];
         }
 
-        return new JsonResponse($data);
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
-
 }

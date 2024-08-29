@@ -40,6 +40,7 @@ security:
         - { path: ^/api/token_refresh, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api/user, roles: PUBLIC_ACCESS }
+        - { path: ^/api/admin, roles: PUBLIC_ACCESS }
        
 
 when@test:

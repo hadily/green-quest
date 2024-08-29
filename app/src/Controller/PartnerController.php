@@ -2,19 +2,20 @@
 
 namespace App\Controller;
 
+namespace App\Controller;
+
 use App\Entity\Partner;
-use App\Entity\Admin;
-use App\Repository\EventRepository;
+use App\Form\PartnerType;
 use App\Repository\PartnerRepository;
-use App\Service\UploadFileService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+
 
 
 #[Route('/api/partner')]
@@ -30,13 +31,12 @@ class PartnerController extends AbstractController
             $data[] = [
                 'id' => $partner->getId(),
                 'email' => $partner->getEmail(),
-                'role' => $partner->getRoles(),
                 'firstName' => $partner->getFirstName(),
                 'lastName' => $partner->getLastName(),
+                'phoneNumber' => $partner->getPhoneNumber(),
                 'companyName' => $partner->getCompanyName(),
                 'companyDescription' => $partner->getCompanyDescription(),
                 'localisation' => $partner->getLocalisation(),
-                'phoneNumber' => $partner->getPhoneNumber(),
                 'imageFilename' => $partner->getImageFilename()
             ];
         }
@@ -44,7 +44,7 @@ class PartnerController extends AbstractController
         return new JsonResponse($data, Response::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'getPartnerByID', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}', name: 'getPartnerByID', methods: ['GET'])]
     public function getPartnerByID(int $id, PartnerRepository $partnerRepository): JsonResponse
     {
         $partner = $partnerRepository->find($id);
@@ -62,7 +62,6 @@ class PartnerController extends AbstractController
             'companyName' => $partner->getCompanyName(),
             'companyDescription' => $partner->getCompanyDescription(),
             'localisation' => $partner->getLocalisation(),
-            'roles' => $partner->getRoles(),
             'imageFilename' => $partner->getImageFilename()
         ];
 
@@ -70,102 +69,63 @@ class PartnerController extends AbstractController
     }
 
     #[Route('/', name: 'createPartner', methods: ['POST'])]
-    public function createPartner(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
+    public function createPartner(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        // $data = json_decode($request->getContent(), true);
-        $data = $request->request->all();
-
+        $data = json_decode($request->getContent(), true);
         $partner = new Partner();
+        $form = $this->createForm(PartnerType::class, $partner);
+        $form->submit($data);
 
-        $imageFilename = $request->files->get('imageFilename');
+        $partner = $form->getData();
 
-        if ($imageFilename) {
-            $imageName = $ufService->uploadFile($imageFilename);
-            $partner->setImageFilename($imageName);
+        $file = $form->get('imageFilename')->getData();
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $partner->setImageFilename($fileName);
         }
-
-        $partner->setEmail($data['email']);
-        $partner->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-        $partner->setFirstName($data['firstName']);
-        $partner->setLastName($data['lastName']);
-        $partner->setPhoneNumber($data['phoneNumber']);
-        $partner->setRoles($data['roles'] ?? ['PARTNER']);
-        $partner->setCompanyName($data['companyName']);
-        $partner->setCompanyDescription($data['companyDescription']);
-        $partner->setLocalisation($data['localisation']);
-
-
-        // Fetch the Admin entity or use default admin ID 6
-        $adminId = $data['admin_id'] ?? 6;
-        $admin = $em->getRepository(Admin::class)->find($adminId);
-        if (!$admin) {
-            return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
-        }
-        $partner->setAdmin($admin);
 
         $em->persist($partner);
         $em->flush();
 
         return new JsonResponse(['message' => 'Partner created'], Response::HTTP_CREATED);
+
     }
 
     #[Route('/{id}', name: 'updatePartner', methods: ['POST'])]
-    public function updatePartner(int $id, Request $request, EntityManagerInterface $em, PartnerRepository $partnerRepository, UploadFileService $ufService): JsonResponse
+    public function updatePartner(int $id, Request $request, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
     {
-        $partner = $partnerRepository->find($id); // Get the logged-in client or fetch client by ID
-
-        // Handle file upload
-        /** @var UploadedFile|null $file */
-        $file = $request->files->get('imageFilename');
-
-        if ($file instanceof UploadedFile) {
-            $imageName = $ufService->uploadFile($file);
-            $partner->setImageFilename($imageName); // Assuming you have a method to set the file name
+        $partner = $partnerRepository->find($id);
+        if (!$partner) {
+            return new JsonResponse(['message' => 'Partner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        // Extract data from the request
-        $email = $request->request->get('email');
-        $firstName = $request->request->get('firstName');
-        $lastName = $request->request->get('lastName');
-        $phoneNumber = $request->request->get('phoneNumber');
-        $localisation = $request->request->get('localisation');
-        $companyName = $request->request->get('companyName');
-        $companyDescription = $request->request->get('companyDescription');
+        $form = $this->createForm(PartnerType::class, $partner);
+        $form->handleRequest($request);
 
-        // Update client details if the provided values are not null
-        if ($email !== null) {
-            $partner->setEmail($email);
-        }
-        if ($firstName !== null) {
-            $partner->setFirstName($firstName);
-        }
-        if ($lastName !== null) {
-            $partner->setLastName($lastName);
-        }
-        if ($phoneNumber !== null) {
-            $partner->setPhoneNumber($phoneNumber);
-        }
-        if ($localisation !== null) {
-            $partner->setLocalisation($localisation);
-        }
-        if ($companyName !== null) {
-            $partner->setCompanyName($companyName);
-        }
-        if ($companyDescription !== null) {
-            $partner->setCompanyDescription($companyDescription);
-        }
-        
-        $em->persist($partner);
-        $em->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $partner = $form->getData();
 
-        return new JsonResponse(['status' => 'partner updated successfully']);
+            $file = $form->get('imageFilename')->getData();
+            if ($file) {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                $file->move($this->getParameter('uploads_directory'), $fileName);
+                $partner->setImageFilename($fileName);
+            }
+
+            $em->persist($partner);
+            $em->flush();
+
+            return new JsonResponse(['message' => 'Partner updated successfully']);
+        }
+
+        return new JsonResponse(['error' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/{id}', name: 'deletePartner', methods: ['DELETE'])]
-    public function deletePartner(int $id, EntityManagerInterface $em, PartnerRepository $partnerRepository): JsonResponse
+    public function deletePartner(int $id, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
     {
         $partner = $partnerRepository->find($id);
-
         if (!$partner) {
             return new JsonResponse(['message' => 'Partner not found'], Response::HTTP_NOT_FOUND);
         }
