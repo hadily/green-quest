@@ -16,24 +16,6 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function getAll(): array
-    {
-        return $this->createQueryBuilder('p')
-        ->select('p.id, p.serviceName, p.description, p.startDate, p.endDate, p.price, p.available, p.imageFilename')
-        ->getQuery()
-        ->getArrayResult();
-    }
-    
-    public function getDetailsById(int $id): ?array
-    {
-        return $this->createQueryBuilder('p')
-        ->select('p.id, p.serviceName, p.description, p.startDate, p.endDate, p.price, p.available, p.imageFilename')
-        ->where('p.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery()
-        ->getOneOrNullResult(); // Use getOneOrNullResult for single results
-    }
-
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

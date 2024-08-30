@@ -10,14 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client extends User
 {
-    public function __contruct()
-    {
-        parent::__construct();
-        $this->setRoles(['CLIENT']);
-        $this->services = new ArrayCollection();
-        $this->reservations = new ArrayCollection();
-    }
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $localisation = null;
 
@@ -25,21 +17,16 @@ class Client extends User
     private $admin = null;
 
     /**
-     * @var Collection<int, Service>
-     */
-    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'participants')]
-    private Collection $services;
-
-    /**
      * @var Collection<int, Reservation>
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'confirmation')]
     private Collection $reservations;
 
-    public function __construct()
+
+    public function __contruct()
     {
         parent::__construct();
-        $this->services = new ArrayCollection();
+        $roles[] = 'CLIENT';
         $this->reservations = new ArrayCollection();
     }
 
@@ -61,33 +48,6 @@ class Client extends User
     public function setAdmin(?Admin $admin): self
     {
         $this->admin = $admin;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Service>
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): static
-    {
-        if (!$this->services->contains($service)) {
-            $this->services->add($service);
-            $service->addParticipant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): static
-    {
-        if ($this->services->removeElement($service)) {
-            $service->removeParticipant($this);
-        }
 
         return $this;
     }

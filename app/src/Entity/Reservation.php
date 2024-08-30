@@ -24,9 +24,6 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $confirmation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Service $service = null;
 
     public function getId(): ?int
     {
@@ -65,18 +62,6 @@ class Reservation
     public function setConfirmation(?Client $confirmation): static
     {
         $this->confirmation = $confirmation;
-
-        return $this;
-    }
-
-    public function getService(): ?Service
-    {
-        return $this->service;
-    }
-
-    public function setService(?Service $service): static
-    {
-        $this->service = $service;
 
         return $this;
     }

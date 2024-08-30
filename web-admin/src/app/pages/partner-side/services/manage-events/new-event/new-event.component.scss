@@ -1,47 +1,80 @@
+/* Style for the modal container to make it scrollable and wider */
+.container {
+  width: 60%;
+  max-height: 80vh; /* Maximum height relative to the viewport height */
+  overflow-y: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1001;
+}
 
-  
-  .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
+/* Form group margin adjustments */
+.form-group {
+  margin-bottom: 15px;
+}
 
+/* Form group label style */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
 
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    margin-right: 10px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  button[type="button"] {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  
+/* Input, textarea, and select styles */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button styles */
+button {
+  margin-right: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Submit button style */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Cancel button style */
+button[type="button"] {
+  background-color: #f44336;
+  color: white;
+}
+
+.participants-control {
+  display: flex;
+  align-items: center;
+}
+
+.participants-control button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #589cc6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.participants-control input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+

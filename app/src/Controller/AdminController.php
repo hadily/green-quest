@@ -14,30 +14,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Service\UploadFileService;
-use App\Service\EmailService;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 
 
 #[Route('/api/admin')]
 class AdminController extends AbstractController
 {
-    private $formFactory;
     private $uploadFileService;
-    private $emailService;
 
-    public function __construct(FormFactoryInterface $formFactory, UploadFileService $uploadFileService, EmailService $emailService)
+    public function __construct(UploadFileService $uploadFileService)
     {
-        $this->formFactory = $formFactory;
         $this->uploadFileService = $uploadFileService;
-        $this->emailService = $emailService;
     }
 
 
     #[Route('/', name: 'getAllAdmins', methods: ['GET'])]
-    public function getAllAdmins(EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
+    public function getAllAdmins(AdminRepository $adminRepository): JsonResponse
     {
         $admins = $adminRepository->findAll();
         $data = [];
@@ -58,7 +54,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'getAdminByID', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function getAdminByID(int $id, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
+    public function getAdminByID(int $id, AdminRepository $adminRepository): JsonResponse
     {
         $admin = $adminRepository->find($id);
         $data = [];
@@ -88,23 +84,15 @@ class AdminController extends AbstractController
         $form = $this->createForm(AdminType::class, $admin);
         $form->submit($data);
 
-        // Handle file upload
-        /** @var UploadedFile|null $file */
         $file = $form->get('imageFilename')->getData();
-
-        if ($file instanceof UploadedFile) {
-            $imageName = $this->uploadFileService->uploadFile($file);
-            $admin->setImageFilename($imageName);
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $admin->setImageFilename($fileName);
         }
 
         $em->persist($admin);
         $em->flush();
-
-        // Send an email with the plain password
-        $this->emailService->sendWelcomeEmail(
-            $admin->getEmail(),
-            $admin->getPassword() // Sending the plain password in the email
-        );
 
         return new JsonResponse(['message' => 'Admin created'], JsonResponse::HTTP_CREATED);
     }
@@ -118,20 +106,14 @@ class AdminController extends AbstractController
             return new JsonResponse(['message' => 'Admin not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $form = $this->formFactory->create(AdminType::class, $admin);
+        $form = $this->createForm(AdminType::class, $admin);
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            return new JsonResponse(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
-        }
-
-        // Handle file upload
-        /** @var UploadedFile|null $file */
         $file = $form->get('imageFilename')->getData();
-
-        if ($file instanceof UploadedFile) {
-            $imageName = $this->uploadFileService->uploadFile($file);
-            $admin->setImageFilename($imageName);
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $admin->setImageFilename($fileName);
         }
 
         $em->persist($admin);
@@ -252,7 +234,7 @@ class AdminController extends AbstractController
         return new JsonResponse($clientData, JsonResponse::HTTP_OK);
     }
 
-     #[Route('/clients/{id}', name: 'admin_add_client', methods: ['POST'])]
+    #[Route('/clients/{id}', name: 'admin_add_client', methods: ['POST'])]
     public function addClient(int $id, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
     {
         $admin = $this->getUser();
@@ -309,7 +291,6 @@ class AdminController extends AbstractController
                 'firstName' => $admin->getFirstName(),
                 'lastName' => $admin->getLastName(),
                 'phoneNumber' => $admin->getPhoneNumber(),
-                'localisation' => $admin->getLocalisation(),
                 'roles' => $admin->getRoles(),
                 'imageFilename' => $admin->getImageFilename()
             ];

@@ -1,9 +1,11 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/modules/auth';
 import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
+
 
 @Component({
   selector: 'app-new-event',
@@ -12,12 +14,14 @@ import { RefreshService } from 'src/app/services/refresh.service';
 })
 export class NewEventComponent implements OnInit {
   event = {
-    serviceName: '',
+    name: '',
     description: '',
     startDate: '',
     endDate: '',
     price: 0,
-    available: true
+    category: '',
+    nbParticipants: 0,
+    organizer: 1
   };
   file: any;
 
@@ -33,28 +37,26 @@ export class NewEventComponent implements OnInit {
   ngOnInit(): void {}
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.file);
+    this.file = event.target.files[0].name;
   }
 
 
   onSubmit(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-    console.log(userId);
-    this.apiService.createEvent(userId, this.event, this.file).subscribe(response => {
-      console.log('Event created:', response);
-      this.router.navigate(['/partner/services/events']); 
-      this.closeModal();
-    },
-    error => {
-      console.error('Error creating article:', error);
-      // Optionally show an error message to the user
-    });
+    this.event.organizer = this.authService.currentUserValue?.id ?? 1;
+    if (this.file) {
+      this.apiService.createEvent(this.event, this.file).subscribe(
+        response => {
+          console.log('Event created:', response);
+          this.router.navigate(['/partner/services/events']);
+          this.closeModal();
+        },
+        error => {
+          console.error('Error creating event:', error);
+        }
+      );
+    } else {
+      console.error('No file selected.');
+    }
   }
 
   closeModal(): void {

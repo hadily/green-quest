@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-namespace App\Controller;
 
 use App\Entity\Partner;
+use App\Entity\Admin;
 use App\Form\PartnerType;
 use App\Repository\PartnerRepository;
 use App\Repository\EventRepository;
@@ -76,14 +76,22 @@ class PartnerController extends AbstractController
         $form = $this->createForm(PartnerType::class, $partner);
         $form->submit($data);
 
-        $partner = $form->getData();
-
         $file = $form->get('imageFilename')->getData();
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $partner->setImageFilename($fileName);
         }
+
+        $partner->setPassword(custom_password_hash($data['password'], PASSWORD_BCRYPT));
+
+        // Fetch the Admin entity or use default admin ID 6
+        $adminId = $data['admin_id'] ?? 1;
+        $admin = $em->getRepository(Admin::class)->find($adminId);
+        if (!$admin) {
+            return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
+        }
+        $partner->setAdmin($admin);
 
         $em->persist($partner);
         $em->flush();
@@ -103,23 +111,20 @@ class PartnerController extends AbstractController
         $form = $this->createForm(PartnerType::class, $partner);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $partner = $form->getData();
+        $partner = $form->getData();
 
-            $file = $form->get('imageFilename')->getData();
-            if ($file) {
-                $fileName = uniqid().'.'.$file->guessExtension();
-                $file->move($this->getParameter('uploads_directory'), $fileName);
-                $partner->setImageFilename($fileName);
-            }
-
-            $em->persist($partner);
-            $em->flush();
-
-            return new JsonResponse(['message' => 'Partner updated successfully']);
+        $file = $form->get('imageFilename')->getData();
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $partner->setImageFilename($fileName);
         }
 
-        return new JsonResponse(['error' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
+        $em->persist($partner);
+        $em->flush();
+
+
+        return new JsonResponse(['status' => 'Partner updated successfully']);
     }
 
     #[Route('/{id}', name: 'deletePartner', methods: ['DELETE'])]

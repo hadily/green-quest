@@ -6,8 +6,8 @@
           <label for="imageFilename">Image</label>
           <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
         </div>
-        <label for="serviceName">Service Name</label>
-        <input type="text" id="serviceName" [(ngModel)]="event.serviceName" name="serviceName" required>
+        <label for="name">Event Name</label>
+        <input type="text" id="name" [(ngModel)]="event.name" name="name" required>
       </div>
       <div class="form-group">
         <label for="description">Description</label>
@@ -26,10 +26,16 @@
         <input type="number" id="price" [(ngModel)]="event.price" name="price" required>
       </div>
       <div class="form-group">
-        <label for="available">Available</label>
-        <select id="available" [(ngModel)]="event.available" name="available" required>
-          <option [value]="true">Yes</option>
-          <option [value]="false">No</option>
+        <label for="nbParticipants">Number of Participants</label>
+        <input type="number" id="nbParticipants" [(ngModel)]="event.nbParticipants" name="nbParticipants" min="0" required>
+    </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" [(ngModel)]="event.category" name="category" required>
+          <option value="outdoor-adventures">Outdoor Adventures</option>
+          <option value="sustainability-conservation">Sustainability and Conservation</option>
+          <option value="education-awareness">Education and Awareness</option>
+          <option value="community-wellbeing">Community and Well-being</option>
         </select>
       </div>
       <button type="submit">Submit</button>

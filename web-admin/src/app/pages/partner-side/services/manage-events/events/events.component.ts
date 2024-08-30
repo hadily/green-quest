@@ -15,7 +15,6 @@ import { NewEventComponent } from '../new-event/new-event.component';
 })
 export class EventsComponent implements OnInit {
   events: any[] = [];
-  allEvents: any[] = [];
   private refreshSubscription: Subscription;
   
   constructor(
@@ -42,7 +41,6 @@ export class EventsComponent implements OnInit {
         (data: any[]) => {
           this.events = data;
           console.log(this.events);
-          this.allEvents = this.events;
           this.cdr.detectChanges();
         },
         (error) => {

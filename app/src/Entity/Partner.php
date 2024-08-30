@@ -24,21 +24,23 @@ class Partner extends User
     private $admin = null;
 
     /**
-     * @var Collection<int, Service>
+     * @var Collection<int, Event>
      */
-    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'owner', orphanRemoval: true)]
-    private Collection $services;
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer')]
+    private Collection $events;
+
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'owner')]
+    private Collection $products;
 
     public function __construct()
     {
         parent::__construct();
-        $this->services = new ArrayCollection();
-    }
-
-    public function __contruct()
-    {
-        parent::__construct();
-        $this->setRoles(['PARTNER']);
+        $roles[] = 'PARTNER';
+        $this->events = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getCompanyName(): ?string
@@ -79,37 +81,67 @@ class Partner extends User
     public function setAdmin(?Admin $admin): self
     {
         $this->admin = $admin;
-
         return $this;
     }
 
     /**
-     * @return Collection<int, Service>
+     * @return Collection<int, Event>
      */
-    public function getServices(): Collection
+    public function getEvents(): Collection
     {
-        return $this->services;
+        return $this->events;
     }
 
-    public function addService(Service $service): static
+    public function addEvent(Event $event): static
     {
-        if (!$this->services->contains($service)) {
-            $this->services->add($service);
-            $service->setOwner($this);
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setOrganizer($this);
         }
 
         return $this;
     }
 
-    public function removeService(Service $service): static
+    public function removeEvent(Event $event): static
     {
-        if ($this->services->removeElement($service)) {
+        if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
-            if ($service->getOwner() === $this) {
-                $service->setOwner(null);
+            if ($event->getOrganizer() === $this) {
+                $event->setOrganizer(null);
             }
         }
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getOwner() === $this) {
+                $product->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -172,17 +172,19 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }
 
-  createEvent(owner: any, event: any, file: File): Observable<any> {
+  createEvent(event: any, file: File): Observable<any> {
     const formData: FormData = new FormData();
-    formData.append('serviceName', event.serviceName);
+    formData.append('name', event.name);
     formData.append('description', event.description);
     formData.append('startDate', event.startDate);
     formData.append('endDate', event.endDate);
     formData.append('price', event.price);
-    formData.append('available', event.available);
-    formData.append('ownerId', owner);
+    formData.append('category', event.category);
+    formData.append('nbParticipants', event.nbParticipants);
+    formData.append('organizer', event.organizer);
     formData.append('imageFilename', file);
-    return this.http.post<any>(`${this.apiUrl}/event/`, event);
+
+    return this.http.post<any>(`${this.apiUrl}/event/`, formData);
   }
 
   createProduct(owner: any, product: any, file: File): Observable<any> {

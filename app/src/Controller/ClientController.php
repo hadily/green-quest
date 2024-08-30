@@ -1,10 +1,9 @@
 <?php
 
-// src/Controller/ClientController.php
-
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Form\ClientType;
 use App\Entity\Admin;
 use App\Entity\Article;
 use App\Repository\ClientRepository;
@@ -31,7 +30,6 @@ class ClientController extends AbstractController
             $data[] = [
                 'id' => $client->getId(),
                 'email' => $client->getEmail(),
-                'roles' => $client->getRoles(),
                 'firstName' => $client->getFirstName(),
                 'lastName' => $client->getLastName(),
                 'phoneNumber' => $client->getPhoneNumber(),
@@ -55,7 +53,6 @@ class ClientController extends AbstractController
         $data = [
             'id' => $client->getId(),
             'email' => $client->getEmail(),
-            'roles' => $client->getRoles(),
             'firstName' => $client->getFirstName(),
             'lastName' => $client->getLastName(),
             'phoneNumber' => $client->getPhoneNumber(),
@@ -69,26 +66,23 @@ class ClientController extends AbstractController
     #[Route('/', name: 'createClient', methods: ['POST'])]
     public function createClient(Request $request, EntityManagerInterface $em, UploadFileService $ufService): JsonResponse
     {
-        $data = $request->request->all();
-
+        $data = json_decode($request->getContent(), true);
         $client = new Client();
+        $form = $this->createForm(ClientType::class, $client);
+        $form->submit($data);
 
-        $imageFile = $request->files->get('imageFilename');
-        if ($imageFile instanceof UploadedFile) {
-            $imageName = $ufService->uploadFile($imageFile);
-            $client->setImageFilename($imageName);
+        $file = $form->get('imageFilename')->getData();
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $client->setImageFilename($fileName);
         }
 
         $client->setEmail($data['email']);
         $client->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
-        $client->setFirstName($data['firstName']);
-        $client->setLastName($data['lastName']);
-        $client->setPhoneNumber($data['phoneNumber']);
-        $client->setRoles($data['roles'] ?? ['CLIENT']);
-        $client->setLocalisation($data['localisation']);
 
         // Fetch the Admin entity or use default admin ID 6
-        $adminId = $data['admin_id'] ?? 6;
+        $adminId = $data['admin_id'] ?? 1;
         $admin = $em->getRepository(Admin::class)->find($adminId);
         if (!$admin) {
             return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
@@ -105,42 +99,22 @@ class ClientController extends AbstractController
     public function updateClient(int $id, Request $request, EntityManagerInterface $em, ClientRepository $clientRepository, UploadFileService $ufService): JsonResponse
     {
         $client = $clientRepository->find($id);
-
         if (!$client) {
-            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Client not found'], Response::HTTP_NOT_FOUND);
         }
 
-        // Handle file upload
-        $file = $request->files->get('imageFilename');
-        if ($file instanceof UploadedFile) {
-            $imageName = $ufService->uploadFile($file);
-            $client->setImageFilename($imageName);
+        $form = $this->createForm(ClientType::class, $client);
+        $form->handleRequest($request);
+
+        $client = $form->getData();
+
+        $file = $form->get('imageFilename')->getData();
+        if ($file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+            $client->setImageFilename($fileName);
         }
 
-        // Extract data from the request
-        $email = $request->request->get('email');
-        $firstName = $request->request->get('firstName');
-        $lastName = $request->request->get('lastName');
-        $phoneNumber = $request->request->get('phoneNumber');
-        $localisation = $request->request->get('localisation');
-
-        // Update client details if the provided values are not null
-        if ($email !== null) {
-            $client->setEmail($email);
-        }
-        if ($firstName !== null) {
-            $client->setFirstName($firstName);
-        }
-        if ($lastName !== null) {
-            $client->setLastName($lastName);
-        }
-        if ($phoneNumber !== null) {
-            $client->setPhoneNumber($phoneNumber);
-        }
-        if ($localisation !== null) {
-            $client->setLocalisation($localisation);
-        }
-        
         $em->persist($client);
         $em->flush();
 
@@ -159,7 +133,7 @@ class ClientController extends AbstractController
         $articles = $em->getRepository(Article::class)->findBy(['writer' => $client]);
 
         foreach ($articles as $article) {
-            $superAdmin = $userRepository->find(6);
+            $superAdmin = $userRepository->find(1);
             $article->setWriter($superAdmin);
             $em->persist($article);
         }

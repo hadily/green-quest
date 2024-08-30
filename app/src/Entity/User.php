@@ -25,9 +25,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
-
     #[ORM\Column(type: 'string')]
     private $password;
 
@@ -39,6 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     private $phoneNumber = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFilename = null;
+
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     /**
      * @var Collection<int, Article>
@@ -52,17 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Complaints::class, mappedBy: 'Owner', orphanRemoval: true)]
     private Collection $complaints;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imageFilename = null;
 
     public function __construct()
     {
-        $this->roles = ['USER'];
-        $this->email = '';
-        $this->password = '';
-        $this->firstName = '';
-        $this->lastName = '';
-        $this->phoneNumber = '';
         $this->articles = new ArrayCollection();
         $this->complaints = new ArrayCollection();
     }
@@ -90,33 +85,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
-    }
-
-    public function hasRole(string $role): bool
-    {
-        return in_array($role, $this->roles);
-    }
-
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'USER';
-
-        return array_unique($roles);
-    }
-
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): void
-    {
-        $this->roles = $roles;
     }
 
     /**
@@ -156,14 +124,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastName;
     }
 
-    public function getFullName(): ?string
-    {
-        return $this->firstName . ' ' . $this->lastName;
-    }
-
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
+    }
+    
+    public function getFullName(): ?string
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 
     public function getPhoneNumber(): ?string
@@ -174,6 +142,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoneNumber(string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
+    }
+    
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * Sets the roles for the user and adds "PARTNER3" role.
+     *
+     * @param array<string> $roles
+     * @return $this
+     */
+    public function setRoles(array $roles): self
+    {
+        // Ensure "PARTNER" is in the roles array
+        if (!in_array('PARTNER', $roles, true)) {
+            $roles[] = 'PARTNER';
+        }
+        
+        $this->roles = $roles;
+        return $this;
     }
 
     /**
@@ -236,14 +246,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImageFilename(): ?string
-    {
-        return $this->imageFilename;
-    }
-
-    public function setImageFilename(?string $imageFilename): self
-    {
-        $this->imageFilename = $imageFilename;
-        return $this;
-    }
 }

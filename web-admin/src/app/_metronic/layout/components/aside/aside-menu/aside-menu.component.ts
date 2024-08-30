@@ -37,6 +37,7 @@ export class AsideMenuComponent implements OnInit {
   }
 
   isPartner(roles: string[]): boolean {
+    console.log("roles: ", roles);
     return roles.includes('PARTNER');
   }
 }
