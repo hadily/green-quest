@@ -74,9 +74,10 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  openUpdateModal(articleId: number): void {
+  openUpdateModal(eventId: number): void {
+    console.log(eventId);
     const dialogRef = this.dialog.open(EventPanelComponent, {
-      data: { articleId: articleId }
+      data: { eventId: eventId }
     });
   
     dialogRef.afterClosed().subscribe(result => {

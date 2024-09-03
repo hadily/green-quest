@@ -24,9 +24,8 @@ export class DeleteEventComponent implements OnInit{
     this.apiService.deleteEvent(this.data.id).subscribe(
       response => {
         console.log('event deleted:', response);
+        this.refreshService.triggerRefresh('/partner/services/events');
         this.dialogRef.close(true); 
-        this.refreshService.triggerRefresh('/partner/services/events'); // Navigate to the partner list page
-
       },
       error => {
         console.error('Error deleting event:', error);

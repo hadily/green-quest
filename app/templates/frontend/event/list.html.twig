@@ -54,17 +54,17 @@
 							<div class="inner">
 								<div class="content pt--0 pb--10">
 									<h2 class="title">
-										<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">{{event.serviceName}}</a>
+										<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">{{event.name}}</a>
 									</h2>
 								</div>
 								<div class="thumbnail">
 									<a href="{{ path('frontend_event_detail', {'id': event.id}) }}">
-										<img src="{{event.imageFilename}}" alt="{{event.serviceName}}">
+										<img src="{{ asset('uploads/' ~ event.imageFilename) }}" alt="{{event.name}}">
 									</a>
 								</div>
 								<div class="content">
 									<div class="justify-content-center">
-										{{event.description}}
+										{{event.category}}
 									</div>
 									<div class="rbt-price justify-content-center mt--10">
 										<span class="current-price theme-gradient">{{event.price}}

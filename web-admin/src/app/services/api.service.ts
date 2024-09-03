@@ -265,15 +265,13 @@ export class ApiService {
 
   updateEvent(id: number, event: any, file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('serviceName', event.serviceName);
-    formData.append('descritpion', event.descritpion);
-    formData.append('startdate', event.startdate);
-    formData.append('endDate', event.endDate);
-    formData.append('available', event.available);
-    formData.append('price', event.price);
-    formData.append('ownerId', event.ownerId);
-    formData.append('imageFilename', file, file.name);
-    return this.http.post<any>(`${this.apiUrl}/event/${id}`, formData);
+    formData.append('event', JSON.stringify(event));
+    if (file) {
+      formData.append('file', file);
+    }
+
+    console.log(formData);
+    return this.http.put<any>(`${this.apiUrl}/event/${id}`, formData);
   }
 
   updateProduct(id: number, product: any, file: File): Observable<any> {

@@ -5,11 +5,11 @@
     <div class="form-group">
       <div class="form-group">
         <label for="imageFilename">Image</label>
-        <img  src="{{fileUrl}}/uploads/{{event.imageFilename}}">
+        <img  [src]="fileUrl + '/uploads/' + event.imageFilename" class="print-size-image">
         <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
       </div>
-      <label for="serviceName">Event Name</label>
-      <input type="serviceName" id="serviceName" [(ngModel)]="event.serviceName" name="serviceName" required>
+      <label for="name">Event Name</label>
+      <input type="name" id="name" [(ngModel)]="event.name" name="name" required>
     </div>
     <div class="form-group">
       <label for="description">Event Description</label>
@@ -28,8 +28,12 @@
       <input type="text" id="price" [(ngModel)]="event.price" name="price" required>
     </div>
     <div class="form-group">
-      <label for="available">Available</label>
-      <input type="text" id="available" [(ngModel)]="event.available" name="available" required>
+      <label for="nbParticipants">Number of Participants</label>
+      <input type="text" id="nbParticipants" [(ngModel)]="event.nbParticipants" name="nbParticipants" required>
+    </div>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" id="category" [(ngModel)]="event.category" name="category" required>
     </div>
     <button type="submit">Update</button>
     <button type="button" (click)="closeModal()">Cancel</button>

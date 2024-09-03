@@ -16,6 +16,27 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
+    /**
+     * Get all events
+     * 
+     * @return Event[]
+     */
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
+
+    /**
+     * Get event details by ID
+     * 
+     * @param int $id
+     * @return Event|null
+     */
+    public function getDetailsById(int $id): ?Event
+    {
+        return $this->find($id);
+    }
+
 //    /**
 //     * @return Event[] Returns an array of Event objects
 //     */

@@ -5,6 +5,7 @@ namespace App\Controller\frontend;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use DateTime;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
@@ -31,10 +32,9 @@ class EventController extends AbstractController
     public function detail(int $id, Event $event)
     {
         $event = $this->eventRepository->getDetailsById($id);
-        if ($event) {
-            $event['startDate'] = $event['startDate'] ? $event['startDate']->format('Y-m-d') : null;
-            $event['endDate'] = $event['endDate'] ? $event['endDate']->format('Y-m-d') : null;
-        }
+        if (!$event) {
+            throw $this->createNotFoundException('Event not found');
+        } 
         return $this->render('frontend/event/detail.html.twig', ['event'=>$event]);
     }
 }

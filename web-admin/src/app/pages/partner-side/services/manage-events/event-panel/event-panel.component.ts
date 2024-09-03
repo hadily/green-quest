@@ -12,14 +12,15 @@ import { environment } from 'src/environments/environment';
 })
 export class EventPanelComponent implements OnInit {
   event = {
-    serviceName: '',
+    name: '',
     description: '',
     startDate: '',
     endDate: '',
-    available: '',
+    category: '',
     price: '',
-    ownerId: 0,
-    imageFilename: null
+    owner: 0,
+    imageFilename: null,
+    nbParticipants: 0
   };
   file: any;  
   fileUrl = environment.fileUrl;
@@ -47,6 +48,7 @@ export class EventPanelComponent implements OnInit {
   }
 
   loadArticleData(): void {
+    console.log(this.data.eventId);
     this.apiService.getEventById(this.data.eventId).subscribe(
       response => {
         console.log('onsode apiService arrow fun', this.data.eventId);
@@ -60,16 +62,16 @@ export class EventPanelComponent implements OnInit {
   }
 
   onUpdate(): void {
-    this.event.ownerId = this.authService.currentUserValue?.id ?? 0;
-    this.file = this.event.imageFilename;
+    this.event.owner = this.authService.currentUserValue?.id ?? 0;
+    this.fileUrl = this.fileUrl.replace(/\/+$/, '');
     this.apiService.updateEvent(this.data.eventId, this.event, this.file).subscribe(
       response => {
         this.dialogRef.close(true);
-        this.refreshService.triggerRefresh('/partner/services/events'); // Notify other components
+        this.refreshService.triggerRefresh('/partner/services/events');
+        this.closeModal(); 
       },
       error => {
         console.error('Error updating event:', error);
-        // Optionally show an error message to the user
       }
     );
   }

@@ -138,27 +138,37 @@ class EventController extends AbstractController
     {
         $event = $this->eventRepository->find($id);
         if (!$event) {
-            return new JsonResponse(['message' => 'event not found']);
+            return new JsonResponse(['message' => 'Event not found'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+        $form->submit(json_decode($request->getContent(), true), false); // Handle only the submitted data
 
-        $event = $form->getData();
-
-        $file = $form->get('imageFilename')->getData();
-        if ($file) {
-            $fileName = uniqid().'.'.$file->guessExtension();
-            $file->move($this->getParameter('uploads_directory'), $fileName);
-            $event->setImageFilename($fileName);
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return new JsonResponse(['message' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->entityManager->persist($event);
-        $this->entityManager->flush();
+        $file = $request->files->get('file');
+        if ($file) {
+            try {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                $file->move($this->getParameter('uploads_directory'), $fileName);
+                $event->setImageFilename($fileName);
+            } catch (\Exception $e) {
+                return new JsonResponse(['message' => 'File upload failed: '.$e->getMessage()], Response::HTTP_BAD_REQUEST);
+            }
+        }
 
+        try {
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['message' => 'Failed to update event: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-        return new JsonResponse(['status' => 'event updated successfully']);
+        return new JsonResponse(['status' => 'Event updated successfully']);
     }
+
 
     #[Route('/{id}', name: 'delete_event', methods: ['DELETE'])]
     public function deleteEvent(int $id): JsonResponse

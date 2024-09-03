@@ -42,12 +42,12 @@ export class NewEventComponent implements OnInit {
 
 
   onSubmit(): void {
-    this.event.organizer = this.authService.currentUserValue?.id ?? 1;
+    this.event.organizer = this.authService.currentUserValue?.id ?? 0;
     if (this.file) {
       this.apiService.createEvent(this.event, this.file).subscribe(
         response => {
           console.log('Event created:', response);
-          this.router.navigate(['/partner/services/events']);
+          this.refreshService.triggerRefresh('/partner/services/events');
           this.closeModal();
         },
         error => {
