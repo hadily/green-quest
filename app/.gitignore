@@ -14,5 +14,5 @@
 ###< lexik/jwt-authentication-bundle ###
 
 ###> credentials ###
-credits.txt
+/credits.txt
 ###< credentials ###
