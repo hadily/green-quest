@@ -26,9 +26,12 @@
 							<h5 class="rbt-card-title">
 								<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">{{product.name}}</a>
 							</h5>
-							<p class="rbt-card-text">I{{product.description}}</p>
+							<div class="rbt-card-img">
+						        <img src="{{ asset('uploads/' ~ product.imageFilename) }}" alt="{{product.name}}">
+					        </div>
+							<p class="rbt-card-text">{{product.price}} Dt</p>
 							<div class="rbt-card-bottom">
-								<a class="transparent-button" href="{{ path('frontend_product_detail', {'id': product.id}) }}">Voir détails<i>
+								<a class="transparent-button" href="{{ path('frontend_product_detail', {'id': product.id}) }}">View details <i>
 										<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">
 											<g stroke="#27374D" fill="none" fill-rule="evenodd">
 												<path d="M10.614 0l5.629 5.629-5.63 5.629"/>

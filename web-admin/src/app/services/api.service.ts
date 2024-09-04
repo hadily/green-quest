@@ -160,19 +160,19 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/admin/`, formData);
   }
 
-  createArticle(formData: any): Observable<any> {
-    //console.log("article ", article);
-    //const formData: FormData = new FormData();
-    //formData.append('title', article.title);
-    //formData.append('subTitle', article.subTitle);
-    //formData.append('summary', article.summary);
-    //formData.append('text', article.text);
-    //formData.append('imageFilename', article.imageFilename);
-    //console.log(formData);
+  createArticle(article: any): Observable<any> {
+    console.log("article ", article);
+    const formData = new FormData();
+    formData.append('title', article.title);
+    formData.append('subTitle', article.subTitle);
+    formData.append('summary', article.summary);
+    formData.append('text', article.text);
+    formData.append('writer', article.writerId);
+    formData.append('imageFilename', article.imageFilename);
     return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }
 
-  createEvent(event: any, file: File): Observable<any> {
+  createEvent(event: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('name', event.name);
     formData.append('description', event.description);
@@ -182,18 +182,18 @@ export class ApiService {
     formData.append('category', event.category);
     formData.append('nbParticipants', event.nbParticipants);
     formData.append('organizer', event.organizer);
-    formData.append('imageFilename', file);
+    formData.append('imageFilename', event.imageFilename);
 
     return this.http.post<any>(`${this.apiUrl}/event/`, formData);
   }
 
-  createProduct(product: any, file: File): Observable<any> {
+  createProduct(product: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('name', product.name);
     formData.append('description', product.description);
     formData.append('price', product.price);
     formData.append('owner', product.owner);
-    formData.append('imageFilename', file);
+    formData.append('imageFilename', product.imageFilename);
     return this.http.post<any>(`${this.apiUrl}/product/`, formData);
   }
 

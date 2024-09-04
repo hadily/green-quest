@@ -82,12 +82,7 @@ class ProductController extends AbstractController
     {
         // Create a new Product entity
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product, [
-            'allow_extra_fields' => true,  // Allow extra fields
-        ]);
-        // Bind request data to the form
-        $form->handleRequest($request);
-        // Handle file upload
+
         $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
@@ -95,11 +90,24 @@ class ProductController extends AbstractController
             $product->setImageFilename($fileName);
         }
 
+        $form = $this->createForm(ProductType::class, $product, [
+            'allow_extra_fields' => true,  // Allow extra fields
+            'csrf_protection' => false
+        ]);
         $form->submit($request->request->all());
+
+        if (!$form->isValid()) {
+            $errors = [];
+            foreach ($form->getErrors(true, true) as $error) {
+                $errors[] = $error->getMessage();
+            }
+            return new JsonResponse(['message' => 'Invalid data', 'errors' => $errors], JsonResponse::HTTP_BAD_REQUEST);
+        }
     
         $this->entityManager->persist($product);
         $this->entityManager->flush();
-        return new JsonResponse(['message' => 'Event created'], JsonResponse::HTTP_CREATED);
+
+        return new JsonResponse(['message' => 'Product created'], JsonResponse::HTTP_CREATED);
     }
 
     #[Route('/product/{id}', name: 'update_product', methods: ['POST'])]

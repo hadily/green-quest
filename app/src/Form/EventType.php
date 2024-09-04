@@ -19,8 +19,7 @@ class EventType extends AbstractType
             ->add('category')
             ->add('price')
             ->add('nbParticipants')
-            ->add('organizer')
-            ->add('imageFilename');
+            ->add('organizer');
     }
 
     public function configureOptions(OptionsResolver $resolver)

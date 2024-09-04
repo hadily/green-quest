@@ -94,9 +94,6 @@ class EventController extends AbstractController
     {
         // Create a new Event entity
         $event = new Event();
-        $form = $this->createForm(EventType::class, $event, [
-            'allow_extra_fields' => true,  // Allow extra fields
-        ]);
 
         // Manually set startDate and endDate
         if (isset($data['startDate'])) {
@@ -114,6 +111,12 @@ class EventController extends AbstractController
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $event->setImageFilename($fileName);
         }
+
+        
+        $form = $this->createForm(EventType::class, $event, [
+            'allow_extra_fields' => true,  // Allow extra fields
+            'csrf_protection' => false
+        ]);
 
         // Handle form submission
         $form->submit($request->request->all());

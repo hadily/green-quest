@@ -59,7 +59,7 @@
 								</div>
 								<div class="thumbnail">
 									<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">
-										<img src="{{ asset('uploads/') ~ product.imageFilename }}" alt="{{product.name}}">
+										<img src="{{ asset('uploads/' ~ product.imageFilename) }}" alt="{{product.name}}">
 									</a>
 								</div>
 								<div class="content">
@@ -73,7 +73,7 @@
 									<div class="addto-cart-btn mt--20">
 										<a class="rbt-btn btn-gradient hover-icon-reverse" href="{{ path('frontend_product_detail', {'id': product.id}) }}">
 											<span class="icon-reverse-wrapper">
-												<span class="btn-text">Dratils</span>
+												<span class="btn-text">Details</span>
 												<span class="btn-icon">
 													<i class="feather-arrow-right"></i>
 												</span>

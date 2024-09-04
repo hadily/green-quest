@@ -37,7 +37,10 @@
 								<h5 class="rbt-card-title">
 									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">{{blog.title}}</a>
 								</h5>
-								<p class="rbt-card-text">{{blog.text}}</p>
+								<div class="breadcrumb-dark">
+					                <img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="Nature Images">
+				                </div>
+								<p class="rbt-card-text">{{blog.summary}}</p>
 								<div class="rbt-card-bottom">
 									<a class="transparent-button" href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">Learn More<i>
 											<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">
