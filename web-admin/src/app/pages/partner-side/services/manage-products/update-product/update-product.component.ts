@@ -12,13 +12,10 @@ import { environment } from 'src/environments/environment';
 })
 export class UpdateProductComponent implements OnInit{
   product = {
-    serviceName: '',
+    name: '',
     description: '',
-    startDate: '',
-    endDate: '',
-    available: '',
     price: '',
-    ownerId: 0,
+    owner: 1,
     imageFilename: null
   };
   file: any;  
@@ -33,9 +30,7 @@ export class UpdateProductComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-    console.log(userId);
-    this.product.ownerId = userId;
+    this.product.owner = this.authService.currentUserValue?.id ?? 1;
     this.loadProductData();
   }
 
@@ -50,38 +45,38 @@ export class UpdateProductComponent implements OnInit{
   }
 
   loadProductData(): void {
-    console.log(this.data.productId);
+    console.log("productID ", this.data.productId);
     this.apiService.getProductById(this.data.productId).subscribe(
       response => {
-        console.log('onsode apiService arrow fun', this.data.productId);
-        console.log('Loaded partner data:', response); // Debugging log
+        console.log('Loaded product data:', response);
         this.product = response;
       },
       error => {
-        console.error('Error loading partner data:', error);
+        console.error('Error loading product data:', error);
       }
-    );
+    );  
   }
-  
+
 
   onUpdate(): void {
-    console.log('Product ID:', this.data.productId);
-    this.file = this.product.imageFilename;
-    console.log('Inside onUpdate');
-  
+    const fileInput = document.querySelector('#fileInput') as HTMLInputElement;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      this.file = fileInput.files[0];
+    } else {
+      console.error('No file selected');
+      return;
+    }
+
     this.apiService.updateProduct(this.data.productId, this.product, this.file).subscribe(
       response => {
         console.log('After updateProduct function', response);
-  
-        // Close the modal and trigger a refresh after a successful update
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/partner/services/products'); 
       },
       error => {
         console.error('Error updating product:', error);
-        // Optionally show an error message to the user
       }
-    );
+    );  
   }
   
 

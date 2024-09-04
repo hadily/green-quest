@@ -28,6 +28,12 @@
     margin-bottom: 2em;
   }
 
+  .print-size-image {
+    width: 200px;   
+    height: 300px;  
+    object-fit: cover; 
+  }
+
 
   .form-group {
     margin-bottom: 15px;

@@ -30,10 +30,6 @@ class ProductController extends AbstractController
     public function detail(int $id, Product $product)
     {
         $product = $this->productRepository->getDetailsById($id);
-        if ($product) {
-            $product['startDate'] = $product['startDate'] ? $product['startDate']->format('Y-m-d') : null;
-            $product['endDate'] = $product['endDate'] ? $product['endDate']->format('Y-m-d') : null;
-        }
         return $this->render('frontend/product/detail.html.twig', ['product'=>$product]);
     }
 }

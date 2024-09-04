@@ -36,8 +36,6 @@ class Article
     #[ORM\JoinColumn(name: "writer_id", referencedColumnName:"id", nullable: true)]
     private ?User $writer = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $likes = null;
 
     /**
      * @var Collection<int, Complaints>
@@ -131,16 +129,10 @@ class Article
         return $this;
     }
 
-    public function getLikes(): ?int
+    public function getWriterFullName() : ?string
     {
-        return $this->likes;
-    }
-
-    public function setLikes(?int $likes): static
-    {
-        $this->likes = $likes;
-
-        return $this;
+        $writer = $this->getWriter();
+        return $writer ? $writer->getFullName() : null;
     }
 
     /**

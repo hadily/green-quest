@@ -18,15 +18,7 @@ class ArticleType extends AbstractType
             ->add('subTitle')
             ->add('summary')
             ->add('text')
-            ->add('date', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('likes')
-            ->add('writer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ->add('writer');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

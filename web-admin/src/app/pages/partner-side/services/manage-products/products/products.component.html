@@ -27,9 +27,7 @@
           <thead>
             <tr class="fw-bolder text-muted">
               <th class="min-w-100px">Product</th>
-              <th class="min-w-80px">Start Date</th>
-              <th class="min-w-80px">End Date</th>
-              <th class="min-w-80px">Available</th>
+              <th class="min-w-150px">description</th>
               <th class="min-w-80px">Price</th>
               <th class="min-w-60px text-end">Actions</th>
             </tr>
@@ -38,35 +36,29 @@
           
           <!-- begin::Table body -->
           <tbody>
-              <tr *ngFor="let article of products">
+              <tr *ngFor="let product of products">
                   <td>
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-70px me-5">
-                            <img  src="{{fileUrl}}/uploads/{{article.imageFilename}}">
+                            <img  src="{{fileUrl}}/uploads/{{product.imageFilename}}">
                           </div>
                       <div class="d-flex justify-content-start flex-column">
-                        <a href="#" class="text-gray-900 fw-bolder text-hover-primary fs-6">{{article.serviceName}}</a>
+                        <a href="#" class="text-gray-900 fw-bolder text-hover-primary fs-6">{{product.name}}</a>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.startDate}}</a>
+                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{product.description}}</a>
                   </td>
                   <td>
-                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.endDate}}</a>
-                  </td>
-                  <td>
-                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.available}}</a>
-                  </td>
-                  <td>
-                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.price}}</a>
+                    <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{product.price}}</a>
                   </td>
                   <td>
                     <div class="d-flex justify-content-end flex-shrink-0">
-                      <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(article.id)">
+                      <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(product.id)">
                         <i class="bi bi-pen"></i>
                       </button>
-                      <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="openDeleteModal(article.id)">
+                      <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="openDeleteModal(product.id)">
                         <i class="bi bi-trash2"></i>
                       </button>
                     </div>

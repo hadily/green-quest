@@ -116,7 +116,7 @@ export class ApiService {
 
   getAllArticlesByWriter(ownerId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/article/writer/${ownerId}`);
-}
+  }
 
   /** CREATE */
 
@@ -160,15 +160,15 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/admin/`, formData);
   }
 
-  createArticle(article: any, fileName: File): Observable<any> {
-    const formData: FormData = new FormData();
-    formData.append('title', article.title);
-    formData.append('subTitle', article.subTitle);
-    formData.append('summary', article.summary);
-    formData.append('text', article.text);
-    formData.append('date', article.date);
-    formData.append('writerId', article.writerId);
-    formData.append('imageFilename', fileName);
+  createArticle(formData: any): Observable<any> {
+    //console.log("article ", article);
+    //const formData: FormData = new FormData();
+    //formData.append('title', article.title);
+    //formData.append('subTitle', article.subTitle);
+    //formData.append('summary', article.summary);
+    //formData.append('text', article.text);
+    //formData.append('imageFilename', article.imageFilename);
+    //console.log(formData);
     return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }
 
@@ -187,15 +187,12 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/event/`, formData);
   }
 
-  createProduct(owner: any, product: any, file: File): Observable<any> {
+  createProduct(product: any, file: File): Observable<any> {
     const formData: FormData = new FormData();
-    formData.append('serviceName', product.serviceName);
+    formData.append('name', product.name);
     formData.append('description', product.description);
-    formData.append('startDate', product.startDate);
-    formData.append('endDate', product.endDate);
     formData.append('price', product.price);
-    formData.append('available', product.available);
-    formData.append('ownerId', owner);
+    formData.append('owner', product.owner);
     formData.append('imageFilename', file);
     return this.http.post<any>(`${this.apiUrl}/product/`, formData);
   }
@@ -277,13 +274,10 @@ export class ApiService {
   updateProduct(id: number, product: any, file: File): Observable<any> {
     console.log('updateProduct called with:', id, product, file);
     const formData = new FormData();
-    formData.append('serviceName', product.serviceName);
-    formData.append('descritpion', product.descritpion);
-    formData.append('startdate', product.startdate);
-    formData.append('endDate', product.endDate);
-    formData.append('available', product.available);
+    formData.append('name', product.name);
+    formData.append('description', product.description); // Ensure 'description' matches the backend expectation
     formData.append('price', product.price);
-    formData.append('ownerId', product.ownerId);
+    formData.append('ownerId', product.ownerId); // Ensure 'ownerId' matches the backend expectation
     formData.append('imageFilename', file, file.name);
     return this.http.post<any>(`${this.apiUrl}/product/${id}`, formData);
   }

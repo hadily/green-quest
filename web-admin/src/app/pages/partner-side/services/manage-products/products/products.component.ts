@@ -35,10 +35,12 @@ export class ProductsComponent implements OnInit{
   }
 
   loadProducts() : void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
+    const userId = this.authService.currentUserValue?.id ?? 1;
+    console.log("userID ",userId);
     this.apiService.getAllProductsByOwner(userId).subscribe(
       data => {
         this.products = data;
+        console.log(this.products);
         this.cdr.detectChanges();  // Manually trigger change detection
         console.log(this.products);
       },

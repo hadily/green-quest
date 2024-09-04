@@ -60,7 +60,7 @@ class ProductController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if (!$product) {
-            return new JsonResponse(['message' => 'Client not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'product not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
         $data = [
@@ -80,37 +80,34 @@ class ProductController extends AbstractController
     #[Route('/', name: 'create_product', methods: ['POST'])]
     public function createProduct(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        // Create a new Product entity
         $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
-        $form->submit($data);
-
-        $file = $form->get('imageFilename')->getData();
+        $form = $this->createForm(ProductType::class, $product, [
+            'allow_extra_fields' => true,  // Allow extra fields
+        ]);
+        // Bind request data to the form
+        $form->handleRequest($request);
+        // Handle file upload
+        $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $product->setImageFilename($fileName);
         }
 
-        $owner = $this->partnerRepository->find($data['owner']);
-        if (!$owner) {
-            return new JsonResponse(['message' => 'Owner not found'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-        $product->setOwner($owner);
+        $form->submit($request->request->all());
     
-
         $this->entityManager->persist($product);
         $this->entityManager->flush();
-
         return new JsonResponse(['message' => 'Event created'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update_product', methods: ['POST'])]
+    #[Route('/product/{id}', name: 'update_product', methods: ['POST'])]
     public function updateProduct(Request $request, int $id): JsonResponse
     {
         $product = $this->productRepository->find($id);
         if (!$product) {
-            return new JsonResponse(['message' => 'event not found']);
+            return new JsonResponse(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
         }
 
         $form = $this->createForm(ProductType::class, $product);
@@ -128,7 +125,7 @@ class ProductController extends AbstractController
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
-        return new JsonResponse(['product created']);
+        return new JsonResponse(['message' => 'Product updated successfully']);
     }
 
     #[Route('/{id}', name: 'delete_product', methods: ['DELETE'])]
@@ -164,7 +161,7 @@ class ProductController extends AbstractController
         foreach ($products as $product) {
             $data[] = [
                 'id' => $product->getId(),
-                'name' => $product->geName(),
+                'name' => $product->getName(),
                 'description' => $product->getDescription(),
                 'price' => $product->getPrice(),
                 'owner' => $product->getOwner()->getId(),

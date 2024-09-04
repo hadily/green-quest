@@ -2,34 +2,18 @@
 <div class="modal-content">
   
 <h2>Create New Product</h2>
-<form (ngSubmit)="onSubmit()" #partnerForm="ngForm">
+<form (ngSubmit)="onSubmit()" #partnerForm="ngForm" enctype="multipart/form-data">
   <div class="form-group">
     <div class="form-group">
       <label for="imageFilename">Product Image</label>
       <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
     </div>
-    <label for="serviceName">Product Name</label>
-    <input type="serviceName" id="serviceName" [(ngModel)]="product.serviceName" name="serviceName" required>
+    <label for="name">Product Name</label>
+    <input type="name" id="name" [(ngModel)]="product.name" name="name" required>
   </div>
   <div class="form-group">
     <label for="description">Description</label>
     <textarea id="description" [(ngModel)]="product.description" name="description" required></textarea>
-  </div>
-  <div class="form-group">
-    <label for="available">Available</label>
-    <select id="available" [(ngModel)]="product.available" name="available" required>
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="startDate">Start Date</label>
-    <input type="date" id="startDate" [(ngModel)]="product.startDate" name="startDate" required>
-  </div>
-  <div class="form-group">
-    <label for="endDate">End Date</label>
-    <input type="date" id="endDate" [(ngModel)]="product.endDate" name="endDate" required>
   </div>
   <div class="form-group">
     <label for="price">Price</label>

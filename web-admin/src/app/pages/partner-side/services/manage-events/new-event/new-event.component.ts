@@ -38,6 +38,7 @@ export class NewEventComponent implements OnInit {
 
   selectImage(event: any) {
     this.file = event.target.files[0].name;
+    console.log(this.file);
   }
 
 

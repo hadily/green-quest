@@ -50,9 +50,10 @@ class EventController extends AbstractController
                 'description' => $event->getDescription(),
                 'startDate' => $event->getStartDate()?->format('Y-m-d'),
                 'endDate' => $event->getEndDate()?->format('Y-m-d'),
-                'price' => $event->getPrice(),
+                'price' => $event->getPrice(),            
                 'nbParticipants' => $event->getNbParticipants(),
                 'organizer' => $event->getOrganizer()->getId(),
+                'category' => $event->getCategory(),
                 'imageFilename' => $event->getImageFilename()
 
             ];
@@ -94,8 +95,8 @@ class EventController extends AbstractController
         // Create a new Event entity
         $event = new Event();
         $form = $this->createForm(EventType::class, $event, [
-        'allow_extra_fields' => true,  // Allow extra fields
-    ]);
+            'allow_extra_fields' => true,  // Allow extra fields
+        ]);
 
         // Manually set startDate and endDate
         if (isset($data['startDate'])) {

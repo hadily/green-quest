@@ -20,8 +20,8 @@ export class NewArticlePartnerComponent {
     text: '',
     imageFilename: null
   };
-  users: any[] = [];
   file: any;
+  dialogRef: any;
 
   constructor(
     private http: HttpClient,
@@ -34,29 +34,46 @@ export class NewArticlePartnerComponent {
   ngOnInit(): void {}
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.file);
+    // this.article.imageFilename = event.target.files[0].name;
+    // console.log(this.article.imageFilename);
+    // let reader = new FileReader();
+    // reader.onload = function () {
+    //   let output: any = document.getElementById('imageFilename');
+    //   output.src = reader.result;
+    // }
+    // reader.readAsDataURL(this.file);
+
+    // this.file = event.target.files[0]; // works only the first time
+    this.file = event.target.files[0].name;
   }
 
   onSubmit(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
+    const userId = this.authService.currentUserValue?.id ?? 1;
     this.article.writerId = userId;
-    console.log(this.article);
-    this.apiService.createArticle(this.article, this.file).subscribe(
+    
+    const formData: FormData = new FormData();
+    formData.append('title', this.article.title);
+    formData.append('subTitle', this.article.subTitle);
+    formData.append('summary', this.article.summary);
+    formData.append('text', this.article.text);
+    if (this.file) {
+      formData.append('imageFilename', this.file, this.file.name);
+    }
+    
+    this.apiService.createArticle(formData).subscribe(
       response => {
         console.log('Article created:', response);
-        this.router.navigate(['/partner/blog/articles']); // Emit a value to notify other components
+        this.refreshService.triggerRefresh('/partner/blog/articles');
+        this.closeModal();
       },
       error => {
         console.error('Error creating article:', error);
-        // Optionally show an error message to the user
       }
     );
+  }
+
+  closeModal(): void {
+    this.dialogRef.close();
   }
 
 }

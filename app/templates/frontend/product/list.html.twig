@@ -54,12 +54,12 @@
 							<div class="inner">
 								<div class="content pt--0 pb--10">
 									<h2 class="title">
-										<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">{{product.serviceName}}</a>
+										<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">{{product.name}}</a>
 									</h2>
 								</div>
 								<div class="thumbnail">
 									<a href="{{ path('frontend_product_detail', {'id': product.id}) }}">
-										<img src="{{product.imageFilename}}" alt="{{product.serviceName}}">
+										<img src="{{ asset('uploads/') ~ product.imageFilename }}" alt="{{product.name}}">
 									</a>
 								</div>
 								<div class="content">

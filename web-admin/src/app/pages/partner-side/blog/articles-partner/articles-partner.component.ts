@@ -34,12 +34,12 @@ export class ArticlesPartnerComponent implements OnInit{
   }
 
   loadArticles() {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-    console.log(userId);  // This should log the correct userId
+    const userId = this.authService.currentUserValue?.id ?? 1;
+    console.log("userId ", userId);
     this.apiService.getAllArticlesByWriter(userId).subscribe(
         data => {
+            console.log("Fetched articles:", data);
             this.articles = data;
-            console.log(this.articles);
             this.allArticles = this.articles;
             this.cdr.detectChanges();
         },

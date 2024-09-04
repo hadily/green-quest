@@ -5,7 +5,7 @@
     <div class="form-group">
       <div class="form-group">
         <label for="imageFilename">Image</label>
-        <img  src="{{fileUrl}}/uploads/{{article.imageFilename}}">
+        <img  src="{{fileUrl}}/uploads/{{article.imageFilename}}" class="print-size-image">
         <input type="file" id="imageFilename" (change)="selectImage($event)" name="imageFilename" required>
       </div>
       <label for="title">Title</label>

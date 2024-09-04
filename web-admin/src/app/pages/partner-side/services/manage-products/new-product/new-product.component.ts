@@ -12,12 +12,10 @@ import { RefreshService } from 'src/app/services/refresh.service';
 })
 export class NewProductComponent implements OnInit{
   product = {
-    serviceName: '',
+    name: '',
     description: '',
-    startDate: '',
-    endDate: '',
     price: 0,
-    available: true,
+    owner: 1,
   };
   file: any;
 
@@ -32,26 +30,22 @@ export class NewProductComponent implements OnInit{
   ngOnInit(): void {}
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
+    const file = event.target.files[0]; // Access the first selected file
+    if (file) {
+      this.file = file.name; // Store the file name (you may want to store the file itself if needed)
     }
-    reader.readAsDataURL(this.file);
   }
 
   onSubmit(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-    console.log(userId);
-    this.apiService.createProduct(userId, this.product, this.file).subscribe(response => {
+    this.product.owner = this.authService.currentUserValue?.id ?? 0;
+    this.apiService.createProduct(this.product, this.file).subscribe(response => {
+      console.log("product: ", this.product);
       console.log('Event created:', response);
       this.router.navigate(['/partner/services/products']); 
       this.closeModal();
     },
     error => {
       console.error('Error creating article:', error);
-      // Optionally show an error message to the user
     });
   }
 

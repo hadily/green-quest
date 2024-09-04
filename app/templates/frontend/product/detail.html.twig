@@ -6,25 +6,14 @@
 			<div class="row g-5 row--30 align-items-center">
 				<div class="col-lg-6">
 					<div class="thumbnail">
-						<img class="w-100 radius-10" src="{{ asset('uploads/') ~ product.imageFilename }}" alt="{{product.serviceName}}">
+						<img class="w-100 radius-10" src="{{ asset('uploads/') ~ product.imageFilename }}" alt="{{product.name}}">
 					</div>
 				</div>
 				<div class="col-lg-6">
 					<div class="content">
-						<h2 class="title mt--10 mb--10">{{product.serviceName}}</h2>
+						<h2 class="title mt--10 mb--10">{{product.name}}</h2>
 						<div class="rbt-price justify-content-start mt--10">
 							<span class="current-price theme-gradient">{{product.price}} Dt</span>
-						</div>
-						
-						
-                        <div class="rbt-price justify-content-start mt--10">
-                            <strong>Available: </strong>
-                            <span class="current-price theme-gradient">
-                                {{ product.available == 1 ? 'Yes' : 'No' }}
-                            </span>
-                        </div>
-                        <div class="rbt-price justify-content-start mt--10">
-							<span class="current-price theme-gradient"> {{product.startDate}} - {{product.endDate}}</span>
 						</div>
 					</div>
 				</div>

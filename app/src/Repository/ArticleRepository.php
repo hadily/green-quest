@@ -28,20 +28,25 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Get all articles
+     * 
+     * @return Article[]
+     */
     public function getAll(): array
     {
-        return $this->createQueryBuilder('a')
-            ->getQuery()
-            ->getResult();
+        return $this->findAll();
     }
 
+    /**
+     * Get article details by ID
+     * 
+     * @param int $id
+     * @return Article|null
+     */
     public function getDetailsById(int $id): ?Article
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->find($id);
     }
 
     public function findAllByOwner(int $ownerId): array

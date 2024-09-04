@@ -16,6 +16,7 @@ export class NewArticleComponent implements OnInit {
     summary: '',
     writerId: null,
     text: '',
+    imageFilename: null,
   };
   users: any[] = [];
   file: any;
@@ -40,6 +41,7 @@ export class NewArticleComponent implements OnInit {
 
   selectImage(event: any) {
     this.file = event.target.files[0];
+    this.article.imageFilename =this.file;
     let reader = new FileReader();
     reader.onload = function () {
       let output: any = document.getElementById('imageFilename');
@@ -49,7 +51,7 @@ export class NewArticleComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.apiService.createArticle(this.article, this.file).subscribe(
+    this.apiService.createArticle(this.article).subscribe(
       response => {
         console.log('Article created:', response);
         this.router.navigate(['/blog/articles']); // Emit a value to notify other components

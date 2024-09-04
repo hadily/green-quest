@@ -66,9 +66,7 @@
 
 								</div>
 								<div class="thumbnail">
-									<a href="{{ path('frontend_blog_detail', {'id': blog.id}) }}">
-										<img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="{{blog.title}}">
-									</a>
+									<img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="{{blog.title}}">
 								</div>
 								<div class="content">
 									{{blog.summary}}

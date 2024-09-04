@@ -23,9 +23,8 @@ export class DeleteProductComponent implements OnInit{
     this.apiService.deleteProduct(this.data.id).subscribe(
       response => {
         console.log('product deleted:', response);
+        this.refreshService.triggerRefresh('/partner/services/products');
         this.dialogRef.close(true); 
-        this.refreshService.triggerRefresh('/partner/services/products'); // Navigate to the partner list page
-
       },
       error => {
         console.error('Error deleting event:', error);

@@ -5,7 +5,7 @@
 		<div class="breadcrumb-image-container breadcrumb-style-max-width">
 			<div class="breadcrumb-image-wrapper">
 				<div class="breadcrumb-dark">
-					<img src="{{ asset('frontend/assets/images/bg/bg-image-3.jpg') }}" alt="Nature Images">
+					<img src="{{ asset('uploads/') ~ blog.imageFilename }}" alt="Nature Images">
 				</div>
 			</div>
 			<div class="breadcrumb-content-top text-center">
@@ -29,6 +29,7 @@
 						</figure>
 					</div>
 					<strong>{{blog.summary}}</strong>
+					</br>
 				    <p>{{blog.text | raw}}</p>
 				</div>
 			</div>

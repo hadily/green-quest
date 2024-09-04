@@ -5,8 +5,3 @@ pwd: azerty
 # partner creditials 
 username: p1@admin.com
 pwd: 000
-
-
-Experience the serenity and spirituality of a temple visit, where you can explore ancient architecture, ornate sculptures, and tranquil gardens. 
-Immerse yourself in the peaceful ambiance as you participate in traditional rituals and listen to the soothing chants of monks. 
-Whether seeking a moment of reflection or cultural enrichment, this event offers a deep connection to history and spirituality.

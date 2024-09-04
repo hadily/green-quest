@@ -30,7 +30,12 @@ class BlogController extends AbstractController
     #[Route('/{id}/detail', name: '_detail')]
     public function detail(int $id, Article $article)
     {
-        $articles = $this->articleRepository->getDetailsById($id);
+        $article = $this->articleRepository->getDetailsById($id);
+
+        if (!$article) {
+            throw $this->createNotFoundException('Article not found');
+        } 
+        
         return $this->render('frontend/blog/detail.html.twig', ['blog'=>$article]);
     }
 }
