@@ -235,15 +235,16 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/admin/${id}`, formData);
   }
 
-  updateArticle(id: number, article: any, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('title', article.title);
-    formData.append('subTitle', article.subTitle);
-    formData.append('summary', article.summary);
-    formData.append('text', article.text);
-    formData.append('date', article.date);
-    formData.append('imageFilename', file);
-    return this.http.post<any>(`${this.apiUrl}/article/${id}`, formData);
+  updateArticle(id: number, article: any): Observable<any> {
+    // const formData = new FormData();
+    // 
+    // for (const key in article) {
+    //   if (article.hasOwnProperty(key)) {
+    //     formData.append(key, article[key]);
+    //   }
+    // }
+
+    return this.http.put<any>(`${this.apiUrl}/article/${id}`, article);
   }
 
   updateComplaints(id: number, complaint: any): Observable<any> {
@@ -260,26 +261,12 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/user/${id}`, formData);
   }
 
-  updateEvent(id: number, event: any, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('event', JSON.stringify(event));
-    if (file) {
-      formData.append('file', file);
-    }
-
-    console.log(formData);
-    return this.http.put<any>(`${this.apiUrl}/event/${id}`, formData);
+  updateEvent(id: number, event: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/event/${id}`, event);
   }
 
-  updateProduct(id: number, product: any, file: File): Observable<any> {
-    console.log('updateProduct called with:', id, product, file);
-    const formData = new FormData();
-    formData.append('name', product.name);
-    formData.append('description', product.description); // Ensure 'description' matches the backend expectation
-    formData.append('price', product.price);
-    formData.append('ownerId', product.ownerId); // Ensure 'ownerId' matches the backend expectation
-    formData.append('imageFilename', file, file.name);
-    return this.http.post<any>(`${this.apiUrl}/product/${id}`, formData);
+  updateProduct(id: number, product: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/product/${id}`, product);
   }
 
   /** DELETE */

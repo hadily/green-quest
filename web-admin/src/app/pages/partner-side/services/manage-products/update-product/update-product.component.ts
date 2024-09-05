@@ -35,17 +35,10 @@ export class UpdateProductComponent implements OnInit{
   }
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.file);
+    this.product.imageFilename = event.target.files[0];
   }
 
   loadProductData(): void {
-    console.log("productID ", this.data.productId);
     this.apiService.getProductById(this.data.productId).subscribe(
       response => {
         console.log('Loaded product data:', response);
@@ -59,15 +52,7 @@ export class UpdateProductComponent implements OnInit{
 
 
   onUpdate(): void {
-    const fileInput = document.querySelector('#fileInput') as HTMLInputElement;
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      this.file = fileInput.files[0];
-    } else {
-      console.error('No file selected');
-      return;
-    }
-
-    this.apiService.updateProduct(this.data.productId, this.product, this.file).subscribe(
+    this.apiService.updateProduct(this.data.productId, this.product).subscribe(
       response => {
         console.log('After updateProduct function', response);
         this.dialogRef.close(true);

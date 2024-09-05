@@ -67,8 +67,13 @@
 										{{event.category}}
 									</div>
 									<div class="rbt-price justify-content-center mt--10">
-										<span class="current-price theme-gradient">{{event.price}}
-											Dt</span>
+						                <span class="current-price theme-gradient">
+						                	{% if event.price == 0 %}
+                                                free
+                                            {% else %}
+                                                {{ event.price }} Dt
+                                            {% endif %}
+						                </span>
 									</div>
 									<div class="addto-cart-btn mt--20">
 										<a class="rbt-btn btn-gradient hover-icon-reverse" href="{{ path('frontend_event_detail', {'id': event.id}) }}">

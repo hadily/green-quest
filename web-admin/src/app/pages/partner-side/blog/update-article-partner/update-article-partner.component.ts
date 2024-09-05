@@ -38,10 +38,7 @@ export class UpdateArticlePartnerComponent implements OnInit{
   }
 
   selectImage(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.article.imageFilename = file;
-    }
+      this.article.imageFilename = event.target.files[0];
   }
 
   loadArticleData(): void {
@@ -59,10 +56,13 @@ export class UpdateArticlePartnerComponent implements OnInit{
 
   onUpdate(): void {
     this.file = this.article.imageFilename;
-    this.apiService.updateArticle(this.data.articleId, this.article, this.file).subscribe(
+    console.log("before this.apiService.updateArticle call");
+    this.apiService.updateArticle(this.data.articleId, this.article).subscribe(
       response => {
-        this.dialogRef.close(true);
-        this.refreshService.triggerRefresh('/partner/blog/articles'); // Notify other components
+        console.log("article data ", this.article);
+        console.log('Article updated:', response);
+        this.refreshService.triggerRefresh('/partner/blog/articles');
+        this.closeModal();
       },
       error => {
         console.error('Error updating article:', error);

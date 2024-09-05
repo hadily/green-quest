@@ -29,7 +29,13 @@
 							<div class="rbt-card-img">
 						        <img src="{{ asset('uploads/' ~ product.imageFilename) }}" alt="{{product.name}}">
 					        </div>
-							<p class="rbt-card-text">{{product.price}} Dt</p>
+							<p class="rbt-card-text">
+						        {% if product.price == 0 %}
+                                    free
+                                {% else %}
+                                    {{ product.price }} Dt
+                                {% endif %}
+							</p>
 							<div class="rbt-card-bottom">
 								<a class="transparent-button" href="{{ path('frontend_product_detail', {'id': product.id}) }}">View details <i>
 										<svg width="17" height="12" xmlns="http://www.w3.org/2000/svg">

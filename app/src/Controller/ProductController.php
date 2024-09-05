@@ -110,7 +110,7 @@ class ProductController extends AbstractController
         return new JsonResponse(['message' => 'Product created'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/product/{id}', name: 'update_product', methods: ['POST'])]
+    #[Route('/{id}', name: 'update_product', methods: ['PUT'])]
     public function updateProduct(Request $request, int $id): JsonResponse
     {
         $product = $this->productRepository->find($id);
@@ -118,16 +118,28 @@ class ProductController extends AbstractController
             return new JsonResponse(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
+        $data = json_decode($request->getContent(), true);
 
-        $product = $form->getData();
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
+        }
 
-        $file = $form->get('imageFilename')->getData();
-        if ($file) {
-            $fileName = uniqid().'.'.$file->guessExtension();
-            $file->move($this->getParameter('uploads_directory'), $fileName);
-            $product->setImageFilename($fileName);
+        if (isset($data['name'])) {
+            $product->setName($data['name']);
+        }
+
+        if (isset($data['description'])) {
+            $product->setDescription($data['description']);
+        }
+
+        if (isset($data['price'])) {
+            $product->setPrice($data['price']);
+        }
+
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile) {
+            $imageName = $ufService->uploadFile($imageFile);
+            $event->setImageFilename($imageName);
         }
 
         $this->entityManager->persist($product);

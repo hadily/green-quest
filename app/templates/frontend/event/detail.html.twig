@@ -13,7 +13,13 @@
 					<div class="content">
 						<h2 class="title mt--10 mb--10">{{event.name}}</h2>
 						<div class="rbt-price justify-content-start mt--10">
-							<span class="current-price theme-gradient">{{event.price}} Dt</span>
+							<span class="current-price theme-gradient">
+						    	{% if event.price == 0 %}
+                                    free
+                                {% else %}
+                                    {{ event.price }} Dt
+                                {% endif %}
+							</span>
 						</div>
 						<div class="rbt-price justify-content-start mt--10">
 							<span class="current-price theme-gradient">Number of Places: {{event.nbParticipants}}</span>

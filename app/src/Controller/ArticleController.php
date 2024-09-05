@@ -108,58 +108,91 @@ class ArticleController extends AbstractController
         return new JsonResponse(['message' => 'Article created'], JsonResponse::HTTP_CREATED);
     }
 
-
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
+    #[Route('/{id}', name: 'app_article_update', methods: ['PUT'])]
+    public function updateArticle(int $id, Request $request, ArticleRepository $articleRepository, EntityManagerInterface $em) 
     {
-        return $this->render('article/show.html.twig', [
-            'article' => $article,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_article_update', methods: ['POST'])]
-    public function updateArticle(int $id, Request $request, EntityManagerInterface $em, ArticleRepository $articleRepository, UploadFileService $ufService): Response
-    {
-        $article = $articleRepository->find($id);
+        $article = $articleRepository->getDetailsById($id);
 
         if (!$article) {
-            return new JsonResponse(['message' => 'article not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Article not found']);
         }
 
-        $imageFilename = $request->files->get('imageFilename');
+        $data = json_decode($request->getContent(), true);
 
-        if ($imageFilename) {
-            $imageName = $ufService->uploadFile($imageFilename);
-            $article->setImageFilename($imageName);
-        } else {
-            return new JsonResponse(['error' => 'Image is required'], Response::HTTP_BAD_REQUEST);
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
         }
 
-        // Extract data from the request
-        $title = $request->request->get('title');
-        $subTitle = $request->request->get('subTitle');
-        $text = $request->request->get('text');
-        $date = $request->request->get('date');
-
+        $article->setDate(new \DateTime());
 
         if (isset($data['title'])) {
             $article->setTitle($data['title']);
         }
+
         if (isset($data['subTitle'])) {
             $article->setSubTitle($data['subTitle']);
         }
+
+        if (isset($data['summary'])) {
+            $article->setSummary($data['summary']);
+        }
+
         if (isset($data['text'])) {
             $article->setText($data['text']);
         }
-        if (isset($data['date'])) {
-            $article->setDate(new \DateTime());
+
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile) {
+            $imageName = $ufService->uploadFile($imageFile);
+            $article->setImageFilename($imageName);
         }
 
         $em->persist($article);
         $em->flush();
 
-        return new JsonResponse(['message' => 'article updated'], Response::HTTP_OK);
+        return new JsonResponse(['message' => 'Article updated successfully'], 200);
     }
+    // public function updateArticle(
+    //     int $id, 
+    //     Request $request, 
+    //     EntityManagerInterface $em, 
+    //     ArticleRepository $articleRepository,
+    //     UploadFileService $ufService
+    // ): Response {
+    //     $article = $articleRepository->find($id);
+    // 
+    //     if (!$article) {
+    //         return new JsonResponse(['message' => 'Article not found'], Response::HTTP_NOT_FOUND);
+    //     }
+    // 
+    //     // Create the form and bind the request data to it
+    //     $form = $this->createForm(ArticleType::class, $article);
+    //     $form->handleRequest($request);
+    // 
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Handle file upload
+    //         $imageFile = $request->files->get('imageFilename');
+    //         if ($imageFile) {
+    //             $imageName = $ufService->uploadFile($imageFile);
+    //             $article->setImageFilename($imageName);
+    //         }
+    // 
+    //         // Save the article
+    //         $em->persist($article);
+    //         $em->flush();
+    // 
+    //         return new JsonResponse(['message' => 'Article updated'], Response::HTTP_OK);
+    //     }
+    // 
+    //     // If the form is not valid, return the errors
+    //     $errors = [];
+    //     foreach ($form->getErrors(true) as $error) {
+    //         $errors[] = $error->getMessage();
+    //     }
+    // 
+    //     return new JsonResponse(['errors' => $errors], Response::HTTP_BAD_REQUEST);
+    // }
+
 
     #[Route('/{id}', name: 'app_article_delete', methods: ['DELETE'])]
     public function delete(int $id, EntityManagerInterface $em, ArticleRepository $articleRepository): Response

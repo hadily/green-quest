@@ -137,38 +137,58 @@ class EventController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'update_event', methods: ['POST'])]
+    #[Route('/{id}', name: 'update_event', methods: ['PUT'])]
     public function updateEvent(Request $request, int $id): JsonResponse
     {
         $event = $this->eventRepository->find($id);
         if (!$event) {
-            return new JsonResponse(['message' => 'Event not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Event not found']);
         }
 
-        $form = $this->createForm(EventType::class, $event);
-        $form->submit(json_decode($request->getContent(), true), false); // Handle only the submitted data
+        $data = json_decode($request->getContent(), true);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            return new JsonResponse(['message' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
         }
 
-        $file = $request->files->get('file');
-        if ($file) {
-            try {
-                $fileName = uniqid().'.'.$file->guessExtension();
-                $file->move($this->getParameter('uploads_directory'), $fileName);
-                $event->setImageFilename($fileName);
-            } catch (\Exception $e) {
-                return new JsonResponse(['message' => 'File upload failed: '.$e->getMessage()], Response::HTTP_BAD_REQUEST);
-            }
+        if (isset($data['name'])) {
+            $event->setName($data['name']);
         }
 
-        try {
-            $this->entityManager->persist($event);
-            $this->entityManager->flush();
-        } catch (\Exception $e) {
-            return new JsonResponse(['message' => 'Failed to update event: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if (isset($data['description'])) {
+            $event->setDescription($data['description']);
         }
+
+        if (isset($data['startDate'])) {
+            $startDate = \DateTime::createFromFormat('Y-m-d', $data['startDate']);
+            $event->setStartDate($startDate);
+        }
+
+        if (isset($data['endDate'])) {
+            $endDate = \DateTime::createFromFormat('Y-m-d', $data['endDate']); 
+            $event->setEndDate($endDate);
+        }
+
+        if (isset($data['category'])) {
+            $event->setCategory($data['category']);
+        }
+
+        if (isset($data['price'])) {
+            $event->setPrice($data['price']);
+        }
+
+        if (isset($data['nbParticipants'])) {
+            $event->setNbParticipants($data['nbParticipants']);
+        }
+        
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile) {
+            $imageName = $ufService->uploadFile($imageFile);
+            $event->setImageFilename($imageName);
+        }
+
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
 
         return new JsonResponse(['status' => 'Event updated successfully']);
     }

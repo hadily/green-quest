@@ -56,8 +56,8 @@ export class UpdateArticleComponent {
   }
 
   onUpdate(): void {
-    this.file = this.article.imageFilename;
-    this.apiService.updateArticle(this.data.articleId, this.article, this.file).subscribe(
+    this.article.imageFilename = this.article.imageFilename;
+    this.apiService.updateArticle(this.data.articleId, this.article).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/blog/articles'); // Notify other components

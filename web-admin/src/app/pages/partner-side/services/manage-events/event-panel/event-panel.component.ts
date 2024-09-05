@@ -38,17 +38,10 @@ export class EventPanelComponent implements OnInit {
   }
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.file);
+    this.event.imageFilename = event.target.files[0];
   }
 
   loadArticleData(): void {
-    console.log(this.data.eventId);
     this.apiService.getEventById(this.data.eventId).subscribe(
       response => {
         console.log('onsode apiService arrow fun', this.data.eventId);
@@ -64,7 +57,7 @@ export class EventPanelComponent implements OnInit {
   onUpdate(): void {
     this.event.owner = this.authService.currentUserValue?.id ?? 0;
     this.fileUrl = this.fileUrl.replace(/\/+$/, '');
-    this.apiService.updateEvent(this.data.eventId, this.event, this.file).subscribe(
+    this.apiService.updateEvent(this.data.eventId, this.event).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/partner/services/events');
