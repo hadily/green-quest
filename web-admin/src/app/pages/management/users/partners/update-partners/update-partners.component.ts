@@ -30,7 +30,6 @@ export class UpdatePartnersComponent {
       @Inject(MAT_DIALOG_DATA) public data: { partnerId: number },
       private apiService: ApiService,
       private refreshService: RefreshService,
-      private authService: AuthService,
     ) {
       console.log('Dialog data:', data);
     }
@@ -67,8 +66,7 @@ export class UpdatePartnersComponent {
 
 
   onUpdate(): void {
-    this.file = this.partner.imageFilename;
-    this.apiService.updatePartner(this.data.partnerId, this.partner, this.file).subscribe(
+    this.apiService.updatePartner(this.data.partnerId, this.partner).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/users/partners'); // Notify other components

@@ -12,17 +12,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoading: boolean;
   private unsubscribe: Subscription[] = [];
-  user: Partial<{
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    email: string;
-    location: string;
-    companyName: string;
-    companyDescription: string;
-    roles: string[];
-    imageFilename: string | null;
-  }> = {};
+  user: any;
   file: any;
 
   constructor(
@@ -38,32 +28,40 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.isPartner());
     this.loadUser();
   }
 
   selectImage(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.user.imageFilename = file;
-    }
+    this.file = event.target.files[0].name;
   }
 
   saveSettings() {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-    this.file = this.user.imageFilename;
-
+    const userId = this.authService.currentUserValue?.id ?? 1;
     this.isLoading$.next(true);
-  
-    // Check if the user is a Partner
+    // console.log("user data to update ", this.user);
+
+    const formData = new FormData();
+
+  // Append the file if it exists
+  if (this.file) {
+    formData.append('imageFilename', this.file);
+  }
+
+  // Append user data manually
+  formData.append('firstName', this.user.firstName);
+  formData.append('lastName', this.user.lastName);
+  formData.append('email', this.user.email);
+  formData.append('phoneNumber', this.user.phoneNumber);
+  formData.append('localisation', this.user.localisation);
+  formData.append('companyName', this.user.companyName);
+  formData.append('companyDescription', this.user.companyDescription);
+
     const updateObservable = this.isPartner()
-      ? this.apiService.updatePartner(userId, this.user, this.file)
+      ? this.apiService.updatePartner(userId, formData)
       : this.apiService.updateUser(userId, this.user, this.file);
   
-    // Subscribe to the updateObservable to handle the API response
     updateObservable.subscribe(
       (response) => {
-        // Handle successful update
         console.log('User updated successfully:', response);
         this.refreshService.triggerRefresh('/crafted/account/overview');
         this.isLoading$.next(false);
@@ -83,33 +81,27 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   loadUser(): void {
     const userId = this.authService.currentUserValue?.id ?? 0;
-  
-    this.apiService.getUserById(userId).subscribe(
-      user => {
-        // Store the basic user data
-        console.log('Loaded user data:', user);
-        this.user = user;
-  
-        // Wait for the isPartner check to finish
+
+    this.apiService.getUserById(userId).pipe(
+      switchMap(user => {
+        if (!user) {
+          throw new Error('User not found');
+        }  
         if (this.isPartner()) {
-          // Fetch additional Partner data
-          this.apiService.getPartnerById(userId).subscribe(
-            partnerData => {
-              console.log('Loaded partner data:', partnerData);
-              // Merge the Partner data with the basic user data
-              this.user = { ...this.user, ...partnerData };
-              console.log('Final merged user data:', this.user);
-            },
-            error => {
-              console.error('Error loading partner data:', error);
-            }
+          console.log(user);
+          return this.apiService.getPartnerById(userId).pipe(
+            map((partnerData: any) => ({ ...user, ...partnerData })) 
           );
-        } else {
-          console.log('User is not a partner. No additional data needed.');
         }
+        this.user = user; 
+        return of(user);
+      })
+    ).subscribe(
+      (      data: {}) => {
+        this.user = data; 
       },
-      error => {
-        console.error('Error loading user data:', error);
+      (      error: any) => {
+        console.error("Error fetching user data:", error);
       }
     );
   }

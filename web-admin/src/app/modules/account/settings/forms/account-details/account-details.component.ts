@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { switchMap, map, of } from 'rxjs';
+import { AuthService } from 'src/app/modules/auth';
 import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from '../../auth';
-import { map, of, switchMap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
+  selector: 'app-account-details',
+  templateUrl: './account-details.component.html',
+  styleUrl: './account-details.component.scss'
 })
-export class OverviewComponent implements OnInit {
+export class AccountDetailsComponent implements OnInit{
   user: any;
+  fileUrl = environment.fileUrl;
 
   constructor(
     private apiService: ApiService,
@@ -27,14 +30,13 @@ export class OverviewComponent implements OnInit {
         // Check if the user data was successfully retrieved
         if (!user) {
           throw new Error('User not found');
-        }
-    
+        }  
         // Based on the role, fetch additional data
         if (user.roles.includes('PARTNER')) {
           return this.apiService.getPartnerById(userId).pipe(
             map((partnerData: any) => ({ ...user, ...partnerData })) // Merge Partner data with user
           );
-        } 
+        }
         this.user = user; // Store the basic user data
         return of(user);
       })
@@ -48,7 +50,4 @@ export class OverviewComponent implements OnInit {
     );
   }
 
-  isPartner(): boolean {
-    return this.user?.roles?.includes('PARTNER') || false;
-  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -22,7 +22,25 @@ export class ApiService {
   }
 
   getUserById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/user/${id}`);
+    // return this.http.get<any>(`${this.apiUrl}/user/${id}`);
+    
+    return this.http.get<any>(`${this.apiUrl}/user/${id}`).pipe(
+      switchMap((user) => {
+        // Check if the user has the 'PARTNER' role
+        if (user.roles && user.roles.includes('PARTNER')) {
+          // Fetch partner-specific details if the role is 'PARTNER'
+          return this.http.get<any>(`${this.apiUrl}/partner/${id}`).pipe(
+            map((partnerDetails) => {
+              // Merge the partner details into the user object
+              return { ...user, ...partnerDetails };
+            })
+          );
+        } else {
+          // If not a partner, return the user as is
+          return of(user);
+        }
+      })
+    );
   }
 
   getAllPartners(): Observable<any> {
@@ -199,18 +217,9 @@ export class ApiService {
 
   /** UPDATE */
 
-  updatePartner(id: number, partnerData: any, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('email', partnerData.email);
-    formData.append('firstName', partnerData.firstName);
-    formData.append('lastName', partnerData.lastName);
-    formData.append('phoneNumber', partnerData.phoneNumber);
-    formData.append('localisation', partnerData.localisation);
-    formData.append('companyName', partnerData.companyName);
-    formData.append('companyDescription', partnerData.companyDescription);
-    formData.append('imageFilename', file, file.name);
-
-    return this.http.post<any>(`${this.apiUrl}/partner/${id}`, formData);
+  updatePartner(id: number, partnerData: any): Observable<any> {
+    console.log("from updatePartner api: ", partnerData);
+    return this.http.post<any>(`${this.apiUrl}/partner/${id}`,partnerData);
   }
 
   updateClient(id: number, clientData: any, file: File): Observable<any> {

@@ -8,7 +8,7 @@
     aria-controls="kt_account_profile_details"
   >
     <div class="card-title m-0">
-      <h3 class="fw-bolder m-0">Profile Details</h3>
+      <h3 class="fw-bolder m-0">Profile Settings</h3>
     </div>
   </div>
   <div id="kt_account_profile_details" class="collapse show">
@@ -88,8 +88,8 @@
                 type="text"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Location"
-                name="location"
-                [(ngModel)]="user.location"
+                name="localisation"
+                [(ngModel)]="user.localisation"
               />
             </div>
           </div>
@@ -104,7 +104,7 @@
                 placeholder="Company name"
                 name="companyName"
                 [(ngModel)]="user.companyName"
-                [attr.value]="user?.companyName || 'Green Quest'"
+                [attr.value]="user.companyName || 'Green Quest'"
               />
             </div>
           </div>
@@ -123,8 +123,7 @@
               ></textarea>
             </div>
           </div>
-        </div>
-        
+        </div> 
       </div>
       <div class="card-footer d-flex justify-content-end py-6 px-9">
         <button

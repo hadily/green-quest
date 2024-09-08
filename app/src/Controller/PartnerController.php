@@ -104,20 +104,50 @@ class PartnerController extends AbstractController
     public function updatePartner(int $id, Request $request, PartnerRepository $partnerRepository, EntityManagerInterface $em): JsonResponse
     {
         $partner = $partnerRepository->find($id);
+
         if (!$partner) {
             return new JsonResponse(['message' => 'Partner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $form = $this->createForm(PartnerType::class, $partner);
-        $form->handleRequest($request);
+        $data = $request->request->all();  // Handles the form data part
+        $file = $request->files->get('imageFilename');
 
-        $partner = $form->getData();
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
+        }
 
-        $file = $form->get('imageFilename')->getData();
+        if (isset($data['firstName'])) {
+            $partner->setFirstName($data['firstName']);
+        }
+
+        if (isset($data['lastName'])) {
+            $partner->setLastName($data['lastName']);
+        }
+
+        if (isset($data['phoneNumber'])) {
+            $partner->setPhoneNumber($data['phoneNumber']);
+        }
+
+        if (isset($data['email'])) {
+            $partner->setEmail($data['email']);
+        }
+
+        if (isset($data['localisation'])) {
+            $partner->setLocalisation($data['localisation']);
+        }
+
+        if (isset($data['companyName'])) {
+            $partner->setCompanyName($data['companyName']);
+        }
+
+        if (isset($data['companyDescription'])) {
+            $partner->setCompanyDescription($data['companyDescription']);
+        }
+
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
-            $partner->setImageFilename($fileName);
+            $partner->setImageFilename($fileName);  // Save filename in DB
         }
 
         $em->persist($partner);
