@@ -71,19 +71,23 @@ class PartnerController extends AbstractController
     #[Route('/', name: 'createPartner', methods: ['POST'])]
     public function createPartner(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
         $partner = new Partner();
-        $form = $this->createForm(PartnerType::class, $partner);
-        $form->submit($data);
+        $data = $request->request->all();
 
-        $file = $form->get('imageFilename')->getData();
+        $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $partner->setImageFilename($fileName);
         }
 
-        $partner->setPassword(custom_password_hash($data['password'], PASSWORD_BCRYPT));
+        $form = $this->createForm(PartnerType::class, $partner, [
+            'allow_extra_fields' => true,  // Allow extra fields
+            'csrf_protection' => false
+        ]);
+
+        $partner->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+
 
         // Fetch the Admin entity or use default admin ID 6
         $adminId = $data['admin_id'] ?? 1;
@@ -92,6 +96,16 @@ class PartnerController extends AbstractController
             return new JsonResponse(['error' => 'Admin with ID ' . $adminId . ' not found'], Response::HTTP_NOT_FOUND);
         }
         $partner->setAdmin($admin);
+
+        $form->submit($request->request->all());
+
+        if (!$form->isValid()) {
+            $errors = [];
+            foreach ($form->getErrors(true, true) as $error) {
+                $errors[] = $error->getMessage();
+            }
+            return new JsonResponse(['message' => 'Invalid data', 'errors' => $errors], JsonResponse::HTTP_BAD_REQUEST);
+        }
 
         $em->persist($partner);
         $em->flush();
@@ -109,8 +123,7 @@ class PartnerController extends AbstractController
             return new JsonResponse(['message' => 'Partner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = $request->request->all();  // Handles the form data part
-        $file = $request->files->get('imageFilename');
+        $data = json_decode($request->getContent(), true);
 
         if ($data === null) {
             return new JsonResponse(['message' => 'Invalid JSON'], 400);
@@ -144,6 +157,7 @@ class PartnerController extends AbstractController
             $partner->setCompanyDescription($data['companyDescription']);
         }
 
+        $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
@@ -152,7 +166,6 @@ class PartnerController extends AbstractController
 
         $em->persist($partner);
         $em->flush();
-
 
         return new JsonResponse(['status' => 'Partner updated successfully']);
     }

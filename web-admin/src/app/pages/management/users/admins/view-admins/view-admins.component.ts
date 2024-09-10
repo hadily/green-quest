@@ -8,6 +8,7 @@ import { NewAdminComponent } from '../new-admin/new-admin.component';
 import { UpdateAdminComponent } from '../update-admin/update-admin.component';
 import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/modules/auth/services/auth.service';
 
 @Component({
   selector: 'app-view-admins',
@@ -19,26 +20,29 @@ export class ViewAdminsComponent implements OnInit {
   private refreshSubscription: Subscription;
   searchQuery: string = '';
   fileUrl = environment.fileUrl;
+  currentUserId: number | undefined;
 
   constructor(
     private apiService: ApiService, 
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private refreshService: RefreshService
-  ) { }  // Use camelCase for service
+    private refreshService: RefreshService,
+    private authService: AuthService
+  ) { }  
 
   ngOnInit(): void {
+    this.currentUserId = this.authService.currentUserValue?.id;
     this.loadAdmins();
     this.refreshSubscription = this.refreshService.getRefreshObservable().subscribe(() => {
-      this.loadAdmins(); // Reload partners when a new partner is added
+      this.loadAdmins(); 
     });
   }
 
   loadAdmins(): void {
     this.apiService.getAllAdmins().subscribe(
       data => {
-        this.admins = data;
-        this.cdr.detectChanges();  // Manually trigger change detection
+        this.admins = data.filter((admin: { id: number | undefined; }) => admin.id !== this.currentUserId);
+        this.cdr.detectChanges();  
         console.log(this.admins);
       },
       error => {

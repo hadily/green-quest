@@ -138,7 +138,7 @@ export class ApiService {
 
   /** CREATE */
 
-  createPartner(partner: any, fileName: any): Observable<any> {
+  createPartner(partner: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('email', partner.email);
     formData.append('password', partner.password);
@@ -149,10 +149,9 @@ export class ApiService {
     formData.append('companyDescription', partner.companyDescription);
     formData.append('localisation', partner.localisation);
     formData.append('adminId', partner.adminId);
-    formData.append('imageFilename', fileName);
+    formData.append('imageFilename', partner.imageFileName);
     return this.http.post<FormData>(`${this.apiUrl}/partner/`, formData);
   }
-
   
   createClient(client: any, fileName: any): Observable<any> {
     const formData: FormData = new FormData();
@@ -167,14 +166,14 @@ export class ApiService {
     return this.http.post<FormData>(`${this.apiUrl}/client/`, formData);
   }
 
-  createAdmin(admin: any, fileName: File): Observable<any> {
+  createAdmin(admin: any): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('email', admin.email);
     formData.append('password', admin.password);
     formData.append('firstName', admin.firstName);
     formData.append('lastName', admin.lastName);
     formData.append('phoneNumber', admin.phoneNumber);
-    formData.append('imageFilename', fileName);
+    formData.append('imageFilename', admin.imageFilename);
     return this.http.post<any>(`${this.apiUrl}/admin/`, formData);
   }
 
@@ -234,14 +233,8 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/client/${id}`, formData);
   }
 
-  updateAdmin(id: number, adminData: any, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('email', adminData.email);
-    formData.append('firstName', adminData.firstName);
-    formData.append('lastName', adminData.lastName);
-    formData.append('phoneNumber', adminData.phoneNumber);
-    formData.append('imageFilename', file, file.name);
-    return this.http.post<any>(`${this.apiUrl}/admin/${id}`, formData);
+  updateAdmin(id: number, adminData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/admin/${id}`, adminData);
   }
 
   updateArticle(id: number, article: any): Observable<any> {

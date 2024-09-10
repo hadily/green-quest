@@ -23,6 +23,7 @@ export class NewPartnerComponent implements OnInit {
     localisation: '',
     adminId: null,
     roles: ['PARTNER'],
+    imageFilename: null,
   };
   admins : any[] = [];
   file: any;
@@ -50,13 +51,7 @@ export class NewPartnerComponent implements OnInit {
   // }
 
   selectImage(event: any) {
-    this.file = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.file);
+    this.partner.imageFilename = event.target.files[0];
   }
 
   generateRandomPassword(): string {
@@ -72,7 +67,7 @@ export class NewPartnerComponent implements OnInit {
     console.log(this.partner)
     this.partner['password'] = this.generateRandomPassword();
     console.log('pwd : ',this.partner['password']);
-    this.apiService.createPartner(this.partner, this.file).subscribe(
+    this.apiService.createPartner(this.partner).subscribe(
       response => {
         console.log('Partner created:', response);
         this.refreshService.triggerRefresh('/users/partners'); // Emit a value to notify other components

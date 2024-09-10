@@ -66,6 +66,7 @@ export class UpdatePartnersComponent {
 
 
   onUpdate(): void {
+    console.log(this.partner);
     this.apiService.updatePartner(this.data.partnerId, this.partner).subscribe(
       response => {
         this.dialogRef.close(true);

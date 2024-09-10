@@ -39,10 +39,7 @@ export class UpdateAdminComponent {
   }
 
   selectImage(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.admin.imageFilename = file;
-    }
+    this.admin.imageFilename = event.target.files[0];
   }
 
   loadAdminData(): void {
@@ -59,8 +56,7 @@ export class UpdateAdminComponent {
   }
 
   onUpdate(): void {
-    this.file = this.admin.imageFilename;
-    this.apiService.updateAdmin(this.data.adminId, this.admin, this.file).subscribe(
+    this.apiService.updateAdmin(this.data.adminId, this.admin).subscribe(
       response => {
         this.dialogRef.close(true);
         this.refreshService.triggerRefresh('/users/admins'); // Notify other components

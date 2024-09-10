@@ -152,47 +152,6 @@ class ArticleController extends AbstractController
 
         return new JsonResponse(['message' => 'Article updated successfully'], 200);
     }
-    // public function updateArticle(
-    //     int $id, 
-    //     Request $request, 
-    //     EntityManagerInterface $em, 
-    //     ArticleRepository $articleRepository,
-    //     UploadFileService $ufService
-    // ): Response {
-    //     $article = $articleRepository->find($id);
-    // 
-    //     if (!$article) {
-    //         return new JsonResponse(['message' => 'Article not found'], Response::HTTP_NOT_FOUND);
-    //     }
-    // 
-    //     // Create the form and bind the request data to it
-    //     $form = $this->createForm(ArticleType::class, $article);
-    //     $form->handleRequest($request);
-    // 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         // Handle file upload
-    //         $imageFile = $request->files->get('imageFilename');
-    //         if ($imageFile) {
-    //             $imageName = $ufService->uploadFile($imageFile);
-    //             $article->setImageFilename($imageName);
-    //         }
-    // 
-    //         // Save the article
-    //         $em->persist($article);
-    //         $em->flush();
-    // 
-    //         return new JsonResponse(['message' => 'Article updated'], Response::HTTP_OK);
-    //     }
-    // 
-    //     // If the form is not valid, return the errors
-    //     $errors = [];
-    //     foreach ($form->getErrors(true) as $error) {
-    //         $errors[] = $error->getMessage();
-    //     }
-    // 
-    //     return new JsonResponse(['errors' => $errors], Response::HTTP_BAD_REQUEST);
-    // }
-
 
     #[Route('/{id}', name: 'app_article_delete', methods: ['DELETE'])]
     public function delete(int $id, EntityManagerInterface $em, ArticleRepository $articleRepository): Response

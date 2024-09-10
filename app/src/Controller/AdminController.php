@@ -79,48 +79,92 @@ class AdminController extends AbstractController
     #[Route('/', name: 'createAdmin', methods: ['POST'])]
     public function createAdmin(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
         $admin = new Admin();
-        $form = $this->createForm(AdminType::class, $admin);
-        $form->submit($data);
-
-        $file = $form->get('imageFilename')->getData();
+    
+        // Get all request parameters
+        $data = $request->request->all();
+    
+        // Handle file upload
+        $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $admin->setImageFilename($fileName);
         }
-
+    
+        // Create and submit the form
+        $form = $this->createForm(AdminType::class, $admin, [
+            'allow_extra_fields' => true,  // Allow extra fields
+            'csrf_protection' => false
+        ]);
+        $form->submit($data);
+    
+        // Check if the form is valid
+        if (!$form->isValid()) {
+            $errors = [];
+            foreach ($form->getErrors(true, true) as $error) {
+                $errors[] = $error->getMessage();
+            }
+            return new JsonResponse(['message' => 'Invalid data', 'errors' => $errors], JsonResponse::HTTP_BAD_REQUEST);
+        }
+    
+        // Persist and flush the admin entity
         $em->persist($admin);
         $em->flush();
-
+    
         return new JsonResponse(['message' => 'Admin created'], JsonResponse::HTTP_CREATED);
     }
+
 
     #[Route('/{id}', name: 'updateAdmin', methods: ['POST'])]
     public function updateAdmin(int $id, Request $request, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
     {
+        // Find the admin entity
         $admin = $adminRepository->find($id);
-
+    
         if (!$admin) {
             return new JsonResponse(['message' => 'Admin not found'], Response::HTTP_NOT_FOUND);
         }
-
-        $form = $this->createForm(AdminType::class, $admin);
-        $form->handleRequest($request);
-
-        $file = $form->get('imageFilename')->getData();
+    
+        // Decode JSON data from the request
+        $data = json_decode($request->getContent(), true);
+    
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
+        }
+    
+        // Update fields if they exist in the request data
+        if (isset($data['firstName'])) {
+            $admin->setFirstName($data['firstName']);
+        }
+    
+        if (isset($data['lastName'])) {
+            $admin->setLastName($data['lastName']);
+        }
+    
+        if (isset($data['phoneNumber'])) {
+            $admin->setPhoneNumber($data['phoneNumber']);
+        }
+    
+        if (isset($data['email'])) {
+            $admin->setEmail($data['email']);
+        }
+    
+        // Handle file upload
+        $file = $request->files->get('imageFilename');
         if ($file) {
             $fileName = uniqid().'.'.$file->guessExtension();
             $file->move($this->getParameter('uploads_directory'), $fileName);
             $admin->setImageFilename($fileName);
         }
-
+    
+        // Persist changes to the database
         $em->persist($admin);
         $em->flush();
-
+    
         return new JsonResponse(['message' => 'Admin updated successfully']);
     }
+
 
     #[Route('/{id}', name: 'deleteAdmin', methods: ['DELETE'])]
     public function deleteAdmin(int $id, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
