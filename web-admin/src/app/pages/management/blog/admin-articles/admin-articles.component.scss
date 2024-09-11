@@ -1,0 +1,141 @@
+/* Container for the table */
+.table-container {
+    background-color: white;
+    border-radius: 10px; /* Adjust the value as needed for slightly rounded corners */
+    padding: 20px; /* Adjust as needed */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: for a subtle shadow effect */
+  }
+  
+  /* Header styles */
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items to the center vertically */
+  }
+  
+  .card-title {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow the card title to take up more space */
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-form {
+    margin-right: 20px; /* Space between search form and button */
+  }
+  
+  .card-toolbar {
+    display: flex;
+    gap: 10px; /* Add spacing between buttons */
+  }
+  
+  .card-toolbar button {
+    white-space: nowrap; /* Prevent the button text from wrapping */
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 0.5rem 1rem; /* Padding inside the buttons */
+    font-weight: bold; /* Bold text */
+  }
+  
+  /* Button styles */
+  .btn-light-primary {
+    background-color: #e6f0ff; /* Faded blue background */
+    border: 1px solid #b3d1ff; /* Light blue border */
+    color: #007bff; /* Blue text color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+  }
+  
+  .btn-light-primary:hover,
+  .btn-light-primary:focus,
+  .btn-light-primary.active {
+    background-color: #cce0ff; /* Darker blue on hover and active */
+    color: #0056b3; /* Darker blue text color */
+    border-color: #0056b3; /* Darker blue border */
+  }
+  
+  /* Table styles */
+  .table {
+    width: 100%; /* Full width of the container */
+    border-collapse: collapse; /* Collapse table borders */
+  }
+  
+  .table thead th {
+    background-color: transparent; /* Remove background color from the table head */
+    text-align: left; /* Left align text in the table head */
+    padding: 0.75rem; /* Padding inside table head cells */
+  }
+  
+  .table tbody tr {
+    border-bottom: 1px solid #dee2e6; /* Border between rows */
+  }
+  
+  .table tbody td {
+    padding: 0.75rem; /* Padding inside table cells */
+  }
+  
+  /* Responsive table */
+  .table-responsive {
+    overflow-x: auto; /* Horizontal scroll for responsive tables */
+  }
+  
+  /* Article content styles */
+  .article-content {
+    display: flex;
+    flex-direction: column; /* Stacks title, subtitle, author, and date vertically */
+  }
+  
+  .article-content a {
+    margin-bottom: 0.5rem; /* Space between title and subtitle */
+  }
+  
+  .article-content span {
+    margin-bottom: 0.25rem; /* Space between subtitle, author, and date */
+  }
+  
+  /* Icon styles */
+  .symbol {
+    display: flex;
+    align-items: center; /* Center content vertically */
+  }
+  
+  .symbol-label {
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+  }
+  
+  .svg-icon {
+    width: 2rem; /* Adjust icon size */
+    height: 2rem; /* Adjust icon size */
+  }
+  
+  .svg-icon-danger {
+    color: #dc3545; /* Red for danger */
+  }
+  
+  .svg-icon-warning {
+    color: #ffc107; /* Yellow for warning */
+  }
+  
+  .svg-icon-info {
+    color: #17a2b8; /* Teal for info */
+  }
+  
+  .svg-icon-primary {
+    color: #007bff; /* Blue for primary */
+  }
+  
+  .svg-icon-success {
+    color: #28a745; /* Green for success */
+  }
+  
+  /* Button styles inside table */
+  .btn-icon {
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+  }
+  

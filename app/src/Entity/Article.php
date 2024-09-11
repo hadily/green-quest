@@ -135,6 +135,12 @@ class Article
         return $writer ? $writer->getFullName() : null;
     }
 
+    public function getWriterId(): ?int
+    {
+        $writer = $this->getWriter();
+        return $writer->getId();
+    }
+
     /**
      * @return Collection<int, Complaints>
      */

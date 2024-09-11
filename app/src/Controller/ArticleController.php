@@ -38,6 +38,7 @@ class ArticleController extends AbstractController
             $data[] = [
                 'id' => $article->getId(),
                 'writer' => $article->getWriterFullName(),
+                'writerId' =>$article->getWriterId(),
                 'title' => $article->getTitle(),
                 'subTitle' => $article->getSubTitle(),
                 'summary' => $article->getSummary(),

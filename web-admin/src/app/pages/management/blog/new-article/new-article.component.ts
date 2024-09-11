@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/modules/auth';
+import { RefreshService } from 'src/app/services/refresh.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-article',
@@ -17,13 +19,14 @@ export class NewArticleComponent implements OnInit {
     text: '',
     imageFilename: null,
   };
-  users: any[] = [];
   file: any;
 
   constructor(
     private apiService: ApiService,
     private router: Router,
     private authService: AuthService,
+    public dialogRef: MatDialogRef<NewArticleComponent>,
+    private refreshService: RefreshService,
   ) {}
 
   ngOnInit(): void {}
@@ -45,13 +48,17 @@ export class NewArticleComponent implements OnInit {
     this.apiService.createArticle(this.article).subscribe(
       response => {
         console.log('Article created:', response);
-        this.router.navigate(['/blog/articles']);
+        this.closeModal();
+        this.refreshService.triggerRefresh('/blog/admin-articles');
       },
       error => {
         console.error('Error creating article:', error);
-        // Optionally show an error message to the user
       }
     );
+  }
+
+  closeModal(): void {
+    this.dialogRef.close();
   }
 
 }

@@ -6,6 +6,7 @@ import { RefreshService } from 'src/app/services/refresh.service';
 import { format, startOfWeek, endOfWeek } from 'date-fns';
 import { DeleteArticleComponent } from '../delete-article/delete-article.component';
 import { UpdateArticleComponent } from '../update-article/update-article.component';
+import { AuthService } from 'src/app/modules/auth';
 
 
 
@@ -25,7 +26,8 @@ export class ArticlesComponent implements OnInit {
     public dialog: MatDialog, 
     private apiService: ApiService,
     private cdr: ChangeDetectorRef,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -36,10 +38,12 @@ export class ArticlesComponent implements OnInit {
   }
 
   loadArticles() {
+    const adminId = this.authService.currentUserValue?.id ?? 1;
+    console.log(adminId);
     this.apiService.getAllArticles().subscribe(
       data => {
-        this.articles = data;
-        console.log(this.articles);
+        this.articles = data.filter((article: { writerId: number; }) => article.writerId !== adminId);
+        console.log('Filtered Articles:', this.articles);
         this.allArticles = this.articles;
         this.cdr.detectChanges();
         

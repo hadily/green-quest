@@ -3,7 +3,6 @@ import { ViewPartnersComponent } from './management/users/partners/view-partners
 import { ViewClientsComponent } from './management/users/clients/view-clients/view-clients.component';
 import { ViewAdminsComponent } from './management/users/admins/view-admins/view-admins.component';
 import { ArticlesComponent } from './management/blog/articles/articles.component';
-import { NewArticleComponent } from './management/blog/new-article/new-article.component';
 import { ViewComplaintsComponent } from './management/complaints/view-complaints/view-complaints.component';
 import { EventsComponent } from './partner-side/services/manage-events/events/events.component';
 import { ProductsComponent } from './partner-side/services/manage-products/products/products.component';
@@ -12,6 +11,7 @@ import { ArticlesPartnerComponent } from './partner-side/blog/articles-partner/a
 import { PartnerComplaintsComponent } from './partner-side/complaints/partner-complaints/partner-complaints.component';
 import { PartnerEventsComponent } from './management/posts/events/partner-events/partner-events.component';
 import { PartnerProductsComponent } from './management/posts/products/partner-products/partner-products.component';
+import { AdminArticlesComponent } from './management/blog/admin-articles/admin-articles.component';
 
 const Routing: Routes = [
   {
@@ -77,8 +77,8 @@ const Routing: Routes = [
     component: ArticlesComponent
   },
   {
-    path: 'blog/new-article',
-    component: NewArticleComponent
+    path: 'blog/admin-articles',
+    component: AdminArticlesComponent
   },
   {
     path: 'complaints',
