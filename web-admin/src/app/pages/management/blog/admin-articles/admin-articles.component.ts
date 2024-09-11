@@ -5,9 +5,9 @@ import { AuthService } from 'src/app/modules/auth';
 import { ApiService } from 'src/app/services/api.service';
 import { RefreshService } from 'src/app/services/refresh.service';
 import { DeleteArticleComponent } from '../delete-article/delete-article.component';
-import { UpdateArticleComponent } from '../update-article/update-article.component';
 import { NewArticleComponent } from '../new-article/new-article.component';
 import { CommonModule } from '@angular/common';
+import { UpdateAdminArticleComponent } from '../update-admin-article/update-admin-article.component';
 
 @Component({
   selector: 'app-admin-articles',
@@ -75,7 +75,7 @@ export class AdminArticlesComponent implements OnInit{
   }
 
   openUpdateModal(articleId: number): void {
-    const dialogRef = this.dialog.open(UpdateArticleComponent, {
+    const dialogRef = this.dialog.open(UpdateAdminArticleComponent, {
       data: { articleId: articleId }
     });
   

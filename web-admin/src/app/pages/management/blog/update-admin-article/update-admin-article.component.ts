@@ -6,11 +6,11 @@ import { RefreshService } from 'src/app/services/refresh.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-update-article-partner',
-  templateUrl: './update-article-partner.component.html',
-  styleUrl: './update-article-partner.component.scss'
+  selector: 'app-update-admin-article',
+  templateUrl: './update-admin-article.component.html',
+  styleUrl: './update-admin-article.component.scss'
 })
-export class UpdateArticlePartnerComponent implements OnInit{
+export class UpdateAdminArticleComponent implements OnInit{
 
   article = {
     title: '',
@@ -18,7 +18,7 @@ export class UpdateArticlePartnerComponent implements OnInit{
     summary: '',
     text: '',
     date: '',
-    status: 'Updated',
+    status: 'Approved',
     review: '',
     imageFilename: null
   };
@@ -27,7 +27,7 @@ export class UpdateArticlePartnerComponent implements OnInit{
 
 
   constructor(
-    public dialogRef: MatDialogRef<UpdateArticlePartnerComponent>,
+    public dialogRef: MatDialogRef<UpdateAdminArticleComponent>,
       @Inject(MAT_DIALOG_DATA) public data: { articleId: number },
       private apiService: ApiService,
       private refreshService: RefreshService,
@@ -58,13 +58,13 @@ export class UpdateArticlePartnerComponent implements OnInit{
 
   onUpdate(): void {
     this.file = this.article.imageFilename;
-    this.article.status = 'Updated';
+    this.article.status = 'Approved';
     console.log("before this.apiService.updateArticle call");
     this.apiService.updateArticle(this.data.articleId, this.article).subscribe(
       response => {
         console.log("article data ", this.article);
         console.log('Article updated:', response);
-        this.refreshService.triggerRefresh('/partner/blog/articles');
+        this.refreshService.triggerRefresh('/blog/admin-articles');
         this.closeModal();
       },
       error => {

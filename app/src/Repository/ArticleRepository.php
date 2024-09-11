@@ -58,6 +58,15 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getApprovedArticles(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.status = :status')
+            ->setParameter('status', 'Approved')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Article[] Returns an array of Article objects
     //     */

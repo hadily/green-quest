@@ -23,7 +23,7 @@ class BlogController extends AbstractController
     #[Route('', name: '_list')]
     public function index()
     {
-        $articles = $this->articleRepository->getAll();
+        $articles = $this->articleRepository->getApprovedArticles();
         return $this->render('frontend/blog/list.html.twig', ['list'=>$articles]);
     }
 

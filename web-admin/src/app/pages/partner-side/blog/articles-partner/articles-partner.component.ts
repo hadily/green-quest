@@ -48,6 +48,21 @@ export class ArticlesPartnerComponent implements OnInit{
         }
     );
   }
+
+  getBadgeClass(status: string): string {
+    switch (status) {
+      case 'Approved':
+        return 'badge-light-success';
+      case 'Pending':
+        return 'badge-light-warning';
+      case 'Reviewed':
+        return 'badge-light-danger';
+      case 'Updated':
+        return 'badge-light-primary'; 
+      default:
+        return 'badge-light-warning';
+    }
+  }
   
   openModal(): void {
     const dialogRef = this.dialog.open(NewArticlePartnerComponent);

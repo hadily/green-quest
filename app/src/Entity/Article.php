@@ -46,6 +46,12 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $imageFilename;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $review = null;
+
     public function __construct()
     {
         $this->complaints = new ArrayCollection();
@@ -179,6 +185,30 @@ class Article
     public function setImageFilename(string $imageFilename): static
     {
         $this->imageFilename = $imageFilename;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getReview(): ?string
+    {
+        return $this->review;
+    }
+
+    public function setReview(string $review): static
+    {
+        $this->review = $review;
 
         return $this;
     }

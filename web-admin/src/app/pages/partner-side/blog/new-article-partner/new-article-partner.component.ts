@@ -17,6 +17,8 @@ export class NewArticlePartnerComponent {
     summary: '',
     writerId: 0,
     text: '',
+    status: 'pending',
+    review: 'none',
     imageFilename: null
   };
 
@@ -35,7 +37,7 @@ export class NewArticlePartnerComponent {
 
   onSubmit(): void {
     this.article.writerId = this.authService.currentUserValue?.id ?? 1;
-    
+    console.log(this.article);
     this.apiService.createArticle(this.article).subscribe(
       response => {
         console.log('Article created:', response);

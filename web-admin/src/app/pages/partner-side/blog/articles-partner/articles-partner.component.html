@@ -27,6 +27,7 @@
               <th class="min-w-150px">Article</th>
               <th class="min-w-140px">summary</th>
               <th class="min-w-120px">Date</th>
+              <th class="min-w-120px">Status</th>
               <th class="min-w-100px text-end">Actions</th>
             </tr>
           </thead>
@@ -48,6 +49,11 @@
                   </td>
                   <td>
                     <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.date}}</a>
+                  </td>
+                  <td class="text-end">
+                    <span class="badge" [ngClass]="getBadgeClass(article.status)">
+                      {{ article.status }}
+                    </span>
                   </td>
                   <td>
                     <div class="d-flex justify-content-end flex-shrink-0">

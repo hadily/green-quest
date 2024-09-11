@@ -44,6 +44,8 @@ class ArticleController extends AbstractController
                 'summary' => $article->getSummary(),
                 'text' => $article->getText(),
                 'date' => $article->getDate()->format('Y-m-d'),
+                'status' => $article->getStatus(),
+                'review' => $article->getReview(),
                 'imageFilename' => $article->getImageFilename()
             ];
         }
@@ -67,6 +69,8 @@ class ArticleController extends AbstractController
             'summary' => $article->getSummary(),
             'text' => $article->getText(),
             'date' => $article->getDate(),
+            'status' => $article->getStatus(),
+            'review' => $article->getReview(),
             'imageFilename' => $article->getImageFilename()
         ];
 
@@ -142,6 +146,14 @@ class ArticleController extends AbstractController
             $article->setText($data['text']);
         }
 
+        if (isset($data['status'])) {
+            $article->setStatus($data['status']);
+        }
+
+        if (isset($data['review'])) {
+            $article->setReview($data['review']);
+        }
+
         $imageFile = $request->files->get('imageFilename');
         if ($imageFile) {
             $imageName = $ufService->uploadFile($imageFile);
@@ -187,6 +199,8 @@ class ArticleController extends AbstractController
                 'writer' => $article->getWriter(),
                 'text' => $article->getText(),
                 'date' => $article->getDate() ? $article->getDate()->format('Y-m-d') :new \DateTime(),
+                'status' => $article->getStatus(),
+                'review' => $article->getReview(),
                 'imageFilename' => $article->getImageFilename()
             ];
         }
@@ -212,6 +226,8 @@ class ArticleController extends AbstractController
                 'summary' => $article->getSummary(),
                 'text' => $article->getText(),
                 'date' => $article->getDate()->format('Y-m-d'),
+                'status' => $article->getStatus(),
+                'review' => $article->getReview(),
                 'imageFilename' => $article->getImageFilename()
             ];
         }

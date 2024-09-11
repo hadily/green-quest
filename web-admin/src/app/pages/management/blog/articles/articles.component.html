@@ -46,9 +46,10 @@
         <!-- begin::Table head -->
         <thead>
           <tr class="fw-bolder text-muted">
-            <th class="min-w-150px">Article</th>
+            <th class="max-w-150px">Article</th>
             <th class="min-w-140px">Writer</th>
-            <th class="min-w-120px">Release Date</th>
+            <th class="min-w-120px">Date</th>
+            <th class="min-w-120px">Status</th>
             <th class="min-w-100px text-end">Actions</th>
           </tr>
         </thead>
@@ -71,10 +72,15 @@
                 <td>
                   <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{article.date}}</a>
                 </td>
+                <td class="text-end">
+                  <span class="badge" [ngClass]="getBadgeClass(article.status)">
+                    {{ article.status }}
+                  </span>
+                </td>
                 <td>
                   <div class="d-flex justify-content-end flex-shrink-0">
                     <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openUpdateModal(article.id)">
-                      <i class="bi bi-pen"></i>
+                      <i class="bi bi-eye"></i>
                     </button>
                     <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm" (click)="openDeleteModal(article.id)">
                       <i class="bi bi-trash2"></i>

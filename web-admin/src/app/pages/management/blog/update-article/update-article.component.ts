@@ -16,6 +16,8 @@ export class UpdateArticleComponent {
     summary: '',
     text: '',
     date: '',
+    status: '',
+    review: '',
     imageFilename: null
   };
   file: any;

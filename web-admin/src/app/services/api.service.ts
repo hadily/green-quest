@@ -185,6 +185,8 @@ export class ApiService {
     formData.append('summary', article.summary);
     formData.append('text', article.text);
     formData.append('writer', article.writerId);
+    formData.append('status', article.status);
+    formData.append('review', article.review);
     formData.append('imageFilename', article.imageFilename);
     return this.http.post<any>(`${this.apiUrl}/article/`, formData);
   }

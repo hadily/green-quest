@@ -55,7 +55,7 @@ class IndexController extends AbstractController
 
     public function blog(): Response {
 
-        $articles = $this->articleRepository->findAll();
+        $articles = $this->articleRepository->getApprovedArticles();
 
         return $this->render('frontend/widget/blog.html.twig', [ 'list' => $articles ]);
     }

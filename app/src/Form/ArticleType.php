@@ -18,6 +18,8 @@ class ArticleType extends AbstractType
             ->add('subTitle')
             ->add('summary')
             ->add('text')
+            ->add('status')
+            ->add('review')
             ->add('writer');
     }
 
