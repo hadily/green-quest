@@ -14,13 +14,6 @@
     <label for="subTitle">Sub Title</label>
     <input type="text" id="subTitle" [(ngModel)]="article.subTitle" name="subTitle" required>
   </div>
-  
-  <div class="form-group">
-    <label for="writer">Author</label>
-    <select id="writer" [(ngModel)]="article.writerId" name="writer" required>
-      <option *ngFor="let user of users" [value]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
-    </select>
-  </div>
   <div class="form-group">
     <label for="summary">Summary</label>
     <input type="text" id="summary" [(ngModel)]="article.summary" name="summary" required>

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
-import { RefreshService } from 'src/app/services/refresh.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/modules/auth';
 
 @Component({
   selector: 'app-new-article',
@@ -14,7 +13,7 @@ export class NewArticleComponent implements OnInit {
     title: '',
     subTitle: '',
     summary: '',
-    writerId: null,
+    writerId: 1,
     text: '',
     imageFilename: null,
   };
@@ -22,22 +21,12 @@ export class NewArticleComponent implements OnInit {
   file: any;
 
   constructor(
-    private http: HttpClient,
     private apiService: ApiService,
-    private refreshService: RefreshService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
   ) {}
 
-  ngOnInit(): void {
-    this.loadUsers();
-  }
-
-  loadUsers(): void {
-    this.apiService.getAllUsers().subscribe(
-      data => this.users = data,
-      error => console.error('Error fetching users:', error)
-    );
-  }
+  ngOnInit(): void {}
 
   selectImage(event: any) {
     this.file = event.target.files[0];
@@ -51,10 +40,12 @@ export class NewArticleComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.article.writerId = this.authService.currentUserValue?.id ?? 1;
+
     this.apiService.createArticle(this.article).subscribe(
       response => {
         console.log('Article created:', response);
-        this.router.navigate(['/blog/articles']); // Emit a value to notify other components
+        this.router.navigate(['/blog/articles']);
       },
       error => {
         console.error('Error creating article:', error);
