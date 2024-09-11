@@ -1,0 +1,19 @@
+.product-container-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two containers per row */
+    gap: 10px; /* Space between grid items */
+    width: 1000px;
+}
+
+@media (max-width: 1200px) {
+    .product-container-wrapper {
+        grid-template-columns: 1fr; /* One container per row on small screens */
+    }
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px; 
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

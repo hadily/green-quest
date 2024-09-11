@@ -1,0 +1,6 @@
+<div class="event-container-wrapper">
+  <div class="container" *ngIf="events.length === 0">
+    <p>No events available.</p>
+  </div>
+  <app-event-container *ngFor="let event of events" [event]="event"></app-event-container>
+</div>

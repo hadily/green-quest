@@ -10,6 +10,8 @@ import { ProductsComponent } from './partner-side/services/manage-products/produ
 import { NewEventComponent } from './partner-side/services/manage-events/new-event/new-event.component';
 import { ArticlesPartnerComponent } from './partner-side/blog/articles-partner/articles-partner.component';
 import { PartnerComplaintsComponent } from './partner-side/complaints/partner-complaints/partner-complaints.component';
+import { PartnerEventsComponent } from './management/posts/events/partner-events/partner-events.component';
+import { PartnerProductsComponent } from './management/posts/products/partner-products/partner-products.component';
 
 const Routing: Routes = [
   {
@@ -101,6 +103,14 @@ const Routing: Routes = [
   {
     path: 'partner/complaints',
     component: PartnerComplaintsComponent
+  },
+  {
+    path: 'posts/events',
+    component: PartnerEventsComponent
+  },
+  {
+    path: 'posts/products',
+    component: PartnerProductsComponent
   }
 ];
 

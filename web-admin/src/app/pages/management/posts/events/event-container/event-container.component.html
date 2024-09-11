@@ -1,0 +1,89 @@
+<div class="container">
+    <!-- begin::Body -->
+    <div class="card-body pb-0">
+      <!-- begin::Header -->
+      <div class="d-flex align-items-center mb-5">
+        <!-- begin::User -->
+        <div class="d-flex align-items-center flex-grow-1">
+          <!-- begin::Avatar -->
+          <div class="symbol symbol-45px me-5">
+            <!-- <img src="{{fileUrl}}/uploads/{{ organizer.imageFilename }}" alt="" /> -->
+          </div>
+          <!-- end::Avatar -->
+    
+          <!-- begin::Info -->
+          <div class="d-flex flex-column">
+            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder">
+              ;u,ynt
+            </a>
+    
+            <span class="text-gray-500 fw-bold">cfvgh</span>
+          </div>
+          <!-- end::Info -->
+        </div>
+        <!-- end::User -->
+      </div>
+      <!-- end::Header -->
+    
+      <!-- begin::Post -->
+      <div class="mb-5">
+        <!-- begin::Text -->
+        <h3><strong>{{ event.name }}</strong></h3>
+        <div class="event-image-container my-4">
+            <img src="{{fileUrl}}/uploads/{{ event.imageFilename }}" alt="{{ event.name }}" class="img-fluid" />
+          </div>
+        <p class="text-gray-800 fw-normal mb-5">
+          {{ event.description }}
+        </p>
+        <!-- end::Text -->
+      </div>
+      <!-- end::Post -->
+    
+      <!-- begin::Toolbar -->
+      <div class="d-flex align-items-center mb-5">
+          <a
+            href="#"
+            class="
+              btn btn-sm btn-light btn-color-muted btn-active-light-success
+              px-4
+              py-2
+              me-4
+            "
+          >
+          <i class="bi bi-calendar-week"></i>
+            {{ event.startDate }} - {{ event.endDate }}
+          </a>
+    
+          <a
+            href="#"
+            class="
+              btn btn-sm btn-light btn-color-muted btn-active-light-danger
+              px-4
+              py-2
+            "
+          >
+          <i class="bi bi-coin"></i>
+            {{ event.price }} Dt
+          </a>
+
+          <a
+            href="#"
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-info px-4 py-2 me-4 ms-3"
+          >
+            <i class="bi bi-bookmark"></i>
+            {{ event.category }}
+          </a>
+          
+          <a
+            href="#"
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-warning px-4 py-2 me-4 ms-3"
+          >
+            <i class="bi bi-person-arms-up"></i>
+            {{ event.nbParticipants }}
+          </a>
+     
+        </div>
+        <!-- end::Toolbar -->
+    </div>
+    <!-- end::Body -->
+  </div>

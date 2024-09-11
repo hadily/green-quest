@@ -1,0 +1,60 @@
+<div class="container">
+    <!-- begin::Body -->
+    <div class="card-body pb-0">
+      <!-- begin::Header -->
+      <div class="d-flex align-items-center mb-5">
+        <!-- begin::User -->
+        <div class="d-flex align-items-center flex-grow-1">
+          <!-- begin::Avatar -->
+          <div class="symbol symbol-45px me-5">
+            <!-- <img src="{{fileUrl}}/uploads/{{ owner.imageFilename }}" alt="" /> -->
+          </div>
+          <!-- end::Avatar -->
+    
+          <!-- begin::Info -->
+          <div class="d-flex flex-column">
+            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder">
+              ;u,ynt
+            </a>
+    
+            <span class="text-gray-500 fw-bold">cfvgh</span>
+          </div>
+          <!-- end::Info -->
+        </div>
+        <!-- end::User -->
+      </div>
+      <!-- end::Header -->
+    
+      <!-- begin::Post -->
+      <div class="mb-5">
+        <!-- begin::Text -->
+        <h3><strong>{{ product.name }}</strong></h3>
+        <div class="product-image-container my-4">
+            <img src="{{fileUrl}}/uploads/{{ product.imageFilename }}" alt="{{ product.name }}" class="img-fluid" />
+          </div>
+        <p class="text-gray-800 fw-normal mb-5">
+          {{ product.description }}
+        </p>
+        <!-- end::Text -->
+      </div>
+      <!-- end::Post -->
+    
+      <!-- begin::Toolbar -->
+        <div>
+          <a
+            href="#"
+            class="
+              btn btn-sm btn-light btn-color-muted btn-active-light-danger
+              px-4
+              py-2
+            "
+          >
+          <i class="bi bi-coin"></i>
+            {{ product.price }} Dt
+          </a>
+     
+        </div>
+        <!-- end::Toolbar -->
+    </div>
+    <!-- end::Body -->
+</div>

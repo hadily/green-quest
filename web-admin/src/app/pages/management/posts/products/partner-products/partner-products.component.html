@@ -1,0 +1,6 @@
+<div class="product-container-wrapper">
+    <div class="container" *ngIf="products.length === 0">
+      <p>No products available.</p>
+    </div>
+    <app-product-container *ngFor="let product of products" [product]="product"></app-product-container>
+  </div>

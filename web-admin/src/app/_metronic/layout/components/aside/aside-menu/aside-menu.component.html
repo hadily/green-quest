@@ -91,7 +91,7 @@
   </div>
   </div>
   
-  <!-- Post -->
+  <!-- Blog -->
   <div
   class="menu-item menu-accordion"
   data-kt-menu-trigger="click"
@@ -103,7 +103,7 @@
       class="svg-icon svg-icon-2"
       [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'"
       ></span></span
-    ><span class="menu-title" data-link="/crafted/account">Posts</span
+    ><span class="menu-title" data-link="/crafted/account">Blog</span
     ><span class="menu-arrow"></span
   ></span>
   <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
@@ -120,7 +120,33 @@
       <a
         class="menu-link without-sub"
         routerLinkActive="active"
-        routerLink="/blog/articles"
+        routerLink="/blog/new-article"
+        ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
+        ><span class="menu-title">Add Article</span></a
+      >
+    </div>
+  </div>
+  </div>
+
+  <!-- Partner Posts -->
+  <div
+  class="menu-item menu-accordion"
+  data-kt-menu-trigger="click"
+  routerLinkActive="here show"
+>
+  <span class="menu-link"
+    ><span class="menu-icon"
+      ><i class="bi bi-postcard"></i>
+      </span
+    ><span class="menu-title" data-link="/crafted/account">Partner Posts</span
+    ><span class="menu-arrow"></span
+  ></span>
+  <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
+    <div class="menu-item">
+      <a
+        class="menu-link without-sub"
+        routerLinkActive="active"
+        routerLink="/posts/events"
         ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
         ><span class="menu-title">Events</span></a
       >
@@ -129,22 +155,11 @@
       <a
         class="menu-link without-sub"
         routerLinkActive="active"
-        routerLink="/blog/articles"
+        routerLink="/posts/products"
         ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
         ><span class="menu-title">Products</span></a
       >
     </div>
-    <!--
-    <div class="menu-item">
-      <a
-        class="menu-link without-sub"
-        routerLinkActive="active"
-        routerLink="/blog/new-article"
-        ><span class="menu-bullet"><span class="bullet bullet-dot"></span></span
-        ><span class="menu-title">Add Article</span></a
-      >
-    </div>
-    -->
   </div>
   </div>
   
