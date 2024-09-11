@@ -45,5 +45,9 @@ export class PartnerProductsComponent implements OnInit{
     );
   }
 
+  trackByProductId(index: number, product: any): number {
+    return product.id;
+  }
+
   
 }

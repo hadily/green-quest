@@ -45,6 +45,9 @@ export class PartnerEventsComponent implements OnInit{
     );
   }
 
+  trackByEventId(index: number, event: any): number {
+    return event.id;
+  }
   
 
 }
