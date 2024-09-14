@@ -20,8 +20,8 @@ export class OverviewComponent implements OnInit {
   }
 
   loadUser(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
-
+    const userId = this.authService.currentUserValue?.id ?? 1;
+    console.log(userId);
     this.apiService.getUserById(userId).pipe(
       switchMap(user => {
         // Check if the user data was successfully retrieved

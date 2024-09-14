@@ -19,11 +19,12 @@ export class HeaderMenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
+    const userId = this.authService.currentUserValue?.id ?? 1;
     this.checkIfPartner(userId);
   }
 
   checkIfPartner(userId: number): void {
+    console.log(userId);
     this.apiService.getUserById(userId).subscribe(
       user => {
         this.isPartnerUser = this.isPartner(user.roles);

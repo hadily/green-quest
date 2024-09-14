@@ -255,13 +255,19 @@ export class ApiService {
     return this.http.put<any>(`${this.apiUrl}/complaints/${id}`, complaint);
   }
 
-  updateUser(id: number, user: any, file: File): Observable<any> {
+  updateUser(id: number, user: any): Observable<any> {
     const formData = new FormData();
     formData.append('email', user.email);
     formData.append('firstName', user.firstName);
     formData.append('lastName', user.lastName);
     formData.append('phoneNumber', user.phoneNumber);
-    formData.append('imageFilename', file, file.name);
+    formData.append('imageFilename', user.imageFilename);
+    
+    // Log formData entries for debugging
+    formData.forEach((value, key) => {
+      console.log(key + ': ' + value);
+    });
+
     return this.http.post<any>(`${this.apiUrl}/user/${id}`, formData);
   }
 

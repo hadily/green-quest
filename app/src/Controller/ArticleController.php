@@ -114,7 +114,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_article_update', methods: ['PUT'])]
-    public function updateArticle(int $id, Request $request, ArticleRepository $articleRepository, EntityManagerInterface $em) 
+    public function updateArticle(int $id, Request $request, ArticleRepository $articleRepository, EntityManagerInterface $em, UploadFileService $ufService) 
     {
         $article = $articleRepository->getDetailsById($id);
 

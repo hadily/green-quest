@@ -17,8 +17,8 @@ export class NewArticleComponent implements OnInit {
     summary: '',
     writerId: 1,
     text: '',
-    status: 'approved',
-    review: '',
+    status: 'Approved',
+    review: ' none ',
     imageFilename: null,
   };
   file: any;

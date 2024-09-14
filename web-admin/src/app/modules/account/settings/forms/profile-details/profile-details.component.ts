@@ -13,7 +13,6 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   isLoading: boolean;
   private unsubscribe: Subscription[] = [];
   user: any;
-  file: any;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -32,38 +31,28 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   selectImage(event: any) {
-    this.file = event.target.files[0].name;
+    this.user.imageFilename = event.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function () {
+      let output: any = document.getElementById('imageFilename');
+      output.src = reader.result;
+    }
+    reader.readAsDataURL(this.user.imageFilename);
   }
 
   saveSettings() {
     const userId = this.authService.currentUserValue?.id ?? 1;
     this.isLoading$.next(true);
-    // console.log("user data to update ", this.user);
-
-    const formData = new FormData();
-
-  // Append the file if it exists
-  if (this.file) {
-    formData.append('imageFilename', this.file);
-  }
-
-  // Append user data manually
-  formData.append('firstName', this.user.firstName);
-  formData.append('lastName', this.user.lastName);
-  formData.append('email', this.user.email);
-  formData.append('phoneNumber', this.user.phoneNumber);
-  formData.append('localisation', this.user.localisation);
-  formData.append('companyName', this.user.companyName);
-  formData.append('companyDescription', this.user.companyDescription);
+    console.log("user data to update ", this.user);
 
     const updateObservable = this.isPartner()
-      ? this.apiService.updatePartner(userId, formData)
-      : this.apiService.updateUser(userId, this.user, this.file);
+      ? this.apiService.updatePartner(userId, this.user)
+      : this.apiService.updateUser(userId, this.user);
   
     updateObservable.subscribe(
       (response) => {
         console.log('User updated successfully:', response);
-        this.refreshService.triggerRefresh('/crafted/account/overview');
+        this.refreshService.triggerRefresh('/crafted/account');
         this.isLoading$.next(false);
       },
       (error) => {
@@ -80,7 +69,9 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   loadUser(): void {
-    const userId = this.authService.currentUserValue?.id ?? 0;
+    const userId = this.authService.currentUserValue?.id ?? 1;
+    console.log("userid from authService ", this.authService.currentUserValue?.id);
+    console.log("userID ",userId);
 
     this.apiService.getUserById(userId).pipe(
       switchMap(user => {
