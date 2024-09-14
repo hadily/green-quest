@@ -24,6 +24,21 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $confirmation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?Event $event = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?Product $product = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $client_name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $client_phoneNumber = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $client_email = null;
+
 
     public function getId(): ?int
     {
@@ -62,6 +77,66 @@ class Reservation
     public function setConfirmation(?Client $confirmation): static
     {
         $this->confirmation = $confirmation;
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getClientName(): ?string
+    {
+        return $this->client_name;
+    }
+
+    public function setClientName(string $client_name): static
+    {
+        $this->client_name = $client_name;
+
+        return $this;
+    }
+
+    public function getClientPhoneNumber(): ?string
+    {
+        return $this->client_phoneNumber;
+    }
+
+    public function setClientPhoneNumber(string $client_phoneNumber): static
+    {
+        $this->client_phoneNumber = $client_phoneNumber;
+
+        return $this;
+    }
+
+    public function getClientEmail(): ?string
+    {
+        return $this->client_email;
+    }
+
+    public function setClientEmail(string $client_email): static
+    {
+        $this->client_email = $client_email;
 
         return $this;
     }
