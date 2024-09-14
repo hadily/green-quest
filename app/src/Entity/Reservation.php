@@ -17,13 +17,6 @@ class Reservation
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $reservationDate = null;
 
-    #[ORM\Column]
-    private ?bool $confirmReservation = null;
-
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Client $confirmation = null;
-
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?Event $event = null;
 
@@ -39,6 +32,9 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $client_email = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
 
     public function getId(): ?int
     {
@@ -53,30 +49,6 @@ class Reservation
     public function setReservationDate(\DateTimeInterface $reservationDate): static
     {
         $this->reservationDate = $reservationDate;
-
-        return $this;
-    }
-
-    public function isConfirmReservation(): ?bool
-    {
-        return $this->confirmReservation;
-    }
-
-    public function setConfirmReservation(bool $confirmReservation): static
-    {
-        $this->confirmReservation = $confirmReservation;
-
-        return $this;
-    }
-
-    public function getConfirmation(): ?Client
-    {
-        return $this->confirmation;
-    }
-
-    public function setConfirmation(?Client $confirmation): static
-    {
-        $this->confirmation = $confirmation;
 
         return $this;
     }
@@ -137,6 +109,18 @@ class Reservation
     public function setClientEmail(string $client_email): static
     {
         $this->client_email = $client_email;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
