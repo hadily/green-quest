@@ -29,6 +29,7 @@
               <th class="min-w-100px">Product</th>
               <th class="min-w-150px">description</th>
               <th class="min-w-80px">Price</th>
+              <th class="min-w-80px">Bookings</th>
               <th class="min-w-60px text-end">Actions</th>
             </tr>
           </thead>
@@ -52,6 +53,11 @@
                   </td>
                   <td>
                     <a href="#" class="text-gray-900 fw-bolder text-hover-primary d-block fs-6">{{product.price}}</a>
+                  </td>
+                  <td>
+                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" (click)="openBookingModal(product.id)">
+                      View Bookings
+                    </button>
                   </td>
                   <td>
                     <div class="d-flex justify-content-end flex-shrink-0">

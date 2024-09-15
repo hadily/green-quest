@@ -8,75 +8,127 @@ use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/reservation')]
 class ReservationController extends AbstractController
 {
-    #[Route('/', name: 'app_reservation_index', methods: ['GET'])]
-    public function index(ReservationRepository $reservationRepository): Response
-    {
-        return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
-        ]);
+    private $entityManager;
+    private $reservationRepository;
+
+
+    public function __construct(
+        ReservationRepository $rsRepository,
+        EntityManagerInterface $entityManager,
+    ) {
+        $this->reservationRepository = $rsRepository;
+        $this->entityManager = $entityManager;
     }
 
-    #[Route('/new', name: 'app_reservation_new', methods: ['POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'getReservationById', methods: ['GET'])]
+    public function getReservationById(int $id): JsonResponse
     {
-        $reservation = new Reservation();
-        $form = $this->createForm(ReservationType::class, $reservation);
-        $form->handleRequest($request);
+        $reservations = $this->reservationRepository->findById($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($reservation);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        foreach ($reservations as $reservation) {
+            $data[] = [
+                'id' => $reservation->getId(),
+                'reservationDate' => $reservation->getReservationDate()?->format('Y-m-d'),
+                'clientName' => $reservation->getClientName(),
+                'clientPhoneNumber' => $reservation->getClientPhoneNumber(),
+                'clientEmail' => $reservation->getClientEmail(),
+                'event' => $reservation->getEvent(),
+                'product' => $reservation->getProduct(),
+                'status' => $reservation->getStatus(),
+            ];
         }
 
-        return $this->render('reservation/new.html.twig', [
-            'reservation' => $reservation,
-            'form' => $form,
-        ]);
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
-    public function show(Reservation $reservation): Response
+    #[Route('/event/{id}', name: 'getReservationsByEvent', methods: ['GET'])]
+    public function getReservationByEvent(int $id): JsonResponse
     {
-        return $this->render('reservation/show.html.twig', [
-            'reservation' => $reservation,
-        ]);
-    }
+        $reservations = $this->reservationRepository->findByEvent($id);
 
-    #[Route('/{id}/edit', name: 'app_reservation_edit', methods: ['PUT'])]
-    public function edit(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ReservationType::class, $reservation);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        foreach ($reservations as $reservation) {
+            $data[] = [
+                'id' => $reservation->getId(),
+                'reservationDate' => $reservation->getReservationDate()?->format('Y-m-d'),
+                'clientName' => $reservation->getClientName(),
+                'clientPhoneNumber' => $reservation->getClientPhoneNumber(),
+                'clientEmail' => $reservation->getClientEmail(),
+                'event' => $reservation->getEvent(),
+                'product' => $reservation->getProduct(),
+                'status' => $reservation->getStatus(),
+            ];
         }
 
-        return $this->render('reservation/edit.html.twig', [
-            'reservation' => $reservation,
-            'form' => $form,
-        ]);
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'app_reservation_delete', methods: ['DELETE'])]
-    public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    #[Route('/product/{id}', name: 'getReservationByProduct', methods: ['GET'])]
+    public function getReservationByProduct(int $id): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($reservation);
-            $entityManager->flush();
+        $reservations = $this->reservationRepository->findByProduct($id);
+
+        foreach ($reservations as $reservation) {
+            $data[] = [
+                'id' => $reservation->getId(),
+                'reservationDate' => $reservation->getReservationDate()?->format('Y-m-d'),
+                'clientName' => $reservation->getClientName(),
+                'clientPhoneNumber' => $reservation->getClientPhoneNumber(),
+                'clientEmail' => $reservation->getClientEmail(),
+                'event' => $reservation->getEvent(),
+                'product' => $reservation->getProduct(),
+                'status' => $reservation->getStatus(),
+            ];
         }
 
-        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
+
+    #[Route('/{id}', name: 'update_reservation', methods: ['PUT'])]
+    public function updateReservation(Request $request, int $id): JsonResponse
+    {
+        $reservation = $this->reservationRepository->find($id);
+        if (!$reservation) {
+            return new JsonResponse(['message' => 'reservation not found']);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($data === null) {
+            return new JsonResponse(['message' => 'Invalid JSON'], 400);
+        }
+
+        $reservation->setReservationDate(new \DateTime());
+        if (isset($data['status'])) {
+            $reservation->setStatus($data['status']);
+        }
+
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['status' => 'reservation updated successfully']);
+    }
+
+    #[Route('/{id}', name: 'delete_Reservation', methods: ['DELETE'])]
+    public function deleteReservation(int $id): JsonResponse
+    {
+        $reservation = $this->reservationRepository->find($id);
+
+        if (!$reservation) {
+            return new JsonResponse(['message' => 'reservation not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $this->entityManager->remove($reservation);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['message' => 'reservation deleted successfully']);
+    }
+
+
 
 }

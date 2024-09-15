@@ -8,6 +8,7 @@ import { UpdateProductComponent } from '../update-product/update-product.compone
 import { DeleteProductComponent } from '../delete-product/delete-product.component';
 import { NewProductComponent } from '../new-product/new-product.component';
 import { AuthService } from 'src/app/modules/auth';
+import { BookingsProdComponent } from '../bookings-prod/bookings-prod.component';
 
 @Component({
   selector: 'app-products',
@@ -74,6 +75,19 @@ export class ProductsComponent implements OnInit{
 
   openUpdateModal(productId: number): void {
     const dialogRef = this.dialog.open(UpdateProductComponent, {
+      data: { productId: productId }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.refreshService.triggerRefresh('/partner/services/products');
+      }
+    });
+  }
+
+  openBookingModal(productId: number): void {
+    console.log(productId);
+    const dialogRef = this.dialog.open(BookingsProdComponent, {
       data: { productId: productId }
     });
   

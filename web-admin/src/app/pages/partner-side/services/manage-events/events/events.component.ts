@@ -7,6 +7,7 @@ import { RefreshService } from 'src/app/services/refresh.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteEventComponent } from '../delete-event/delete-event.component';
 import { NewEventComponent } from '../new-event/new-event.component';
+import { BookingsComponent } from '../bookings/bookings.component';
 
 @Component({
   selector: 'app-events',
@@ -77,6 +78,19 @@ export class EventsComponent implements OnInit {
   openUpdateModal(eventId: number): void {
     console.log(eventId);
     const dialogRef = this.dialog.open(EventPanelComponent, {
+      data: { eventId: eventId }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.refreshService.triggerRefresh('/partner/services/events');
+      }
+    });
+  }
+
+  openBookingModal(eventId: number): void {
+    console.log(eventId);
+    const dialogRef = this.dialog.open(BookingsComponent, {
       data: { eventId: eventId }
     });
   

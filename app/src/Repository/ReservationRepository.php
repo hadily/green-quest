@@ -16,6 +16,59 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+    /**
+     * Get all reservations
+     * 
+     * @return Reservation[]
+     */
+    public function getAll(): array
+    {
+        return $this->findAll();
+    }
+
+     /**
+     * Find reservations by event.
+     *
+     * @param int $eventId
+     * @return Reservation[] Returns an array of Reservation objects
+     */
+    public function findByEvent(int $eventId): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.event = :event')
+            ->setParameter('event', $eventId)
+            ->orderBy('r.reservationDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find reservations by product.
+     *
+     * @param int $productId
+     * @return Reservation[] Returns an array of Reservation objects
+     */
+    public function findByProduct(int $productId): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.product = :product')
+            ->setParameter('product', $productId)
+            ->orderBy('r.reservationDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Find a reservation by ID.
+     *
+     * @param int $id
+     * @return Reservation|null Returns a Reservation object or null
+     */
+    public function findById(int $id): ?Reservation
+    {
+        return $this->find($id);
+    }
+
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
     //     */

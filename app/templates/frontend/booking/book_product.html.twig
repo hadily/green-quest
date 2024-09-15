@@ -1,0 +1,17 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+<h1>Book Product: {{ product.name }}</h1>
+
+    {# Display success messages #}
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">Submit</button>
+    {{ form_end(form) }}
+{% endblock %}

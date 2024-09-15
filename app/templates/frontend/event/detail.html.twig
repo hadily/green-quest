@@ -33,6 +33,19 @@
                                 {{ event.endDate ? event.endDate|date('Y-m-d') : 'Not set' }}
 							</span>
 						</div>
+						<div class="addto-cart-btn mt--20">
+							<a class="rbt-btn btn-gradient hover-icon-reverse" href="{{ path('book_event', { 'id': event.id }) }}">
+								<span class="icon-reverse-wrapper">
+									<span class="btn-text">Book</span>
+									<span class="btn-icon">
+										<i class="feather-arrow-right"></i>
+									</span>
+									<span class="btn-icon">
+										<i class="feather-arrow-right"></i>
+									</span>
+								</span>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>

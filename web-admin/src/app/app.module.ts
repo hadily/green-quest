@@ -47,6 +47,8 @@ import { UpdateArticlePartnerComponent } from './pages/partner-side/blog/update-
 import { PartnerComplaintsComponent } from './pages/partner-side/complaints/partner-complaints/partner-complaints.component';
 import { PartnerCreateComplaintComponent } from './pages/partner-side/complaints/partner-create-complaint/partner-create-complaint.component';
 import { UpdateAdminArticleComponent } from './pages/management/blog/update-admin-article/update-admin-article.component';
+import { BookingsComponent } from './pages/partner-side/services/manage-events/bookings/bookings.component';
+import { BookingsProdComponent } from './pages/partner-side/services/manage-products/bookings-prod/bookings-prod.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -91,7 +93,9 @@ function appInitializer(authService: AuthService) {
     UpdateArticlePartnerComponent,
     PartnerComplaintsComponent,
     PartnerCreateComplaintComponent,
-    UpdateAdminArticleComponent
+    UpdateAdminArticleComponent,
+    BookingsComponent,
+    BookingsProdComponent
   ],
   imports: [
     BrowserModule,

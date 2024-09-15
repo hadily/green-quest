@@ -136,6 +136,14 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/article/writer/${ownerId}`);
   }
 
+  getBookingsByEvent(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/reservation/event/${id}`);
+  }
+
+  getBookingsByProduct(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/reservation/product/${id}`);
+  }
+
   /** CREATE */
 
   createPartner(partner: any): Observable<any> {
@@ -279,6 +287,10 @@ export class ApiService {
     return this.http.put<any>(`${this.apiUrl}/product/${id}`, product);
   }
 
+  updateBooking(id: number, booking: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/reservation/${id}`, booking);
+  }
+
   /** DELETE */
 
   deletePartner(id: number): Observable<any> {
@@ -303,6 +315,10 @@ export class ApiService {
 
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/product/${id}`);
+  }
+
+  deleteBooking(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/reservation/${id}`);
   }
 
 
