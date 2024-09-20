@@ -1,17 +1,51 @@
 {% extends 'frontend/base.html.twig' %}
 
 {% block body %}
-<h1>Book Product: {{ product.name }}</h1>
+    <div class="container">
+        <h1>Book Product: {{ product.name }}</h1>
 
-    {# Display success messages #}
-    {% for flash_message in app.flashes('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
+        {# Display success messages #}
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+
+        {# Start the form rendering #}
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+        <div class="form-container">
+            {# Loop through each field in the form, skipping the token field #}
+            {% for field in form %}
+                {# Skip the CSRF token field #}
+                {% if field.vars.name != '_token' %}
+                    <div class="form-group mb-3">
+                        <label>
+                            {{ form_label(field) }}
+                        </label>
+                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(field) }}
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-    {% endfor %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary">Submit</button>
-    {{ form_end(form) }}
+        {# The form submission button #}
+        <div class="addto-cart-btn mt--20">
+            <button type="submit" class="rbt-btn btn-gradient hover-icon-reverse">
+                <span class="icon-reverse-wrapper">
+                    <span class="btn-text">Confirm Booking</span>
+                    <span class="btn-icon">
+                        <i class="feather-arrow-right"></i>
+                    </span>
+                    <span class="btn-icon">
+                        <i class="feather-arrow-right"></i>
+                    </span>
+                </span>
+            </button>
+        </div>
+
+        {# End the form rendering #}
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
