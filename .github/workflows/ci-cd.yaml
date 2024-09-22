@@ -1,0 +1,37 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'  # Set your PHP version
+
+    - name: Install Composer dependencies
+      run: composer install
+
+    - name: Run tests
+      run: vendor/bin/phpunit  # Adjust based on your testing framework
+
+    - name: Build Angular app
+      run: |
+        cd web-admin
+        npm install
+        npm run build  # Build your Angular app
+
+    - name: Deploy (Optional)
+      run: |
+        # Add deployment commands here
+        echo "Deploying application..."
