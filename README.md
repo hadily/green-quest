@@ -10,7 +10,6 @@
 
 ### Clone the Repository
 To clone the project, run:
-```bash
 git clone https://github.com/hadily/symfony-project.git
 
 ## Running the Project
