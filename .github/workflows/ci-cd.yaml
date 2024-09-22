@@ -17,7 +17,9 @@ jobs:
         php-version: '8.1'  # Set your PHP version
 
     - name: Install dependencies
-      run: composer install
+      run: 
+        cd app
+        composer install
 
     - name: Start backend server
       run: |
