@@ -14,7 +14,6 @@
       [ngClass]="toolbarButtonIconSizeClass"
     ></span>
   </div>
-  <app-search-result-inner></app-search-result-inner>
 </div>
 
 <!-- NOTIFICATIONS -->
@@ -33,18 +32,19 @@
       [ngClass]="toolbarButtonIconSizeClass"
     ></span>
   </div>
-  <app-notifications-inner></app-notifications-inner>
 </div>
 
 <!-- Logout Button -->
 <div class="d-flex align-items-center" [ngClass]="toolbarButtonMarginClass">
-  <button
+  <a href="/auth/login">
+    <button
     class="btn btn-icon btn-active-light-danger btn-large"
     (click)="logout()"
     aria-label="Logout"
-  >
+    >
     <i class="bi bi-box-arrow-left"></i>
   </button>
+  </a>
 </div>
 
 
@@ -64,14 +64,14 @@
     data-kt-menu-placement="bottom-end"
     data-kt-menu-flip="bottom"
   >
-    <img src="./assets/media/avatars/300-1.jpg" alt="metronic" />
+  <img  src="{{fileUrl}}/uploads/{{user.imageFilename}}">
   </div>
   </a>
   <!-- end::Toggle  -->
-  <app-user-inner></app-user-inner>
 </div>
 <!-- end::User -->
 
+<!--
 <ng-container *ngIf="headerLeft === 'menu'">
   <div
     class="d-flex align-items-center d-lg-none ms-2 me-n3"
@@ -94,3 +94,4 @@
     </div>
   </div>
 </ng-container>
+-->

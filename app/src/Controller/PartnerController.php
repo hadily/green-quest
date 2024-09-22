@@ -157,11 +157,14 @@ class PartnerController extends AbstractController
             $partner->setCompanyDescription($data['companyDescription']);
         }
 
-        $file = $request->files->get('imageFilename');
-        if ($file) {
-            $fileName = uniqid().'.'.$file->guessExtension();
-            $file->move($this->getParameter('uploads_directory'), $fileName);
-            $partner->setImageFilename($fileName);  // Save filename in DB
+        if (isset($data['password'])) {
+            $partner->setPassword($data['password']);
+        }
+
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile) {
+            $imageName = $ufService->uploadFile($imageFile);
+            $partner->setImageFilename($imageName);
         }
 
         $em->persist($partner);

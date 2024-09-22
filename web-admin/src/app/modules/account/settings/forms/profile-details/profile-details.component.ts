@@ -32,12 +32,6 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
 
   selectImage(event: any) {
     this.user.imageFilename = event.target.files[0];
-    let reader = new FileReader();
-    reader.onload = function () {
-      let output: any = document.getElementById('imageFilename');
-      output.src = reader.result;
-    }
-    reader.readAsDataURL(this.user.imageFilename);
   }
 
   saveSettings() {

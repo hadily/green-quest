@@ -20,7 +20,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 
-
 #[Route('/api/admin')]
 class AdminController extends AbstractController
 {
@@ -117,7 +116,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/{id}', name: 'updateAdmin', methods: ['POST'])]
-    public function updateAdmin(int $id, Request $request, EntityManagerInterface $em, AdminRepository $adminRepository): JsonResponse
+    public function updateAdmin(int $id, Request $request, EntityManagerInterface $em, AdminRepository $adminRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         // Find the admin entity
         $admin = $adminRepository->find($id);
@@ -148,6 +147,10 @@ class AdminController extends AbstractController
     
         if (isset($data['email'])) {
             $admin->setEmail($data['email']);
+        }
+
+        if (isset($data['password'])) {
+            $admin->setPassword($data['password'], $passwordHasher);
         }
     
         // Handle file upload

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -95,9 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(string $plainPassword, UserPasswordHasherInterface $passwordHasher): void
     {
-        $this->password = $password;
+        $hashedPassword = $passwordHasher->hashPassword($this, $plainPassword);
+        $this->password = $hashedPassword; // Store the hashed password
     }
 
     /**
