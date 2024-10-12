@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 #[Route('/api/partner')]
@@ -69,7 +69,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route('/', name: 'createPartner', methods: ['POST'])]
-    public function createPartner(Request $request, EntityManagerInterface $em): JsonResponse
+    public function createPartner(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $partner = new Partner();
         $data = $request->request->all();
@@ -86,7 +86,7 @@ class PartnerController extends AbstractController
             'csrf_protection' => false
         ]);
 
-        $partner->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
+        $partner->setPassword($data['password'], $passwordHasher);
 
 
         // Fetch the Admin entity or use default admin ID 6

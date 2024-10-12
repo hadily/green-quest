@@ -70,12 +70,21 @@ export class NewPartnerComponent implements OnInit {
     this.apiService.createPartner(this.partner).subscribe(
       response => {
         console.log('Partner created:', response);
+
+        this.apiService.sendEmail(this.partner.email, this.partner['password']).subscribe(
+          emailResponse => {
+            console.log('Welcome email sent:', emailResponse);
+          },
+          emailError => {
+            console.error('Error sending welcome email:', emailError);
+          }
+        );
+
         this.refreshService.triggerRefresh('/users/partners'); // Emit a value to notify other components
         this.closeModal();
       },
       error => {
         console.error('Error creating partner:', error);
-        // Optionally show an error message to the user
       }
     );
   }

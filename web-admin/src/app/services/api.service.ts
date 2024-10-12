@@ -349,6 +349,11 @@ export class ApiService {
     return this.http.put(`${this.apiUrl}/user/reset-password/${id}`, data);
   }
 
+  /** SEND EMAIL */
+  sendEmail(email: string, password: string): Observable<any> {
+    const data = { email, password };
+    return this.http.post(`${this.apiUrl}/mailer`, data);
+  }
   
   
 }
