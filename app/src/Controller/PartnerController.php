@@ -74,15 +74,14 @@ class PartnerController extends AbstractController
         $partner = new Partner();
         $data = $request->request->all();
 
-        $file = $request->files->get('imageFilename');
-        if ($file) {
-            $fileName = uniqid().'.'.$file->guessExtension();
-            $file->move($this->getParameter('uploads_directory'), $fileName);
-            $partner->setImageFilename($fileName);
+        $imageFile = $request->files->get('imageFilename');
+        if ($imageFile) {
+            $imageName = $ufService->uploadFile($imageFile);
+            $partner->setImageFilename($imageName);
         }
 
         $form = $this->createForm(PartnerType::class, $partner, [
-            'allow_extra_fields' => true,  // Allow extra fields
+            'allow_extra_fields' => true,  
             'csrf_protection' => false
         ]);
 
