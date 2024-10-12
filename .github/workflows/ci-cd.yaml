@@ -26,4 +26,3 @@ jobs:
       - name: Push to Dockerhub
         if: ${{ !inputs.skip-push }}
         run: docker push ${{ secrets.DOCKER_USERNAME }}/green-quest
-k
