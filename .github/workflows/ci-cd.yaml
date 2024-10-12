@@ -24,5 +24,5 @@ jobs:
       - name: Build docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/green-quest -f ./docker/Dockerfile .
       - name: Push to Dockerhub
-        if: ${{ !inputs.skip-push }}
+        if: ${{ inputs.skip-push == 'false' }}
         run: docker push ${{ secrets.DOCKER_USERNAME }}/green-quest
