@@ -3,13 +3,13 @@ version: '3.8'
 services:
   symfony:
     build:
-      context: .  # This points to the root of your project directory
-      dockerfile: docker/Dockerfile  # This specifies the Dockerfile location
+      context: .  
+      dockerfile: docker/Dockerfile 
     container_name: symfony_app
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/var/www/html  # Mount the application code but be cautious with vendor directory
+      - ./app:/var/www/html 
     environment:
       APP_ENV: dev
       DATABASE_URL: "mysql://root@host.docker.internal:3306/expDouce1"

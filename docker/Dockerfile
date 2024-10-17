@@ -1,39 +1,32 @@
-# Use the official PHP 8.2 Apache image as the base image
+# Use the official PHP 8.2 Apache image as the base image 
 FROM php:8.2-apache
 
 # Set the working directory
 WORKDIR /var/www/html
 
-# Install necessary system dependencies and PHP extensions
+# Install necessary system dependencies
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     zip \
     unzip \
-    && docker-php-ext-install intl pdo pdo_mysql opcache zip
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy the Symfony project files into the container
-COPY app /var/www/html
-
-# Create necessary directories
-RUN mkdir -p /var/www/html/var /var/www/html/vendor
+    && docker-php-ext-install intl pdo pdo_mysql opcache zip \
+    && curl -sS https://get.symfony.com/cli/installer | bash \
+    && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony \
+    && rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
 
 # Set the correct permissions
-RUN chown -R www-data:www-data /var/www/html/var \
-    && chown -R www-data:www-data /var/www/html/vendor
+RUN mkdir -p var/vendor && \
+    chown -R www-data:www-data var vendor
 
 # Set environment variable to allow Composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Set the DATABASE_URL environment variable
-ENV DATABASE_URL="mysql://root@host.docker.internal:3306/expDouce"
+ENV DATABASE_URL="mysql://root@host.docker.internal:3306/expDouce1"
 
-# Install Symfony CLI tool
-RUN curl -sS https://get.symfony.com/cli/installer | bash \
-    && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony
+# Copy the Symfony project files into the container
+COPY app .
 
 # Install Symfony dependencies
 RUN composer install --no-interaction --optimize-autoloader --prefer-dist
